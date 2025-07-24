@@ -1,2 +1,1 @@
-# neulanc.com
-website of neulanc
+# neulanc Website (neulanc.com)
