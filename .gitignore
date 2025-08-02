@@ -1,3 +1,29 @@
+# Build Output
+dist/
+dist/*
+out/
+out/*
+public_html/
+public_html/*
+
+# Environment Files
+.env
+.env.*
+
+# OS Files
 .DS_Store
-auth/
-auth/*
+Thumbs.db
+
+# Node Modules
+node_modules
+
+# Editor/IDE
+.vscode
+.idea
+*.log
+
+# astro
+.astro
+.astro/*
+
+*/.htaccess
