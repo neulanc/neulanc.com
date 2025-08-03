@@ -3,6 +3,7 @@ dist/
 dist/*
 out/
 out/*
+public_html
 public_html/
 public_html/*
 
@@ -25,5 +26,3 @@ node_modules
 # astro
 .astro
 .astro/*
-
-*/.htaccess
