@@ -1,12 +1,12 @@
-## Run/Build the website
+# Run/Build the website
 
-### Build
+## Build
 
 ```bash
 npm run build
 ```
 
-### Run locally (e.g to test)
+## Run locally (e.g to test)
 
 ```bash
 npm run dev

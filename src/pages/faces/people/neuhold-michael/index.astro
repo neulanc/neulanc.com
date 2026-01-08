@@ -1,14 +1,784 @@
 ---
---- 
+import { useTranslations } from '../../../../i18n/translations';
+import { getLocaleFromUrl } from '../../../../i18n/utils';
+import LanguageSwitcher from '../../../../components/LanguageSwitcher.astro';
+import mainPic from './assets/neuhold-michael_main-pic.jpg';
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Michael Neuhold</title>
-  </head>
-  <body>
-    <h1>Michael Neuhold</h1>
-    <p>wait for it</p>
-    <a href="../">back to people</a>
-  </body>
+const locale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(locale);
+---
+
+<!DOCTYPE html>
+<html lang={locale}>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Michael Neuhold</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #fff;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    /* Header / About Section */
+    .about {
+      margin-bottom: 4rem;
+    }
+
+    .about h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #000;
+    }
+
+    .about-content {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+
+    .portrait {
+      width: 180px;
+      height: 180px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .bio {
+      flex: 1;
+      font-size: 1.05rem;
+      color: #555;
+    }
+
+    .bio p {
+      margin-bottom: 1rem;
+    }
+
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .social-row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .social-links a {
+      color: #0066cc;
+      text-decoration: none;
+      font-size: 0.95rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      transition: all 0.2s ease;
+    }
+
+    .social-links a:hover {
+      color: #0088ff;
+      transform: translateY(-2px);
+    }
+
+    .social-links a svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+
+    /* Timeline Section */
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section-header {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      padding: 1.5rem 0;
+      margin-bottom: 1rem;
+      z-index: 100;
+      border-bottom: 2px solid #e0e0e0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .section-header:hover {
+      border-bottom-color: #0066cc;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .year-section {
+      position: relative;
+    }
+
+    .year-header {
+      padding: 1rem 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .year-header:hover h3 {
+      color: #0066cc;
+    }
+
+    .year-header h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+      transition: color 0.2s ease;
+    }
+
+    .items {
+      margin-left: 3rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    /* Creative animated line */
+    .items::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        #0066cc 10%,
+        #00aaff 50%,
+        #0066cc 90%,
+        transparent 100%
+      );
+      animation: lineGlow 2s ease-in-out infinite alternate;
+    }
+
+    /* Animated dots flowing down the line */
+    .items::after {
+      content: '';
+      position: absolute;
+      left: calc(-2rem - 2px);
+      top: 0;
+      width: 6px;
+      height: 6px;
+      background: #00aaff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00aaff, 0 0 20px rgba(0, 170, 255, 0.5);
+      animation: dotFlow 3s ease-in-out infinite;
+    }
+
+    @keyframes lineGlow {
+      0% {
+        opacity: 0.5;
+        box-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+      }
+      100% {
+        opacity: 1;
+        box-shadow: 0 0 15px rgba(0, 170, 255, 0.6);
+      }
+    }
+
+    @keyframes dotFlow {
+      0% {
+        top: 0%;
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+
+    .item {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      padding-left: 0;
+      border-bottom: 1px solid #f0f0f0;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    /* Item indicator dot - perfectly centered on line */
+    .item::before {
+      content: '';
+      position: absolute;
+      left: calc(-2rem - 6px);
+      top: 0.4rem;
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border: 3px solid #0066cc;
+      border-radius: 50%;
+      z-index: 2;
+      transition: all 0.3s ease;
+    }
+
+    .item:hover::before {
+      transform: scale(1.4);
+      border-color: #00aaff;
+      box-shadow: 0 0 0 4px rgba(0, 170, 255, 0.2), 0 0 15px rgba(0, 170, 255, 0.4);
+      background: #00aaff;
+    }
+
+    .item:hover {
+      transform: translateX(8px);
+    }
+
+    .item:hover h4 {
+      color: #0066cc;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .item h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #000;
+    }
+
+    .item-meta {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 0.5rem;
+    }
+
+    .item p {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .item a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    .item a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      .about-content {
+        flex-direction: column;
+      }
+
+      .portrait {
+        width: 150px;
+        height: 150px;
+      }
+
+      .about h1 {
+        font-size: 2rem;
+      }
+
+      .section-header h2 {
+        font-size: 1.5rem;
+      }
+
+      .year-header {
+        top: 60px;
+      }
+
+      .year-header h3 {
+        font-size: 1.2rem;
+      }
+
+      .items {
+        margin-left: 1.5rem;
+      }
+
+      .items::before {
+        left: -1rem;
+      }
+
+      .items::after {
+        left: calc(-1rem - 2px);
+      }
+
+      .item::before {
+        left: calc(-1rem - 6px);
+      }
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Language Switcher positioning */
+    .lang-switcher-wrapper {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 250;
+    }
+
+    /* Sticky year indicators */
+    .sticky-years {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 200;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 0.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .sticky-year-btn {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.2s ease;
+    }
+
+    .sticky-year-btn:hover {
+      background: #0066cc;
+      color: #fff;
+      border-color: #0066cc;
+    }
+
+    .sticky-year-btn.active {
+      background: #0066cc;
+      color: #fff;
+      border-color: #0066cc;
+    }
+  </style>
+</head>
+<body>
+
+<div class="lang-switcher-wrapper">
+  <LanguageSwitcher currentLocale={locale} currentPath={Astro.url.pathname} />
+</div>
+
+<div class="sticky-years" id="stickyYears"></div>
+
+<div class="container">
+  <!-- About Section -->
+  <section class="about">
+    <h1>{t.about.title}</h1>
+    <div class="about-content">
+      <img src={mainPic.src} alt="Michael Neuhold" class="portrait">
+      <div class="bio">
+        <p>
+          {t.about.bio1}
+        </p>
+        <p>
+          {t.about.bio2}
+        </p>
+      </div>
+    </div>
+    <div class="social-links">
+      <div class="social-row">
+        <a href="https://github.com/neuholdmichael" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/neuhold-michael/" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+          </svg>
+          <span>LinkedIn</span>
+        </a>
+      </div>
+      <div class="social-row">
+        <a href="https://www.strava.com/athletes/neuholdmichael" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/>
+          </svg>
+          <span>Strava</span>
+        </a>
+        <a href="https://www.instagram.com/neuholdmichael" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+          <span>Instagram</span>
+        </a>
+        <a href="https://www.x.com/neuholdmichael" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          <span>X</span>
+        </a>
+        <a href="mailto:michaelneuhold19@gmail.com">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/>
+          </svg>
+          <span>Email</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ausbildung Section -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Ausbildung</h2>
+    </div>
+    <div class="items">
+      <div class="item">
+        <h4>TU Graz - Software Engineering and Management Bachelor und Master</h4>
+        <div class="item-meta">seit September 2023</div>
+        <p>Bachelor Studium als außerordentlicher Student an der Technischen Universität Graz.</p>
+        <p>Nebenbei bereits Lehrveranstaltungen für den Master im gleichnamigen Masterstudium mit Major in
+          Machine Learning und Minor in Business Informatics.</p>
+        <p><a href="https://github.com/neuholdmichael/Compact-prediction-learning">Github zur Bachelorarbeit</a></p>
+        <p><a href="">Thesis Bachelorarbeit</a></p>
+      </div>
+      <div class="item">
+        <h4>HTBL Kapfenberg - Mechatronik</h4>
+        <div class="item-meta">seit September 2021</div>
+        <p>Höhere Technische Bundeslehranstalt mit Schwerpunkt Mechatronik.</p>
+        <p><a href="https://github.com/neuholdmichael/AVL-Drive5_battery-charging">Github zur Diplomarbeit bzw Code im Praktikum</a></p>
+        <p><a href="">Thesis Diplomarbeit</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Erfahrung Section -->
+  <section class="section">
+    <div class="section-header" onclick="document.getElementById('exp-2025').scrollIntoView()">
+      <h2>Arbeits-Erfahrung</h2>
+    </div>
+
+    <!-- 2025 -->
+    <div class="year-section" id="exp-2025">
+      <div class="year-header" onclick="this.parentElement.scrollIntoView()">
+        <h3>2025</h3>
+      </div>
+      <div class="items">
+        <div class="item">
+          <h4>Praktikum - Software Engineer bei AVL List GmbH</h4>
+          <div class="item-meta">Juli 2025 - Graz</div>
+          <p>Erweiterung einer Python-basierten Fahrzeugdatenanalyse im Rahmen der Diplomarbeit.</p>
+          <p><a href="https://github.com/neuholdmichael/AVL-Drive5_battery-charging">Github zur Diplomarbeit bzw Code im Praktikum</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2024 -->
+    <div class="year-section" id="exp-2024">
+      <div class="year-header" onclick="this.parentElement.scrollIntoView()">
+        <h3>2024</h3>
+      </div>
+      <div class="items">
+        <div class="item">
+          <h4>Teaching Assistant an der TU Graz</h4>
+          <div class="item-meta">Oktober 2024 - Februar 2026</div>
+          <p>Betreuung von Studenten in den Lehrveranstaltungen über Einführung ins C-Programmierung (Introduction in structured Programming) und
+            Einführung in Machine Learning (Computer Methods for Statistics).</p>
+        </div>
+        <div class="item">
+          <h4>Praktikum - PLC Engineer bei EPI Energietechnik</h4>
+          <div class="item-meta">Juli 2024 - Graz</div>
+          <p>Programmierung einer Phoenix-Steuerung für ein neues Projekt für intelligente Stromnetze.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2023 -->
+    <div class="year-section" id="exp-2023">
+      <div class="year-header" onclick="this.parentElement.scrollIntoView()">
+        <h3>2023</h3>
+      </div>
+      <div class="items">
+        <div class="item">
+          <h4>Praktikum - Software Engineer bei Andritz AG</h4>
+          <div class="item-meta">August 2023 - Graz</div>
+          <p>Erprobung eines neuen VR-Systems für virtuelle Begehung von Anlagen. Erweiterung eines interaktiven 3D Viewers mittels JavaScript.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2022 -->
+    <div class="year-section" id="exp-2022">
+      <div class="year-header" onclick="this.parentElement.scrollIntoView()">
+        <h3>2022</h3>
+      </div>
+      <div class="items">
+        <div class="item">
+          <h4>Tutor an der HTBL Kapfenberg</h4>
+          <div class="item-meta">seit März 2022</div>
+          <p>Nachhilfe in Informatik, Mathematik, Mechanik und Elektrotechnik.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects & Fähigkeiten Section -->
+  <section class="section">
+    <div class="section-header" onclick="document.getElementById('proj-2025').scrollIntoView()">
+      <h2>Projekte & Fähigkeiten</h2>
+    </div>
+
+    <!-- 2023 -->
+    <div class="year-section" id="proj-2023">
+      <div class="year-header" onclick="this.parentElement.scrollIntoView()">
+        <h3>2023</h3>
+      </div>
+      <div class="items">
+        <div class="item">
+          <h4>XY - Kart</h4>
+          <div class="item-meta">Projekt 3. Klasse HTBL Kapfenberg</div>
+          <p>TODO</p>
+          <p><a href="https://github.com/neuholdmichael/XY-Kart">GitHub zum Projekt</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="year-section" id="skills">
+      <div class="year-header">
+        <h3>Fähigkeiten</h3>
+      </div>
+      <div class="items">
+        <div class="item">
+          <h4>Programmierung</h4>
+          <p>C++, Java, Python, C, SQL, JavaScript, Scala, Machine Learning, Deep Learning</p>
+        </div>
+        <div class="item">
+          <h4>Technologien & Tools</h4>
+          <p>LaTeX, Git, Linux, Office 365, Web Development, SolidWorks</p>
+        </div>
+        <div class="item">
+          <h4>Sprachen</h4>
+          <p>Deutsch (Muttersprache), Englisch (B2/C1), Französisch (A1)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sport Section -->
+  <!-- Sport Section -->
+  <section class="section">
+    <div class="section-header" onclick="document.getElementById('sport-2025').scrollIntoView()">
+      <h2>Sport</h2>
+    </div>
+
+    <!-- Erfolge Subsection -->
+    <div class="year-section" id="erfolge">
+      <div class="year-header">
+        <h3>Erfolge</h3>
+      </div>
+      <div class="items">
+        <div class="item">
+          <h4>Qualifikation für Age-Group EM und WM 2026</h4>
+          <div class="item-meta">Triathlon</div>
+          <p>AG 20-24, stay tuned für Ergebnisse</p>
+        </div>
+        <div class="item">
+          <h4>Steirischer Olympischer Triathlonmeister Junioren (U18) 2025</h4>
+          <div class="item-meta">Triathlon</div>
+          <p>Olympische Distanz - Oberland Triathlon</p>
+        </div>
+        <div class="item">
+          <h4>Steirischer Crosslaufmeister Junioren (U18)</h4>
+          <div class="item-meta">Crosslauf</div>
+          <p>3.8km - Crosslauf Frohnleiten</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2025 -->
+    <div class="year-section" id="sport-2025">
+      <div class="year-header" onclick="this.parentElement.scrollIntoView()">
+        <h3>2025</h3>
+      </div>
+      <div class="items">
+        <div class="item">
+          <h4>70.3 Triathlon Porec 5. Platz AG 18-24 + 55. Gesamtplatz</h4>
+          <div class="item-meta">Triathlon</div>
+          <p>19.10.2025</p>
+          <p>erste Mitteldistanz</p>
+        </div>
+        <div class="item">
+          <h4>Olympischer Triathlon Podersdorf 2. Platz Junioren (U20) + 4. Gesamtplatz</h4>
+          <div class="item-meta">Triathlon</div>
+          <div class="item-meta">02.09.2025</div>
+          <p>times</p>
+        </div>
+        <div class="item">
+          <h4>Sieger Supersprint Triathlon Röthlstein M Allg. + 2. Gesamtplatz</h4>
+          <div class="item-meta">Triathlon</div>
+          <div class="item-meta">09.08.2025</div>
+          <p>times</p>
+        </div>
+        <div class="item">
+          <h4>Sieger Olympischer Triathlon Fürstenfeld Junioren (U20)</h4>
+          <div class="item-meta">Triathlon</div>
+          <div class="item-meta">03.08.2025</div>
+          <p>times</p>
+        </div>
+        <div class="item">
+          <h4>Sieger Olympischer Triathlon Oberland Junioren (U20)</h4>
+          <div class="item-meta">Triathlon</div>
+          <div class="item-meta">28.06.2025</div>
+          <p>Qualifiziert für EM und WM 2026</p>
+        </div>
+        <div class="item">
+          <h4>Sieger Olympischer Triathlon Knittelfeld Junioren (U20)</h4>
+          <div class="item-meta">Triathlon</div>
+          <div class="item-meta">01.05.2025</div>
+          <p>times</p>
+        </div>
+      </div>
+    </div>
+    <div class="year-section" id="sport-2024">
+      <div class="year-header" onclick="this.parentElement.scrollIntoView()">
+        <h3>2024</h3>
+      </div>
+      <div class="items">
+        <div class="item">
+          <h4>Sieger Olympischer Triathlon Knittelfeld Jugend (U18)</h4>
+          <div class="item-meta">Triathlon</div>
+          <div class="item-meta">01.05.2024</div>
+          <p>times</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Persönliche Bestzeiten & Leistungen -->
+    <div class="year-section" id="sport-bestzeiten">
+      <div class="year-header">
+        <h3>Persönliche Bestzeiten & Leistungen</h3>
+      </div>
+      <div class="items">
+        <div class="item">
+          <h4>Triathlon - Olympische Distanz</h4>
+          <div class="item-meta">Zeit</div>
+          <p>2:14, 28:06 Schwimmen, 63:10 Radfahren, 39:30 Laufen (<a href="https://strava.app.link/EGBHEKNnLZb">Strava Einheit Schwimmen</a>, <a href="https://strava.app.link/SJ7CNiPnLZb">Strava Einheit Radfahren</a>, <a href="https://strava.app.link/Icfe90QnLZb">Strava Einheit Laufen</a>)</p>
+        </div>
+        <div class="item">
+          <h4>Laufen - 10 km</h4>
+          <div class="item-meta">Bestzeit</div>
+          <p>37:46, 3:47min/km (<a href="https://strava.app.link/rcfPlkUnLZb">Strava Einheit</a>)</p>
+        </div>
+        <div class="item">
+          <h4>Laufen - 5 km</h4>
+          <div class="item-meta">Bestzeit</div>
+          <p>17:21, 3:28min/km (<a href="https://strava.app.link/JTMg6HSnLZb">Strava Einheit</a>)</p>
+        </div>
+        <div class="item">
+          <h4>Schwimmen - 1000 m</h4>
+          <div class="item-meta">Bestzeit</div>
+          <p>16:00, 1:35 min/100m (<a href="https://strava.app.link/5UjczpXnLZb">Strava Einheit</a>)</p>
+        </div>
+        <div class="item">
+          <h4>Rad - 1h Leistung</h4>
+          <div class="item-meta">Bestleistung</div>
+          <p>250W, 3.97W/kg (<a href="https://strava.app.link/SJ7CNiPnLZb">Strava Einheit</a>)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Sticky section navigation - only headlines, not years
+  const sections = document.querySelectorAll('.section');
+  const stickyYearsContainer = document.getElementById('stickyYears');
+  
+  const sectionData: Array<{ name: string; element: Element }> = [];
+  sections.forEach(section => {
+    const headerElement = section.querySelector('.section-header h2');
+    if (headerElement) {
+      const sectionName = headerElement.textContent;
+      sectionData.push({ name: sectionName, element: section });
+    }
+  });
+
+  // Create sticky section buttons
+  sectionData.forEach(({ name, element }) => {
+    const btn = document.createElement('button');
+    btn.className = 'sticky-year-btn';
+    btn.textContent = name;
+    btn.onclick = () => {
+      element.scrollIntoView({ behavior: 'smooth' });
+    };
+    if (stickyYearsContainer) {
+      stickyYearsContainer.appendChild(btn);
+    }
+  });
+
+  // Update active section on scroll
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && stickyYearsContainer) {
+          const currentSection = entry.target;
+          const headerElement = currentSection.querySelector('.section-header h2');
+          if (headerElement) {
+            const sectionName = headerElement.textContent;
+            const buttons = stickyYearsContainer.querySelectorAll('.sticky-year-btn');
+            buttons.forEach(btn => {
+              if (btn.textContent === sectionName) {
+                btn.classList.add('active');
+              } else {
+                btn.classList.remove('active');
+              }
+            });
+          }
+        }
+      });
+    },
+    {
+      threshold: 0.3,
+      rootMargin: '-100px 0px -70% 0px'
+    }
+  );
+
+  sections.forEach(section => observer.observe(section));
+</script>
+
+</body>
 </html>
