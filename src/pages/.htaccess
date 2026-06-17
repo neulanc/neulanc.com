@@ -1,3 +1,9 @@
+# -------------------
+# Title: 4TODO
+# Created: 01.10.2025
+# Last modified: 12.02.2026 by Michael Neuhold (neuhold-michael@neulanc.com)
+# Content: TODO
+# -------------------
 RewriteEngine On
 
 # Remove www (only do this once)
