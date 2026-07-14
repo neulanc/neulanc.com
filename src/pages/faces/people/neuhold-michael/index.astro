@@ -16,10 +16,13 @@ import main_pic from './assets/neuhold-michael_main-pic.jpg';
 import logoGasthausHoaterwirt from './assets/logo_gasthaus-hoaterwirt.svg';
 import logoRoteRakete from './assets/logo_Rote-Rakete.webp';
 import logoLima from './assets/logo_lima.jpg';
+import pdfThesisDiploma from './assets/neuhold-michael_diploma-thesis.pdf';
+import pdfThesisBachelor from './assets/neuhold-michael_bachelor-thesis.pdf';
+import pdfSponsorMap from './assets/neuhold-michael_sponsormap.pdf';
 
-const PDF_SPONSOR_MAP = './neuhold-michael/assets/neuhold-michael_sponsoring-mappe.pdf';
-const PDF_THESIS_DIPLOMA = './neuhold-michael/assets/neuhold-michael_diploma-thesis.pdf';
-const PDF_THESIS_BACHELOR = './neuhold-michael/assets/neuhold-michael_bachelor-thesis.pdf';
+const PDF_SPONSOR_MAP = pdfSponsorMap
+const PDF_THESIS_DIPLOMA = pdfThesisDiploma;
+const PDF_THESIS_BACHELOR = pdfThesisBachelor;
 const PDF_THESIS_MASTER = './neuhold-michael/assets/neuhold-michael_master-thesis.pdf'; // still todo hehe
 
 const locale = getLocaleFromUrl(Astro.url);
@@ -459,6 +462,19 @@ const translate = useTranslations(locale);
     }
 
     .item a:hover {
+      text-decoration: underline;
+    }
+
+    .sport-text-links .item {
+      display: block;
+      width: 100%;
+      color: #243042;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .sport-text-links .item:hover {
       text-decoration: underline;
     }
 
@@ -1104,19 +1120,19 @@ const translate = useTranslations(locale);
         </a>
       </div>
       <div class="social-row">
-        <a href="https://www.strava.com/athletes/neuholdmichael" target="_blank">
+        <a href="https://www.strava.com/athletes/michaelneuhold" target="_blank">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/>
           </svg>
           <span>Strava</span>
         </a>
-        <a href="https://www.instagram.com/neuholdmichael" target="_blank">
+        <a href="https://www.instagram.com/michaelneuhold_" target="_blank">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
           </svg>
           <span>Instagram</span>
         </a>
-        <a href="https://www.x.com/neuholdmichael" target="_blank">
+        <a href="https://www.x.com/neuholdmichael_" target="_blank">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
           </svg>
@@ -1137,8 +1153,7 @@ const translate = useTranslations(locale);
       <span class="section-eyebrow">Support</span>
       <h2>Sponsoren</h2>
     </div>
-    <div class="items">
-      <div class="item">
+    <div class="sponsor-list">
       <a class="sponsor-item" href="https://www.hoaterwirt.at" target="_blank" rel="noreferrer">
         <img class="sponsor-logo" src={logoGasthausHoaterwirt.src} alt="Gasthaus Hoaterwirt logo">
         <div>
@@ -1146,8 +1161,6 @@ const translate = useTranslations(locale);
           <small>Partner</small>
         </div>
       </a>
-      </div>
-      <div class="item">
       <a class="sponsor-item" href="https://www.roterakete.at" target="_blank" rel="noreferrer">
         <img class="sponsor-logo" src={logoRoteRakete.src} alt="Rote Rakete logo">
         <div>
@@ -1155,16 +1168,13 @@ const translate = useTranslations(locale);
           <small>Partner</small>
         </div>
       </a>
-      </div>
-      <div class="item">
       <a class="sponsor-item" href="https://www.lima-sportcoaching.com" target="_blank" rel="noreferrer">
         <img class="sponsor-logo" src={logoLima.src} alt="LiMa Sportcoaching logo">
         <div>
           <strong>LiMa Sportcoaching</strong>
-          <small>Trainer</small>
+          <small>Partner und Trainer</small>
         </div>
       </a>
-      </div>
     </div>
   </section>
 
@@ -1187,7 +1197,7 @@ const translate = useTranslations(locale);
           <div class="thesis-abstract-content">
             <p>Compact prediction learning is a training principle that encourages neural networks to reuse a small number of latent representations while maintaining task performance. This bachelor thesis investigates whether such compactness constraints lead to structured and reusable internal representations in neural networks.</p>
             <p>The approach is evaluated on a set of synthetic binary prediction tasks</a> and synthetic linear prediction tasks</a> as well as on a convolutional neural network trained on a pairwise MNIST comparison task</a>. Compactness is enforced by an additional loss term applied to the latent representations. The compactness objective is defined as:</p>
-            <div class="math-block">{String.raw`$$E = \sum_{k \neq l} \Bigl( 1 + \log \sum_i (\lvert g_i(x^{(k)}) - g_i(x^{(l)}) \rvert) \Bigr).$$`}</div>
+            <p class="math-block">{String.raw`E = \sum_{k \neq l} \Bigl( 1 + \log \sum_i (\lvert g_i(x^{(k)}) - g_i(x^{(l)}) \rvert) \Bigr).`}</p>
             <p>The results show that for simple synthetic tasks, compact prediction learning leads to highly structured and low-dimensional latent spaces that reflect task-relevant structure. In contrast, for the convolutional setting, the compact objective causes a strong collapse of the latent space, removing most digit-specific information and reducing classification accuracy.</p>
             <p>These findings indicate that compact prediction learning acts as a strong inductive bias that enforces minimal, task-aligned representations, but may limit information retention in more complex perceptual tasks.</p>
             <a class="inline-link" href={PDF_THESIS_BACHELOR} target="_blank" rel="noreferrer"> Bachelorarbeit (PDF anzeigen)</a>
@@ -1387,7 +1397,9 @@ const translate = useTranslations(locale);
         <div class="item">
           <h4>XY - Kart</h4>
           <div class="item-meta">Projekt 3. Klasse HTBL Kapfenberg</div>
-          <p>TODO</p>
+          <p>Im Zweierteam entwickeltes, ferngesteuertes Modellfahrzeug mit drahtloser Kommunikation über zwei
+            Bluetooth-Module. Mein Schwerpunkt lag auf der Elektronik und der Arduino-Programmierung zur Übertragung
+            und Verarbeitung der Steuersignale sowie zur Ansteuerung der Motoren.</p>
           <p><a href="https://github.com/neuholdmichael/XY-Kart">GitHub zum Projekt</a></p>
         </div>
       </div>
@@ -1421,33 +1433,31 @@ const translate = useTranslations(locale);
       <span class="section-eyebrow">Sport</span>
       <h2>Sport</h2>
     </div>
-    <div class="year-section" id="achievements">
+    <div class="year-section sport-text-links">
+      <div class="year-header">
+        <h3>Sponsoren</h3>
+      </div>
+      <div class="items">
+        <a class="item" href="https://www.roterakete.at">Rote Rakete</a>
+        <a class="item" href="https://www.hoaterwirt.at">Gasthaus Hoaterwirt</a>
+        <a class="item" href="https://www.lima-sportcoaching.com">LiMa Sportcoaching - Markus Lichtenegger</a>
+      </div>
+    </div>
+    <div class="year-section achievement-links sport-text-links" id="achievements">
       <div class="year-header">
         <h3>Erfolge</h3>
       </div>
       <div class="items">
-        <div class="item">
-          <a href="#race-od-tarragona-2026">AG Europa Meisterschaft: 5. Platz</a>
-        </div>
-        <div class="item">
-          <a href="#race-sd-vulkandland-2026">2026 Steirischer Meisterschaft: 1. Platz Sprint Distanz U20</a>
-        </div>
-        <div class="item">
-          <a href="#race-sd-vulkandland-2026">2026 Steirischer Meisterschaft: 3. Platz Sprint Distanz Gesamt</a>
-        </div>
-        <div class="item">
-          <a href="#race-od-knittelfeld-2025">2025 Steirischer Meisterschaft: 1. Platz Olympische Distanz U18</a>
-        </div>
-        <div class="item">
-          <a href="#race-cross-frohnleiten-2023">2023 Steirischer Meisterschaft: 1. Platz Crosslauf U18</a>
-        </div>
+        <a class="item" href="#race-od-tarragona-2026">AG Europa Meisterschaft: 5. Platz</a>
+        <a class="item" href="#race-sd-vulkandland-2026">2026 Steirischer Meisterschaft: 1. Platz Sprint Distanz U20</a>
+        <a class="item" href="#race-sd-vulkandland-2026">2026 Steirischer Meisterschaft: 3. Platz Sprint Distanz Gesamt</a>
+        <a class="item" href="#race-od-knittelfeld-2025">2025 Steirischer Meisterschaft: 1. Platz Olympische Distanz U18</a>
+        <a class="item" href="#race-cross-frohnleiten-2024">2024 Steirischer Meisterschaft: 1. Platz Crosslauf U18</a>
       </div>
     </div>
   </section>
-    <div class="year-header" id="races">
+      <div class="race-log" id="races">
         <h3>Alle Rennen</h3>
-      </div>
-      <div class="race-log" >
 
         <div class="race-year-group">
           <div class="year-section">
@@ -1464,15 +1474,15 @@ const translate = useTranslations(locale);
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Schwimmen: 1500</p>
-                  <p class="race-time-value">26:24min, 1:44min/100m <a class="race-official-link" href="https://strava.app.link/oP8D29Gt23b">Strava</a></p>
+                  <p class="race-time-value">26:24min, 1:44min/100m <a class="race-official-link" href="https://www.strava.com/activities/18913548736">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Rad: 37km</p>
-                  <p class="race-time-value">58:08min, 235W <a class="race-official-link" href="https://strava.app.link/xN1HdjIt23b">Strava</a></p>
+                  <p class="race-time-value">58:08min, 235W <a class="race-official-link" href="https://www.strava.com/activities/18913934440">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Laufen: 10km</p>
-                  <p class="race-time-value">38:45min, 3:54min/km <a class="race-official-link" href="https://strava.app.link/hScB7sJt23b">Strava</a></p>
+                  <p class="race-time-value">38:45min, 3:54min/km <a class="race-official-link" href="https://www.strava.com/activities/18913548758">Strava</a></p>
                 </div>
               </div>
             </article>
@@ -1484,15 +1494,15 @@ const translate = useTranslations(locale);
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Schwimmen: 900m</p>
-                  <p class="race-time-value">15:24min, 1:41min/100m <a class="race-official-link" href="#">Strava</a></p>
+                  <p class="race-time-value">15:24min, 1:41min/100m <a class="race-official-link" href="https://www.strava.com/activities/18529485406">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Rad: 19.5km</p>
-                  <p class="race-time-value">31:21min, 255W <a class="race-official-link" href="#">Strava</a></p>
+                  <p class="race-time-value">31:21min, 255W <a class="race-official-link" href="https://www.strava.com/activities/18531246007">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Laufen: 4.8km</p>
-                  <p class="race-time-value">16:58min, 3:33min/km <a class="race-official-link" href="#">Strava</a></p>
+                  <p class="race-time-value">16:58min, 3:33min/km <a class="race-official-link" href="https://www.strava.com/activities/18529485317">Strava</a></p>
                 </div>
               </div>
             </article>
@@ -1504,15 +1514,15 @@ const translate = useTranslations(locale);
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Schwimmen: 700m</p>
-                  <p class="race-time-value">11:38min, 1:41min/100m <a class="race-official-link" href="#">Strava</a></p>
+                  <p class="race-time-value">11:38min, 1:41min/100m <a class="race-official-link" href="https://www.strava.com/activities/18357685390">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Rad: 20km (300HM)</p>
-                  <p class="race-time-value">33:47min, 259W <a class="race-official-link" href="#">Strava</a></p>
+                  <p class="race-time-value">33:47min, 259W <a class="race-official-link" href="https://www.strava.com/activities/18357693491">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Laufen: 4.8km (80HM)</p>
-                  <p class="race-time-value">18:10min, 3:46min/km <a class="race-official-link" href="#">Strava</a></p>
+                  <p class="race-time-value">18:10min, 3:46min/km <a class="race-official-link" href="https://www.strava.com/activities/18357685367">Strava</a></p>
                 </div>
               </div>
             </article>
@@ -1524,15 +1534,15 @@ const translate = useTranslations(locale);
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Schwimmen: 1500m</p>
-                  <p class="race-time-value">23:52min, 1:35min/100m <a class="race-official-link" href="#">Strava</a></p>
+                  <p class="race-time-value">23:52min, 1:35min/100m <a class="race-official-link" href="https://www.strava.com/activities/18332806946">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Rad: 39km</p>
-                  <p class="race-time-value">1:01h, 248W <a class="race-official-link" href="#">Strava</a></p>
+                  <p class="race-time-value">1:01h, 248W <a class="race-official-link" href="https://www.strava.com/activities/18332826480">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Laufen: 9.5km</p>
-                  <p class="race-time-value">35:47min, 3:47min/km <a class="race-official-link" href="#">Strava</a></p>
+                  <p class="race-time-value">35:47min, 3:47min/km <a class="race-official-link" href="https://www.strava.com/activities/18332807014">Strava</a></p>
                 </div>
               </div>
             </article>
@@ -1544,7 +1554,7 @@ const translate = useTranslations(locale);
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Lauf: 10.6km</p>
-                  <p class="race-time-value">36:45min, 3:28min/km <a class="race-official-link" href="#">Strava</a></p>
+                  <p class="race-time-value">36:45min, 3:28min/km <a class="race-official-link" href="https://www.strava.com/activities/18076661697">Strava</a></p>
                 </div>
               </div>
             </article>
@@ -1556,7 +1566,7 @@ const translate = useTranslations(locale);
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Lauf: 10km</p>
-                  <p class="race-time-value">35:51min, 3:35min/km <a class="race-official-link" href="#">Strava</a></p>
+                  <p class="race-time-value">35:51min, 3:35min/km <a class="race-official-link" href="https://www.strava.com/activities/17562457170">Strava</a></p>
                 </div>
               </div>
             </article>
@@ -1568,182 +1578,182 @@ const translate = useTranslations(locale);
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Lauf: 10km</p>
-                  <p class="race-time-value">36:21min, 3:38min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">36:21min, 3:38min/km <a class="race-official-link" href="https://www.strava.com/activities/17562457170">Strava</a></p>
                 </div>
               </div>
             </article>
           </div>
           </div>
         </div>
-
         <div class="race-year-group">
           <h4>2025</h4>
           <div class="race-cards-grid">
             <article class="race-card" id="race-10k-graz-2026">
               <p class="race-type">5k 31.12.2025</p>
               <h5 class="race-name-location">Graz</h5>
-              <a class="race-official-link" href="TODO">official results</a>
-              <p>Platzierung TODO</p>
+              <a class="race-official-link" href="https://my.raceresult.com/354101/#2_67B2C3">official results</a>
+              <p>2. Platz U20</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Lauf: 5km</p>
-                  <p class="race-time-value">17:30min, 3:30min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">17:30min, 3:30min/km <a class="race-official-link" href="https://www.strava.com/activities/16893475245">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-10k-graz-2026">
               <p class="race-type">5k 30.11.2025</p>
               <h5 class="race-name-location">Graz</h5>
-              <a class="race-official-link" href="TODO">official results</a>
-              <p>Platzierung TODO</p>
+              <a class="race-official-link" href="https://my.raceresult.com/347583/#0_B50C50">official results</a>
+              <p>2. Platz U20</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Lauf: 5km</p>
-                  <p class="race-time-value">17:21min, 3:28min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">17:21min, 3:28min/km <a class="race-official-link" href="https://www.strava.com/activities/16607887483">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-md-porec-2025">
               <p class="race-type">70.3 19.10.2025</p>
               <h5 class="race-name-location">Porec</h5>
-              <a class="race-official-link" href="#">official results</a>
-              <p>Platzierung TODO</p>
+              <a class="race-official-link" href="https://www.ironman.com/races/im703-croatia/results">official results</a>
+              <p>5. Platz M18-24</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Schwimmen: 1900m</p>
-                  <p class="race-time-value">33:33 TODO <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">33:33 1:44 min/100m <a class="race-official-link" href="https://www.strava.com/activities/16189915340">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Rad: 89km</p>
-                  <p class="race-time-value">2:19:00 <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">2:19:00 232W <a class="race-official-link" href="https://www.strava.com/activities/16191908246">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Laufen: 21.1km</p>
-                  <p class="race-time-value">1:34:TODO <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">1:34:24 4:31min/km <a class="race-official-link" href="https://www.strava.com/activities/16189915389">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-od-podersdorf-2025">
               <p class="race-type">Olympische Distanz 31.08.2025</p>
               <h5 class="race-name-location">Podersdorf</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <a class="race-official-link" href="https://balancer.pentek-timing.at/results.html?pnr=14595&cnr=5">official results</a>
               <p>4. Platz Gesamt, 2. Platz U20</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Schwimmen: 1500m</p>
-                  <p class="race-time-value">25:00 <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">28:00 <a class="race-official-link" href="https://www.strava.com/activities/15648343456">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Rad: 40km</p>
-                  <p class="race-time-value">1:03h, 250W <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">1:03h, 250W <a class="race-official-link" href="https://www.strava.com/activities/15648348144">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Laufen: 10.3km</p>
-                  <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="https://www.strava.com/activities/15648343459">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-sd-roethlstein-2025">
               <p class="race-type">Supersprint Distanz 09.08.2025</p>
               <h5 class="race-name-location">Röthlstein</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <!-- <a class="race-official-link" href="#">official results</a> -->
               <p>2. Platz Gesamt, 1. Platz M Allgemein</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Schwimmen: 250m</p>
-                  <p class="race-time-value">25:00 <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">4:25 <a class="race-official-link" href="https://www.strava.com/activities/15399290542">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Rad: 17km</p>
-                  <p class="race-time-value">1:03h, 250W <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">24min, 240W <a class="race-official-link" href="https://www.strava.com/activities/15399293328">Strava</a></p>
                 </div>
                 <div class="race-time-item">
                   <p>Laufen: 4.5km</p>
-                  <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">18:40, 4:07min/km <a class="race-official-link" href="https://www.strava.com/activities/15399290611">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-od-fuerstenfeld-2025">
               <p class="race-type">Olympische Distanz 03.08.2025</p>
               <h5 class="race-name-location">Fürstenfeld</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <a class="race-official-link" href="https://ergebnisliste.at/Ergebnis/1193/5494/-/-/-/">official results</a>
               <p>17. Platz Gesamt, 1. Platz U18</p>
               <div class="race-times">
                 <div class="race-time-item">
-                  <p>Schwimmen: 1500m</p>
-                  <p class="race-time-value">25:00 <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p>Schwimmen: 1400m</p>
+                  <p class="race-time-value">26:42 <a class="race-official-link" href="https://www.strava.com/activities/15327930004">Strava</a></p>
                 </div>
                 <div class="race-time-item">
-                  <p>Rad: 40km</p>
-                  <p class="race-time-value">1:03h, 250W <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p>Rad: 35km</p>
+                  <p class="race-time-value">59:353h, 240W <a class="race-official-link" href="https://www.strava.com/activities/15328156485">Strava</a></p>
                 </div>
                 <div class="race-time-item">
-                  <p>Laufen: 8.5km</p>
-                  <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p>Laufen: 8.8km (120HM)</p>
+                  <p class="race-time-value">39:55, 4:27min/km <a class="race-official-link" href="https://www.strava.com/activities/15327930048">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-od-oberland-2025">
               <p class="race-type">Olympische Distanz 28.06.2025</p>
               <h5 class="race-name-location">Oberland</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <a class="race-official-link" href="https://my.raceresult.com/304756/#7_5D61F9">official results</a>
               <p>7. Platz Gesamt, 1. Platz U18</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Schwimmen: 1500m</p>
-                  <p class="race-time-value">25:00 <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">30:00 <a class="race-official-link" href="https://www.strava.com/activities/14943105123">Strava</a></p>
                 </div>
                 <div class="race-time-item">
-                  <p>Rad: 40km</p>
-                  <p class="race-time-value">1:03h, 250W <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p>Rad: 43km</p>
+                  <p class="race-time-value">1:07h, 245W <a class="race-official-link" href="https://www.strava.com/activities/14943096311">Strava</a></p>
                 </div>
                 <div class="race-time-item">
-                  <p>Laufen: 8.5km</p>
-                  <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p>Laufen: 9.3km (120HM)</p>
+                  <p class="race-time-value">41:10, 4:26min/km <a class="race-official-link" href="https://www.strava.com/activities/14943105131">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-od-knittelfeld-2025">
               <p class="race-type">Olympische Distanz 01.05.2025</p>
               <h5 class="race-name-location">Knittelfeld</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <a class="race-official-link" href="https://time2win.at/event/704/results">official results</a>
               <p>17. Platz Gesamt, 1. Platz U18</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Schwimmen: 1500m</p>
-                  <p class="race-time-value">25:00 <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">27:50 <a class="race-official-link" href="https://www.strava.com/activities/14343351471">Strava</a></p>
                 </div>
                 <div class="race-time-item">
-                  <p>Rad: 40km</p>
-                  <p class="race-time-value">1:03h, 250W <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p>Rad: 39km</p>
+                  <p class="race-time-value">1:04h <a class="race-official-link" href="https://www.strava.com/activities/14343609707">Strava</a></p>
                 </div>
                 <div class="race-time-item">
-                  <p>Laufen: 8.5km</p>
-                  <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p>Laufen: 9.5km</p>
+                  <p class="race-time-value">42:30, 4:28min/km <a class="race-official-link" href="https://www.strava.com/activities/14343351581">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">10k 23.02.2025</p>
               <h5 class="race-name-location">Graz</h5>
-              <a class="race-official-link" href="#">official results</a>
-              <p>17. Platz Gesamt, 1. Platz U18</p>
+              <a class="race-official-link" href="https://my.raceresult.com/298580/">official results</a>
+              <p>8. Platz Gesamt, 1. Platz U20</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Laufen: 10km</p>
-                  <p class="race-time-value">37:45, 3:47min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">37:46, 3:47min/km <a class="race-official-link" href="https://www.strava.com/activities/13703123833">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">10k 26.01.2025</p>
               <h5 class="race-name-location">Graz</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <a class="race-official-link" href="https://my.raceresult.com/298580/#0_9D55AF">official results</a>
               <p>erstes Mal sub40</p>
+              <p>1. U20</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Laufen: 10km</p>
-                  <p class="race-time-value">39:52, 3:59min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">39:52, 3:59min/km <a class="race-official-link" href="https://www.strava.com/activities/13455842117">Strava</a></p>
                 </div>
               </div>
             </article>
@@ -1756,88 +1766,86 @@ const translate = useTranslations(locale);
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">5k 31.12.2024</p>
               <h5 class="race-name-location">Graz</h5>
-              <a class="race-official-link" href="#">official results</a>
-              <p>PLatzierungen todo</p>
+              <a class="race-official-link" href="https://my.raceresult.com/303552/#2_67B2C3">official results</a>
+              <p>5. U20</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Laufen: 5.3km</p>
-                  <p class="race-time-value">19:05, 3:42min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">19:05, 3:42min/km <a class="race-official-link" href="https://www.strava.com/activities/13230657676">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-5k-2024">
               <p class="race-type">5k 01.12.2024</p>
               <h5 class="race-name-location">Graz</h5>
-              <a class="race-official-link" href="#">official results</a>
-              <p>PLatzierungen todo</p>
+              <a class="race-official-link" href="https://my.raceresult.com/298580/#0_B50C50">official results</a>
+              <p>1. U20</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Laufen: 5km</p>
-                  <p class="race-time-value">18:55, 3:47min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p class="race-time-value">18:55, 3:47min/km <a class="race-official-link" href="https://www.strava.com/activities/13021603820">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">Halbmarathon 24.11.2024</p>
               <h5 class="race-name-location">Wien</h5>
-              <a class="race-official-link" href="#">official results</a>
-              <p>PLatzierungen todo</p>
+              <a class="race-official-link" href="https://balancer.pentek-timing.at/results.html?pnr=14450&cnr=3">official results</a>
               <div class="race-times">
                 <div class="race-time-item">
-                  <p>Laufen: 5km</p>
-                  <p class="race-time-value">1:34h, 4:27min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                  <p>Laufen: 21.3km</p>
+                  <p class="race-time-value">1:34h, 4:27min/km <a class="race-official-link" href="https://www.strava.com/activities/12971509923">Strava</a></p>
                 </div>
               </div>
             </article>
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">Olympische Distanz 18.08.2024</p>
               <h5 class="race-name-location">Südsteiermark</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <a class="race-official-link" href="https://www.pentek-timing.at/results.html?pnr=14532&cnr=2">official results</a>
               <p>17. Gesamt, 1. U18</p>
               <div class="race-times">
                 <div class="race-time-item">
                     <p>Schwimmen: 1500m</p>
-                    <p class="race-time-value">25:00 <a class="race-official-link" href="TODO">Strava</a></p>
+                    <p class="race-time-value">28:43min <a class="race-official-link" href="https://www.strava.com/activities/12177556162">Strava</a></p>
                   </div>
                   <div class="race-time-item">
-                    <p>Rad: 40km</p>
-                    <p class="race-time-value">1:03h, 250W <a class="race-official-link" href="TODO">Strava</a></p>
+                    <p>Rad: 37.8km</p>
+                    <p class="race-time-value">59:30h, 230W <a class="race-official-link" href="https://www.strava.com/activities/12177690569">Strava</a></p>
                   </div>
                   <div class="race-time-item">
-                    <p>Laufen: 8.5km</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                    <p>Laufen: 10km</p>
+                    <p class="race-time-value">45:00, 4:31min/km <a class="race-official-link" href="https://www.strava.com/activities/12177561051">Strava</a></p>
                   </div>
               </div>
             </article>
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">Supersprint Distanz 10.08.2024</p>
               <h5 class="race-name-location">Röthlstein</h5>
-              <a class="race-official-link" href="#">official results</a>
               <p>4. Gesamt, 1. U18</p>
               <div class="race-times">
                 <div class="race-time-item">
-                    <p>Schwimmen: 1500m</p>
-                    <p class="race-time-value">25:00 <a class="race-official-link" href="TODO">Strava</a></p>
+                    <p>Schwimmen: 250m</p>
+                    <p class="race-time-value">5:00min <a class="race-official-link" href="https://www.strava.com/activities/12111372607">Strava</a></p>
                   </div>
                   <div class="race-time-item">
-                    <p>Rad: 40km</p>
-                    <p class="race-time-value">1:03h, 250W <a class="race-official-link" href="TODO">Strava</a></p>
+                    <p>Rad: 16.5km</p>
+                    <p class="race-time-value">26:42min <a class="race-official-link" href="https://www.strava.com/activities/12111354374">Strava</a></p>
                   </div>
                   <div class="race-time-item">
-                    <p>Laufen: 8.5km</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                    <p>Laufen: 4.5km</p>
+                    <p class="race-time-value">18:50min <a class="race-official-link" href="https://www.strava.com/activities/12111375732">Strava</a></p>
                   </div>
               </div>
             </article>
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">Berglauf 28.07.2024</p>
               <h5 class="race-name-location">Paracup Oberaich</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <!-- <a class="race-official-link" href="#">official results</a> -->
               <p>1. Teamwertung, 2. Gesamt Läufer</p>
               <div class="race-times">
                   <div class="race-time-item">
-                    <p>Laufen: 6.6km mit 300HM</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                    <p>Laufen: 6.1km mit 300HM</p>
+                    <p class="race-time-value">39:30min <a class="race-official-link" href="https://www.strava.com/activities/12001833231">Strava</a></p>
                   </div>
               </div>
             </article>
@@ -1845,76 +1853,34 @@ const translate = useTranslations(locale);
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">Bergtriathlon 01.06.2024</p>
               <h5 class="race-name-location">Schöckl Hero</h5>
-              <a class="race-official-link" href="#">official results</a>
-              <p>1. Teamwertung, 2. Gesamt Läufer</p>
-              <div class="race-times">
-                  <div class="race-time-item">
-                    <p>Schwimmen: 6.6km mit 300HM</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
-                  </div>
-                  <div class="race-time-item">
-                    <p>Radfahren: 6.6km mit 300HM</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
-                  </div>
-                  <div class="race-time-item">
-                    <p>Laufen: 6.6km mit 300HM</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
-                  </div>
-              </div>
+              <a class="race-official-link" href="https://www.schoeckl-hero.com/wp-content/uploads/2018/06/RL_SchoecklHero_Split.pdf">official results</a>
             </article>
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">Olympische Distanz 01.05.2024</p>
               <h5 class="race-name-location">Knittelfeld</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <a class="race-official-link" href="https://time2win.at/event/530/results?page=2">official results</a>
               <p>erster Triathlon, 1. U18</p>
-              <div class="race-times">
-                  <div class="race-time-item">
-                    <p>Schwimmen: 6.6km mit 300HM</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
-                  </div>
-                  <div class="race-time-item">
-                    <p>Radfahren: 6.6km mit 300HM</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
-                  </div>
-                  <div class="race-time-item">
-                    <p>Laufen: 6.6km mit 300HM</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
-                  </div>
-              </div>
             </article>
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">Radrennen 21.04.2024</p>
               <h5 class="race-name-location">Neusidlersee</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <!-- <a class="race-official-link" href="#">official results</a> -->
               <p>erstes Radrennen</p>
               <div class="race-times">
                   <div class="race-time-item">
-                    <p>Radfahren: 6.6km mit 300HM</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
-                  </div>
-              </div>
-            </article>
-            <article class="race-card" id="race-10k-2025">
-              <p class="race-type">10k 03.03.2024</p>
-              <h5 class="race-name-location">Graz</h5>
-              <a class="race-official-link" href="#">official results</a>
-              <p>erstes Radrennen</p>
-              <div class="race-times">
-                  <div class="race-time-item">
-                    <p>Laufen: 5k</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                    <p>Radfahren: 126km</p>
+                    <p class="race-time-value">4:12h, 29.8km/h <a class="race-official-link" href="https://strava.app.link/Aeu93fXdL4b">Strava</a></p>
                   </div>
               </div>
             </article>
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">10k 28.01.2024</p>
               <h5 class="race-name-location">Graz</h5>
-              <a class="race-official-link" href="#">official results</a>
-              <p>erstes Radrennen</p>
+              <!-- <a class="race-official-link" href="#">official results</a> -->
               <div class="race-times">
                   <div class="race-time-item">
-                    <p>Laufen: 5k</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                    <p>Laufen: 10k</p>
+                    <p class="race-time-value">43:24, 4:22min/km <a class="race-official-link" href="https://strava.app.link/ZWQZJvOeL4b">Strava</a></p>
                   </div>
               </div>
             </article>
@@ -1924,62 +1890,124 @@ const translate = useTranslations(locale);
           <h4>2023</h4>
           <div class="race-cards-grid">
             <article class="race-card" id="race-10k-2025">
-              <p class="race-type">10k 03.12.2023</p>
-              <h5 class="race-name-location">Graz</h5>
-              <a class="race-official-link" href="#">official results</a>
-              <p>erstes Radrennen</p>
-              <div class="race-times">
-                  <div class="race-time-item">
-                    <p>Laufen: 5k</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
-                  </div>
-              </div>
-            </article>
-            <article class="race-card" id="race-10k-2025">
               <p class="race-type">Halbmarathon 08.10.2023</p>
               <h5 class="race-name-location">Graz</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <!-- <a class="race-official-link" href="#">official results</a> -->
               <p>erster Halbmarathon</p>
               <div class="race-times">
                   <div class="race-time-item">
-                    <p>Laufen: 5k</p>
-                    <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
+                    <p>Laufen: 21.1k</p>
+                    <p class="race-time-value">1:32h, 4:22min/km <a class="race-official-link" href="https://www.strava.com/activities/9999618456">Strava</a></p>
                   </div>
               </div>
             </article>
             <article class="race-card" id="race-10k-2025">
-              <p class="race-type">Halbmarathon 12.08.2023</p>
+              <p class="race-type">Supersprint Distanz 12.08.2023</p>
               <h5 class="race-name-location">Röthlstein</h5>
-              <a class="race-official-link" href="#">official results</a>
+              <!-- <a class="race-official-link" href="#">official results</a> -->
               <p>erster Triathlon (Staffel)</p>
-              <div class="race-times">
-                <div class="race-time-item">
-                  <p>Radfahren: 5k</p>
-                  <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
-                </div>
-                <div class="race-time-item">
-                  <p>Laufen: 5k</p>
-                  <p class="race-time-value">39:30, 3:56min/km <a class="race-official-link" href="TODO">Strava</a></p>
-                </div>
-              </div>
-            </article>
-            <article class="race-card" id="race-cross-frohnleiten-2023">
-              <p class="race-type">Crosslauf 2023</p>
-              <h5 class="race-name-location">Frohnleiten</h5>
-              <a class="race-official-link" href="#">official results</a>
-              <p>1. U18</p>
-              <div class="race-times">
-                  <div class="race-time-item">
-                    <p>Laufen: 4.8k</p>
-                    <p class="race-time-value">TODO</p>
-                  </div>
-              </div>
             </article>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Personal bests section: running, swimming, and cycling records
+    <div class="year-section" id="sport-bests">
+      <div class="year-header">
+        <h3>Persönliche Bestzeiten & Leistungen</h3>
+      </div>
+      <div class="items">
+        <div class="item">
+          <div class="card-media sport-item-media">Picture slot for this class<small>Triathlon - Olympische Distanz</small></div>
+          <h4>Triathlon - Olympische Distanz</h4>
+          <div class="item-meta">Zeit</div>
+          <p>2:04h overall, 23:52 Schwimmen, 61:24 Radfahren, 35:47 Laufen (<a href="https://strava.app.link/BjoqURT4U2b">Strava Einheit Schwimmen</a>, <a href="https://strava.app.link/7C1lmgW4U2b">Strava Einheit Radfahren</a>, <a href="https://strava.app.link/YrR3NT04U2b">Strava Einheit Laufen</a>)</p>
+        </div>
+        <div class="item">
+          <div class="card-media sport-item-media">Picture slot for this class<small>Laufen - 10 km</small></div>
+          <h4>Laufen - 10 km</h4>
+          <div class="item-meta">Bestzeit</div>
+          <p>34:44, 3:28min/km (<a href="">Strava Einheit TODO</a>)</p>
+        </div>
+        <div class="item">
+          <div class="card-media sport-item-media">Picture slot for this class<small>Laufen - 5 km</small></div>
+          <h4>Laufen - 5 km</h4>
+          <div class="item-meta">Bestzeit</div>
+          <p>17:21, 3:28min/km (<a href="https://strava.app.link/phNqyQK4U2b">Strava Einheit</a>)</p>
+        </div>
+        <div class="item">
+          <div class="card-media sport-item-media">Picture slot for this class<small>Schwimmen - 1000 m</small></div>
+          <h4>Schwimmen - 1000 m</h4>
+          <div class="item-meta">Bestzeit</div>
+          <p>15:38, 1:33 min/100m (<a href="https://strava.app.link/UnaAjiN4U2b">Strava Einheit</a>)</p>
+        </div>
+        <div class="item">
+          <div class="card-media sport-item-media">Picture slot for this class<small>Rad - 1h Leistung</small></div>
+          <h4>Rad - 1h Leistung</h4>
+          <div class="item-meta">Bestleistung</div>
+          <p>250W, 3.97W/kg (im Triathlon) (<a href="https://strava.app.link/SJ7CNiPnLZb">Strava Einheit</a>)</p>
+        </div>
+        <div class="item">
+          <div class="card-media sport-item-media">Picture slot for this class<small>Rad - 20min Leistung</small></div>
+          <h4>Rad - 20min Leistung</h4>
+          <div class="item-meta">Bestleistung</div>
+          <p>269W, 4.33W/kg (<a href="">Strava Einheit TODO</a>)</p>
+        </div>
+      </div>
+    </div> -->
   </section>
+
+  <!-- Photo placeholders: future gallery or slideshow slots -->
+  <!-- <section class="section" id="section-photos">
+    <div class="section-header">
+      <span class="section-eyebrow">Gallery</span>
+      <h2>Fotos</h2>
+      <p class="section-subtitle">Placeholder layout for a future slideshow or photo wall, five images per row on wide screens.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-card">
+        <div class="gallery-visual">Photo 01</div>
+        <div class="gallery-caption">Race or training photo placeholder</div>
+      </div>
+      <div class="gallery-card">
+        <div class="gallery-visual">Photo 02</div>
+        <div class="gallery-caption">Race or training photo placeholder</div>
+      </div>
+      <div class="gallery-card">
+        <div class="gallery-visual">Photo 03</div>
+        <div class="gallery-caption">Race or training photo placeholder</div>
+      </div>
+      <div class="gallery-card">
+        <div class="gallery-visual">Photo 04</div>
+        <div class="gallery-caption">Race or training photo placeholder</div>
+      </div>
+      <div class="gallery-card">
+        <div class="gallery-visual">Photo 05</div>
+        <div class="gallery-caption">Race or training photo placeholder</div>
+      </div>
+      <div class="gallery-card">
+        <div class="gallery-visual">Photo 06</div>
+        <div class="gallery-caption">Extra slot for the next row</div>
+      </div>
+      <div class="gallery-card">
+        <div class="gallery-visual">Photo 07</div>
+        <div class="gallery-caption">Extra slot for the next row</div>
+      </div>
+      <div class="gallery-card">
+        <div class="gallery-visual">Photo 08</div>
+        <div class="gallery-caption">Extra slot for the next row</div>
+      </div>
+      <div class="gallery-card">
+        <div class="gallery-visual">Photo 09</div>
+        <div class="gallery-caption">Extra slot for the next row</div>
+      </div>
+      <div class="gallery-card">
+        <div class="gallery-visual">Photo 10</div>
+        <div class="gallery-caption">Extra slot for the next row</div>
+      </div>
+    </div>
+  </section> -->
 </div>
 
 <script>
@@ -2038,7 +2066,18 @@ const translate = useTranslations(locale);
 
   sections.forEach(section => observer.observe(section));
 
-  const achievementLinks = document.querySelectorAll('.achievement-list a[href^="#"]');
+  const achievementLinks = document.querySelectorAll('.achievement-links a[href^="#race-"]');
+
+  const pulseRace = (target: HTMLElement) => {
+    target.classList.remove('is-pulsed');
+    void target.offsetWidth;
+    target.classList.add('is-pulsed');
+
+    window.setTimeout(() => {
+      target.classList.remove('is-pulsed');
+    }, 1800);
+  };
+
   achievementLinks.forEach(link => {
     link.addEventListener('click', () => {
       const href = link.getAttribute('href');
@@ -2049,15 +2088,17 @@ const translate = useTranslations(locale);
       if (!target || !(target instanceof HTMLElement))
         return;
 
-      target.classList.remove('is-pulsed');
-      void target.offsetWidth;
-      target.classList.add('is-pulsed');
-
-      window.setTimeout(() => {
-        target.classList.remove('is-pulsed');
-      }, 1800);
+      pulseRace(target);
     });
   });
+
+  // Also highlight a race when this page is opened with a race hash directly.
+  const initialTarget = window.location.hash
+    ? document.querySelector(window.location.hash)
+    : null;
+  if (initialTarget instanceof HTMLElement && initialTarget.classList.contains('race-card')) {
+    window.setTimeout(() => pulseRace(initialTarget), 100);
+  }
 </script>
 
 </body>
