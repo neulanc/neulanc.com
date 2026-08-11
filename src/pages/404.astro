@@ -8,13 +8,54 @@
 
 // Frontmatter
 ---
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <title>neulanc</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>404 – neulanc</title>
+    <style>
+      :global(*) { box-sizing: border-box; }
+      body {
+        display: grid;
+        min-height: 100vh;
+        margin: 0;
+        place-items: center;
+        padding: 2rem;
+        background: linear-gradient(145deg, #f4f9ff, #fff);
+        color: #172b42;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      main { max-width: 34rem; text-align: center; }
+      strong { color: #0066cc; font-size: clamp(4rem, 16vw, 8rem); line-height: 1; }
+      h1 { margin: 1rem 0 0.5rem; font-size: clamp(1.5rem, 5vw, 2.3rem); }
+      p { margin: 0 0 1.5rem; color: #607286; }
+      a {
+        display: inline-block;
+        padding: 0.7rem 1rem;
+        border-radius: 12px;
+        background: #0066cc;
+        color: white;
+        font-weight: 700;
+        text-decoration: none;
+      }
+    </style>
   </head>
   <body>
-    <p>oh sh*t, not good -  side not found</p>
-    <a href="https://neulanc.com">Back to homepage</a>
+    <main>
+      <strong>404</strong>
+      <h1 data-de="Seite nicht gefunden" data-en="Page not found">Seite nicht gefunden</h1>
+      <p data-de="Die angeforderte Seite existiert nicht oder wurde verschoben." data-en="The requested page does not exist or has been moved.">Die angeforderte Seite existiert nicht oder wurde verschoben.</p>
+      <a href="/" data-de="Zurück zur Startseite" data-en="Back to the homepage">Zurück zur Startseite</a>
+    </main>
+    <script is:inline>
+      const savedLocale = localStorage.getItem('preferred-locale');
+      const systemLocale = navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en';
+      const locale = savedLocale === 'de' || savedLocale === 'en' ? savedLocale : systemLocale;
+      document.documentElement.lang = locale;
+      document.querySelectorAll('[data-de][data-en]').forEach((element) => {
+        element.textContent = element.getAttribute(`data-${locale}`);
+      });
+    </script>
   </body>
 </html>

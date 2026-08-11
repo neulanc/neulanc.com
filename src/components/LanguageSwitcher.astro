@@ -1,5 +1,5 @@
 ---
-import type { Locale } from '../i18n/translations';
+import { getLocalizedPath, type Locale } from '../i18n/utils';
 
 interface Props {
   currentLocale: Locale;
@@ -13,18 +13,13 @@ const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' }
 ];
 
-function getLocalizedPath(locale: string) {
-  if (locale === 'de') {
-    return currentPath.replace(/^\/en/, '') || '/';
-  }
-  return `/en${currentPath}`;
-}
 ---
 
 <div class="language-switcher">
   {languages.map(lang => (
     <a
-      href={getLocalizedPath(lang.code)}
+      href={getLocalizedPath(currentPath, lang.code as Locale)}
+      data-locale={lang.code}
       class:list={['lang-link', { active: currentLocale === lang.code }]}
       aria-label={`Switch to ${lang.name}`}
     >
@@ -33,6 +28,28 @@ function getLocalizedPath(locale: string) {
     </a>
   ))}
 </div>
+
+<script>
+  const preferenceKey = 'preferred-locale';
+
+  document.querySelectorAll<HTMLAnchorElement>('.language-switcher [data-locale]').forEach(link => {
+    link.addEventListener('click', () => {
+      const selectedLocale = link.dataset.locale;
+      if (selectedLocale) localStorage.setItem(preferenceKey, selectedLocale);
+    });
+  });
+
+  const savedLocale = localStorage.getItem(preferenceKey);
+  const systemLocale = navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en';
+  const wantedLocale = savedLocale === 'de' || savedLocale === 'en' ? savedLocale : systemLocale;
+  const currentLocale = document.documentElement.lang;
+
+  if (wantedLocale !== currentLocale) {
+    const pathWithoutLocale = window.location.pathname.replace(/^\/(de|en)(?=\/|$)/, '') || '/';
+    const localizedPath = wantedLocale === 'de' ? pathWithoutLocale : `/en${pathWithoutLocale}`;
+    window.location.replace(`${localizedPath}${window.location.search}${window.location.hash}`);
+  }
+</script>
 
 <style>
   .language-switcher {

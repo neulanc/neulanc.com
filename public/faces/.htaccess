@@ -1,0 +1,9 @@
+RewriteEngine On
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# faces.neulanc.com uses public_html/faces as its document root.
+ErrorDocument 404 /404.html
+
+Options -Indexes

@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && cp -R public_html/_astro public_html/faces/_astro && cp public_html/404.html public_html/faces/404.html && mkdir -p public_html/faces/assets && cp src/pages/faces/@neuhold-michael/assets/neuhold-michael_bachelor-thesis.pdf public_html/faces/assets/neuhold-michael_bachelor-thesis.pdf",
     "preview": "astro preview"
   },
   "dependencies": {

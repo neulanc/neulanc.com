@@ -1,0 +1,14 @@
+RewriteEngine On
+
+# Canonical main-domain host.
+RewriteCond %{HTTP_HOST} ^www\.neulanc\.com$ [NC]
+RewriteRule ^ https://neulanc.com%{REQUEST_URI} [R=301,L]
+
+# Always use HTTPS.
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Let Apache keep the real 404 status while displaying the custom page.
+ErrorDocument 404 /404.html
+
+Options -Indexes

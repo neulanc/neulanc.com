@@ -6,17 +6,35 @@
 // Last modified: 12.02.2026 by Michael Neuhold (neuhold-michael@neulanc.com)
 // Content: TODO
 // -------------------
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import { getLocaleFromUrl } from '../../i18n/utils';
+
+const content = {
+  de: {
+    title: 'Faces – neulanc',
+    heading: 'Willkommen bei Faces!',
+    text: 'Hier entsteht eine Liste aller Menschen, die neulanc repräsentieren.',
+  },
+  en: {
+    title: 'Faces – neulanc',
+    heading: 'Welcome to Faces!',
+    text: 'This will become a list of all the people who represent neulanc.',
+  },
+} as const;
+
+const locale = getLocaleFromUrl(Astro.url);
+const t = content[locale];
 
 ---
 
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
-    <title>Faces - neulanc</title>
+    <title>{t.title}</title>
   </head>
   <body>
-    <h1>Welcome to Faces!</h1>
-    <a href="https://faces.neulanc.com/people">Go to People</a>
-    <a href="https://faces.neulanc.com/partners">Go to Partners</a>
+    <LanguageSwitcher currentLocale={locale} currentPath={Astro.url.pathname.replace(/^\/faces/, '') || '/'} />
+    <h1>{t.heading}</h1>
+    <p>{t.text}</p>
   </body>
 </html>

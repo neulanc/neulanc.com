@@ -1,7 +1,7 @@
 ---
 
 // -------------------
-// Title: Portfolio for Michael Neuhold (https://faces.neulanc.com/people/neuhold-michael) 
+// Title: Portfolio for Michael Neuhold (https://faces.neulanc.com/@neuhold-michael) 
 // Created: 01.10.2025
 // Last modified: 12.02.2026 by Michael Neuhold (neuhold-michael@neulanc.com)
 // Content: This file includes all information publicly about Michael Neuhold, about his education, experience and side
@@ -9,9 +9,8 @@
 // -------------------
 
 // Frontmatter
-import { useTranslations } from '../../../../i18n/translations';
-import { getLocaleFromUrl } from '../../../../i18n/utils';
-import LanguageSwitcher from '../../../../components/LanguageSwitcher.astro';
+import { getLocaleFromUrl } from '../../../i18n/utils';
+import LanguageSwitcher from '../../../components/LanguageSwitcher.astro';
 import main_pic from './assets/neuhold-michael_main-pic.jpg';
 import logoGasthausHoaterwirt from './assets/logo_gasthaus-hoaterwirt.svg';
 import logoRoteRakete from './assets/logo_Rote-Rakete.webp';
@@ -26,7 +25,7 @@ const PDF_THESIS_BACHELOR = pdfThesisBachelor;
 const PDF_THESIS_MASTER = './neuhold-michael/assets/neuhold-michael_master-thesis.pdf'; // still todo hehe
 
 const locale = getLocaleFromUrl(Astro.url);
-const translate = useTranslations(locale);
+const tr = (de: string, en: string) => locale === 'de' ? de : en;
 ---
 
 <!DOCTYPE html>
@@ -44,14 +43,14 @@ const translate = useTranslations(locale);
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="profile" />
-  <meta property="og:url" content="https://faces.neulanc.com/people/neuhold-michael/" />
+  <meta property="og:url" content="https://faces.neulanc.com/@neuhold-michael/" />
   <meta property="og:title" content="Michael Neuhold - Software Engineer & Triathlete" />
   <meta property="og:description" content="Software Engineering Student at TU Graz, Triathlete, Teaching Assistant." />
   <meta property="og:image" content="https://faces.neulanc.com/_astro/neuhold-michael_main-pic.jpg" />
   
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://faces.neulanc.com/people/neuhold-michael/" />
+  <meta property="twitter:url" content="https://faces.neulanc.com/@neuhold-michael/" />
   <meta property="twitter:title" content="Michael Neuhold - Software Engineer & Triathlete" />
   <meta property="twitter:description" content="Software Engineering Student at TU Graz, Triathlete, Teaching Assistant." />
   <meta property="twitter:image" content="https://faces.neulanc.com/_astro/neuhold-michael_main-pic.jpg" />
@@ -130,8 +129,81 @@ const translate = useTranslations(locale);
       color: #555;
     }
 
-    .bio p {
-      margin-bottom: 1rem;
+    .bio-intro {
+      max-width: 560px;
+      color: #34465a;
+      font-size: 1.15rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .bio-age {
+      color: #718095;
+      font-size: 0.9rem;
+    }
+
+    .about-explore-title {
+      margin: 1.75rem 0 0.75rem;
+      color: #6a788a;
+      font-size: 0.78rem;
+      font-weight: 750;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .about-topics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .about-topic {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 0.75rem;
+      align-items: center;
+      min-width: 0;
+      padding: 0.85rem 0.95rem;
+      border: 1px solid rgba(0, 102, 204, 0.13);
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.88);
+      color: inherit;
+      text-decoration: none;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .about-topic:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 102, 204, 0.3);
+      box-shadow: 0 10px 24px rgba(16, 30, 54, 0.08);
+    }
+
+    .about-topic-icon {
+      font-size: 1.25rem;
+    }
+
+    .about-topic strong,
+    .about-topic small {
+      display: block;
+    }
+
+    .about-topic strong {
+      color: #14263a;
+      line-height: 1.25;
+    }
+
+    .about-topic small {
+      overflow: hidden;
+      margin-top: 0.15rem;
+      color: #718095;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .about-topic-arrow {
+      color: #0066cc;
+      font-size: 1.15rem;
     }
 
     .sponsor-section {
@@ -142,6 +214,51 @@ const translate = useTranslations(locale);
       display: grid;
       gap: 0.9rem;
       margin-top: 1rem;
+    }
+
+    .sponsor-cta {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      padding: 1.15rem 1.25rem;
+      border: 1px solid rgba(0, 102, 204, 0.18);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(0, 102, 204, 0.08), rgba(0, 170, 255, 0.05));
+    }
+
+    .sponsor-cta strong,
+    .sponsor-cta span {
+      display: block;
+    }
+
+    .sponsor-cta strong {
+      color: #10243a;
+      font-size: 1.02rem;
+    }
+
+    .sponsor-cta span {
+      max-width: 62ch;
+      margin-top: 0.15rem;
+      color: #5d6e81;
+      font-size: 0.9rem;
+    }
+
+    .sponsor-cta-link {
+      flex-shrink: 0;
+      padding: 0.65rem 0.9rem;
+      border-radius: 11px;
+      background: #0066cc;
+      color: #fff;
+      font-size: 0.87rem;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .sponsor-cta-link:hover {
+      background: #0055aa;
     }
 
     .sponsor-item {
@@ -863,6 +980,15 @@ const translate = useTranslations(locale);
         font-size: 2rem;
       }
 
+      .about-topics {
+        grid-template-columns: 1fr;
+      }
+
+      .sponsor-cta {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
       .section-header h2 {
         font-size: 1.5rem;
       }
@@ -1068,7 +1194,7 @@ const translate = useTranslations(locale);
 <body>
 
 <div class="lang-switcher-wrapper">
-  <LanguageSwitcher currentLocale={locale} currentPath={Astro.url.pathname} />
+  <LanguageSwitcher currentLocale={locale} currentPath={Astro.url.pathname.replace(/^\/faces/, '') || '/'} />
 </div>
 
 <div class="sticky-years" id="stickyYears"></div>
@@ -1076,32 +1202,54 @@ const translate = useTranslations(locale);
 <div class="container">
   <!-- About -->
   <section class="about">
-    <h1>{translate.about.title}</h1>
+    <h1>Michael Neuhold</h1>
     <div class="about-content">
       <img src={main_pic.src} alt="Michael Neuhold" class="portrait">
       <div class="bio">
-        <p>
-            {translate.about.bio_generel_prefix} <span id="ageYears"></span>
-            (<span id="ageDays"></span> {translate.about.age_days_label} :))
-            {` ${translate.about.bio_generel_join} `}{translate.about.bio_generel_after}
-            <a class="inline-link" href="#section-ausbildung"> {translate.about.bio_generell_link}</a>
-          </p>
-        <p>
-          {translate.about.bio_work}
-          <a class="inline-link" href="#section-erfahrung"> {translate.about.bio_work_link}</a>
+        <p class="bio-intro">{tr('Software-Engineering-Student und Triathlet.', 'Software engineering student and triathlete.')}</p>
+        <p class="bio-age">
+          <span id="ageYears"></span> {tr('Jahre alt', 'years old')}
+          · <span id="ageDays"></span> {tr('Tage', 'days')} :)
         </p>
-        <p>
-          {translate.about.bio_triathlon}
-          <a class="inline-link" href="#achievements"> {translate.about.bio_triathlon_link}</a>
-          <a class="inline-link" href="#races"> {translate.about.bio_triathlon_link2}</a>
-        </p>
-        <p>
-          {translate.about.sponsoring}
-        </p>
-        <p>
-          {translate.about.sponsoring_anfrage}
-          <a class="inline-link" href={PDF_SPONSOR_MAP} target="_blank" rel="noreferrer"> {translate.about.sponsoring_link_text}</a>
-        </p>
+
+        <p class="about-explore-title">{tr('Mehr über mich', 'More about me')}</p>
+        <div class="about-topics">
+          <a class="about-topic" href="#section-ausbildung" aria-label={tr('Mehr erfahren: Ausbildung', 'Learn more: Education')}>
+            <span class="about-topic-icon" aria-hidden="true">🎓</span>
+            <span>
+              <strong>{tr('Ausbildung', 'Education')}</strong>
+              <small>TU Graz</small>
+            </span>
+            <span class="about-topic-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="about-topic" href="#section-erfahrung" aria-label={tr('Zur Berufserfahrung', 'View experience')}>
+            <span class="about-topic-icon" aria-hidden="true">💻</span>
+            <span>
+              <strong>{tr('Berufserfahrung', 'Experience')}</strong>
+              <small>{tr('Teaching & Software Engineering', 'Teaching & software engineering')}</small>
+            </span>
+            <span class="about-topic-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="about-topic" href="#section-sport" aria-label={tr('Zum Sport', 'Explore sport')}>
+            <span class="about-topic-icon" aria-hidden="true">🏊</span>
+            <span>
+              <strong>Triathlon</strong>
+              <small>{tr('Erfolge, Training & Rennen', 'Achievements, training & races')}</small>
+            </span>
+            <span class="about-topic-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="about-topic" href="#section-sponsors" aria-label={tr('Zu den Sponsoren', 'Meet the sponsors')}>
+            <span class="about-topic-icon" aria-hidden="true">🤝</span>
+            <span>
+              <strong>Sponsoring</strong>
+              <small>{tr('Partner & Zusammenarbeit', 'Partners & collaboration')}</small>
+            </span>
+            <span class="about-topic-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
       </div>
     </div>
     <div class="social-links">
@@ -1150,8 +1298,8 @@ const translate = useTranslations(locale);
 
   <section class="section sponsor-section" id="section-sponsors">
     <div class="section-header">
-      <span class="section-eyebrow">Support</span>
-      <h2>Sponsoren</h2>
+      <span class="section-eyebrow">{tr('Unterstützung', 'Support')}</span>
+      <h2>{tr('Sponsoren', 'Sponsors')}</h2>
     </div>
     <div class="sponsor-list">
       <a class="sponsor-item" href="https://www.hoaterwirt.at" target="_blank" rel="noreferrer">
@@ -1176,37 +1324,45 @@ const translate = useTranslations(locale);
         </div>
       </a>
     </div>
+    <div class="sponsor-cta">
+      <div>
+        <strong>{tr('Interesse an einer Partnerschaft?', 'Interested in becoming a partner?')}</strong>
+        <span>{tr('Unterstützen Sie meinen Weg im Triathlonsport und werden Sie Teil meiner sportlichen Entwicklung.', 'Support my journey in triathlon and become part of my continued sporting development.')}</span>
+      </div>
+      <a class="sponsor-cta-link" href={PDF_SPONSOR_MAP} target="_blank" rel="noreferrer">
+        {tr('Sponsormappe ansehen', 'View sponsorship brochure')} →
+      </a>
+    </div>
   </section>
 
   <!-- education -->
   <section class="section" id="section-ausbildung">
     <div class="section-header">
-      <span class="section-eyebrow">Education</span>
-      <h2>Ausbildung</h2>
+      <span class="section-eyebrow">{tr('Ausbildung', 'Education')}</span>
+      <h2>{tr('Ausbildung', 'Education')}</h2>
       <!-- <p class="section-subtitle">A compact view of school, university, and the work behind the theses.</p> -->
     </div>
     <div class="items">
       <div class="item">
-        <h4>TU Graz - Software Engineering and Management Bachelor und Master</h4>
-        <div class="item-meta">seit September 2023</div>
-        <p>Bachelor Studium als außerordentlicher Student an der Technischen Universität Graz.</p>
-        <p>Nebenbei bereits Lehrveranstaltungen für den Master im gleichnamigen Masterstudium mit Major in
-          Machine Learning und Minor in Business Informatics.</p>
+        <h4>{tr('TU Graz - Software Engineering and Management Bachelor und Master', 'TU Graz - Bachelor`s and Master`s in Software Engineering and Management')}</h4>
+        <div class="item-meta">{tr('seit September 2023', 'since September 2023')}</div>
+        <p>{tr('Bachelorstudium (bis 2026 als außerordentlicher Student) an der Technischen Universität Graz.', 'Bachelor`s studies (until 2026 as a non-degree student) at Graz University of Technology.')}</p>
+        <p>{tr('Zusätzlich absolviere ich bereits Lehrveranstaltungen des gleichnamigen Masterstudiums mit Major in Machine Learning und Minor in Business Informatics.', 'I am also already completing courses from the corresponding master`s program, with a major in Machine Learning and a minor in Business Informatics.')}</p>
         <details class="thesis-abstract">
-          <summary>Abstract of Bachelor Thesis</summary>
+          <summary>{tr('Abstract der Bachelorarbeit', 'Bachelor`s thesis abstract')}</summary>
           <div class="thesis-abstract-content">
             <p>Compact prediction learning is a training principle that encourages neural networks to reuse a small number of latent representations while maintaining task performance. This bachelor thesis investigates whether such compactness constraints lead to structured and reusable internal representations in neural networks.</p>
             <p>The approach is evaluated on a set of synthetic binary prediction tasks</a> and synthetic linear prediction tasks</a> as well as on a convolutional neural network trained on a pairwise MNIST comparison task</a>. Compactness is enforced by an additional loss term applied to the latent representations. The compactness objective is defined as:</p>
             <p class="math-block">{String.raw`E = \sum_{k \neq l} \Bigl( 1 + \log \sum_i (\lvert g_i(x^{(k)}) - g_i(x^{(l)}) \rvert) \Bigr).`}</p>
             <p>The results show that for simple synthetic tasks, compact prediction learning leads to highly structured and low-dimensional latent spaces that reflect task-relevant structure. In contrast, for the convolutional setting, the compact objective causes a strong collapse of the latent space, removing most digit-specific information and reducing classification accuracy.</p>
             <p>These findings indicate that compact prediction learning acts as a strong inductive bias that enforces minimal, task-aligned representations, but may limit information retention in more complex perceptual tasks.</p>
-            <a class="inline-link" href={PDF_THESIS_BACHELOR} target="_blank" rel="noreferrer"> Bachelorarbeit (PDF anzeigen)</a>
+            <a class="inline-link" href={PDF_THESIS_BACHELOR} target="_blank" rel="noreferrer">{tr('Bachelorarbeit als PDF ansehen', 'View bachelor`s thesis PDF')}</a>
           </div>
         </details>
         <details class="thesis-abstract">
-          <summary>Abstract of Master Thesis</summary>
+          <summary>{tr('Abstract der Masterarbeit', 'Master`s thesis abstract')}</summary>
           <div class="thesis-abstract-content">
-            <p>Not quite there yet ;) (summer semester 2027)</p>
+            <p>{tr('Noch nicht ganz so weit ;) (Sommersemester 2027)', 'Not quite there yet ;) (summer semester 2027)')}</p>
           </div>
         </details>
         <!-- <p><a href="https://github.com/neuholdmichael/Compact-prediction-learning">Github zur Bachelorarbeit</a></p> -->
@@ -1214,10 +1370,11 @@ const translate = useTranslations(locale);
       </div>
       <div class="item">
         <h4>HTBL Kapfenberg - Mechatronik</h4>
-        <div class="item-meta">September 2021 - Juni 2026</div>
-        <p>Höhere Technische Bundeslehranstalt mit Schwerpunkt Mechatronik.</p>
+        <div class="item-meta">{tr('September 2021 - Juni 2026', 'September 2021 - June 2026')}</div>
+        <p>{tr('Höhere Technische Bundeslehranstalt mit Schwerpunkt Mechatronik.', 'Higher technical college specializing in mechatronics.')}</p>
+        <p>{tr('Abschluss mit guten Erfolg.', 'Graduated with good success.')}</p>
         <details class="thesis-abstract" id="diploma-thesis">
-          <summary>Abstract of Diploma Thesis</summary>
+          <summary>{tr('Abstract der Diplomarbeit', 'Diploma thesis abstract')}</summary>
           <div class="thesis-abstract-content">
             <p>This diploma thesis addresses the limited evaluation of battery charging processes
               in AVL Drive 5, where previously only a few parameters were considered. To over-
@@ -1231,11 +1388,17 @@ const translate = useTranslations(locale);
               The outcome is an efficient and scalable framework that significantly enhances
               benchmarking capabilities and provides a solid foundation for future extensions in
               charging analysis.</p>
-              <a class="inline-link" href={PDF_THESIS_DIPLOMA} target="_blank" rel="noreferrer"> Diplomarbeit (PDF anzeigen)</a>
+              <a class="inline-link" href={PDF_THESIS_DIPLOMA} target="_blank" rel="noreferrer">{tr('Diplomarbeit als PDF ansehen', 'View diploma thesis PDF')}</a>
           </div>
         </details>
         <!-- <p><a href="https://github.com/neuholdmichael/AVL-Drive5_battery-charging">Github zur Diplomarbeit bzw Code im Praktikum</a></p> -->
         <!-- <p><a href={pdf_thesis_diplom} target="_blank" rel="noreferrer">Thesis Diplomarbeit (PDF)</a></p> -->
+      </div>
+      <div class="item">
+        <h4>BG Rein</h4>
+        <div class="item-meta">{tr('September 2017 - Juli 2021', 'September 2017 - July 2021')}</div>
+        <p>{tr('Bundesgymnasium Rein.', 'Federal Academic High School Rein.')}</p>
+        <p>{tr('Abschluss mit ausgezeichneten Erfolg.', 'Graduated with excellent success.')}</p>
       </div>
     </div>
   </section>
@@ -1243,8 +1406,8 @@ const translate = useTranslations(locale);
   <!-- work experience -->
   <section class="section" id="section-erfahrung">
     <div class="section-header" onclick="document.getElementById('exp-2025').scrollIntoView({ behavior: 'smooth' })">
-      <span class="section-eyebrow">Work</span>
-      <h2>Arbeits-Erfahrung</h2>
+      <span class="section-eyebrow">{tr('Beruf', 'Work')}</span>
+      <h2>{tr('Berufserfahrung', 'Work Experience')}</h2>
       <!-- <p class="section-subtitle">Roles and internships, grouped by year with the most recent work at the top.</p> -->
     </div>
 
@@ -1255,14 +1418,12 @@ const translate = useTranslations(locale);
       </div>
       <div class="items">
         <div class="item">
-          <h4>Teaching Assistant an der TU Graz</h4>
-          <div class="item-meta">Oktober 2024 - Januar 2027</div>
-          <p>Betreuung und Bewertung von Studenten sowie Erstellung von Aufgaben in den Lehrveranstaltungen über
-             Einführung ins C-Programmierung (Introduction in structured Programming),
-             Einführung in Machine Learning (Computer Methods for Statistics) und Datenstrukturen und Algorithmen.</p>
+          <h4>{tr('Teaching Assistant an der TU Graz', 'Teaching Assistant at TU Graz')}</h4>
+          <div class="item-meta">{tr('Oktober 2024 - Januar 2027', 'October 2024 - January 2027')}</div>
+          <p>{tr('Betreuung und Bewertung von Studierenden sowie Erstellung von Aufgaben für Einführung in die strukturierte Programmierung, Computer Methods for Statistics sowie Datenstrukturen und Algorithmen.', 'Supporting and assessing students and creating assignments for Introduction to Structured Programming, Computer Methods for Statistics, and Data Structures and Algorithms.')}</p>
         </div>
         <div class="item">
-          <h4>Praktikum - Software Engineer Raiffeisen Landesbank</h4>
+          <h4>{tr('Praktikum - Software Engineer bei Raiffeisen-Landesbank', 'Software Engineering Intern at Raiffeisen-Landesbank')}</h4>
           <div class="item-meta">August 2026</div>
           <p></p>
         </div>
@@ -1276,31 +1437,30 @@ const translate = useTranslations(locale);
       </div>
       <div class="items">
         <div class="item">
-          <h4>Praktikum - Software Engineer bei AVL List GmbH</h4>
-          <div class="item-meta">Juli 2025 - Graz</div>
-          <p>Erweiterung einer Python-basierten Fahrzeugdatenanalyse im Rahmen der Diplomarbeit.</p>
-          <p><a href="https://github.com/neuholdmichael/AVL-Drive5_battery-charging">Github zur Diplomarbeit bzw Code im Praktikum</a></p>
-          <p><a href="#diploma-thesis">Zu meiner Diplomarbeit</a></p>
+          <h4>{tr('Praktikum - Software Engineer bei AVL List GmbH', 'Software Engineering Intern at AVL List GmbH')}</h4>
+          <div class="item-meta">{tr('Juli 2025 - Graz', 'July 2025 - Graz')}</div>
+          <p>{tr('Erweiterung einer Python-basierten Fahrzeugdatenanalyse im Rahmen der Diplomarbeit.', 'Extended a Python-based vehicle data analysis system as part of my diploma thesis.')}</p>
+          <p><a href="https://github.com/neuholdmichael/AVL-Drive5_battery-charging">{tr('GitHub zur Diplomarbeit und zum Praktikum', 'Diploma thesis and internship project on GitHub')}</a></p>
+          <p><a href="#diploma-thesis" data-open-details>{tr('Zu meiner Diplomarbeit', 'View my diploma thesis')}</a></p>
         </div>
       </div>
     </div>
 
     <!-- Work experience year: 2024 -->
-    <div class="year-section" id="exp-2024">. 
+    <div class="year-section" id="exp-2024">
       <div class="year-header" onclick="this.parentElement.scrollIntoView()">
         <h3>2024</h3>
       </div>
       <div class="items">
         <div class="item">
-          <h4>Teaching Assistant an der TU Graz</h4>
-          <div class="item-meta">Oktober 2024 - Juni 2026</div>
-          <p>Betreuung und Bewertung von Studenten sowie Erstellung von Aufgaben in der Lehrveranstaltung über
-             Einführung ins C-Programmierung (Einführung in die strukturierte Programmierung).</p>
+          <h4>{tr('Teaching Assistant an der TU Graz', 'Teaching Assistant at TU Graz')}</h4>
+          <div class="item-meta">{tr('Oktober 2024 - Juni 2026', 'October 2024 - June 2026')}</div>
+          <p>{tr('Betreuung und Bewertung von Studierenden sowie Erstellung von Aufgaben für die Lehrveranstaltung Einführung in die strukturierte Programmierung.', 'Supported and assessed students and created assignments for Introduction to Structured Programming.')}</p>
         </div>
         <div class="item">
-          <h4>Praktikum - PLC Engineer bei EPI Energietechnik</h4>
-          <div class="item-meta">Juli 2024 - Graz</div>
-          <p>Programmierung einer Phoenix-Steuerung für ein neues Projekt für intelligente Stromnetze.</p>
+          <h4>{tr('Praktikum - PLC Engineer bei EPI Energietechnik', 'PLC Engineering Intern at EPI Energietechnik')}</h4>
+          <div class="item-meta">{tr('Juli 2024 - Graz', 'July 2024 - Graz')}</div>
+          <p>{tr('Programmierung einer Phoenix-Steuerung für ein neues Smart-Grid-Projekt.', 'Programmed a Phoenix controller for a new smart-grid project.')}</p>
         </div>
       </div>
     </div>
@@ -1312,9 +1472,9 @@ const translate = useTranslations(locale);
       </div>
       <div class="items">
         <div class="item">
-          <h4>Praktikum - Software Engineer bei Andritz AG</h4>
-          <div class="item-meta">August 2023 - Graz</div>
-          <p>Erprobung eines neuen VR-Systems für virtuelle Begehung von Anlagen. Erweiterung eines interaktiven 3D Viewers mittels JavaScript.</p>
+          <h4>{tr('Praktikum - Software Engineer bei Andritz AG', 'Software Engineering Intern at Andritz AG')}</h4>
+          <div class="item-meta">{tr('August 2023 - Graz', 'August 2023 - Graz')}</div>
+          <p>{tr('Erprobung eines VR-Systems für virtuelle Anlagenbegehungen und Erweiterung eines interaktiven 3D-Viewers mit JavaScript.', 'Tested a VR system for virtual plant tours and extended an interactive 3D viewer using JavaScript.')}</p>
         </div>
       </div>
     </div>
@@ -1326,9 +1486,16 @@ const translate = useTranslations(locale);
       </div>
       <div class="items">
         <div class="item">
-          <h4>Tutor an der HTBL Kapfenberg</h4>
-          <div class="item-meta">seit März 2022</div>
-          <p>Nachhilfe in Informatik, Mathematik, Mechanik und Elektrotechnik.</p>
+          <h4>{tr('Werkstattarbeiter bei Spalt GmbH', 'Workshopworker at Spalt GmbH')}</h4>
+          <div class="item-meta">{tr('August 2022', 'August 2022')}</div>
+          <p>{tr('Motoren servisieren (säubern, zerlegen, reparieren, …)', 'Service motors (clean, disassemble, repair, …)')}</p>
+        </div>
+      </div>
+      <div class="items">
+        <div class="item">
+          <h4>{tr('Tutor an der HTBL Kapfenberg', 'Tutor at HTBL Kapfenberg')}</h4>
+          <div class="item-meta">{tr('März 2022 - Juni 2026', 'March 2022 - June 2026')}</div>
+          <p>{tr('Nachhilfe in Informatik, Mathematik, Mechanik und Elektrotechnik.', 'Tutoring in computer science, mathematics, mechanics, and electrical engineering.')}</p>
         </div>
       </div>
     </div>
@@ -1367,8 +1534,8 @@ const translate = useTranslations(locale);
   <!-- projects -->
   <section class="section">
     <div class="section-header" onclick="document.getElementById('proj-2025').scrollIntoView({ behavior: 'smooth' })">
-      <span class="section-eyebrow">Projects</span>
-      <h2>Projekte & Fähigkeiten</h2>
+      <span class="section-eyebrow">{tr('Projekte', 'Projects')}</span>
+      <h2>{tr('Projekte & Fähigkeiten', 'Projects & Skills')}</h2>
       <!-- <p class="section-subtitle">Selected projects plus a short skills snapshot for language, tools, and domains.</p> -->
     </div>
 
@@ -1380,10 +1547,10 @@ const translate = useTranslations(locale);
       <div class="items">
         <div class="item">
           <h4>neulanc Website</h4>
-          <div class="item-meta">neulanc Website, besonders diese Portfolio-Seite</div>
-          <p>Website zu 100% in Astro</p>
-          <p>bisschen viel Vibecode</p>
-          <p><a href="https://github.com/neulanc/neulanc.com">GitHub zur Website</a></p>
+          <div class="item-meta">{tr('neulanc Website, insbesondere diese Portfolio-Seite', 'neulanc website, especially this portfolio page')}</div>
+          <p>{tr('Vollständig mit Astro entwickelt.', 'Built entirely with Astro.')}</p>
+          <p>{tr('Mit einer gesunden Portion Vibe Coding.', 'With a healthy amount of vibe coding.')}</p>
+          <p><a href="https://github.com/neulanc/neulanc.com">{tr('Website auf GitHub', 'Website on GitHub')}</a></p>
         </div>
       </div>
     </div>
@@ -1395,12 +1562,10 @@ const translate = useTranslations(locale);
       </div>
       <div class="items">
         <div class="item">
-          <h4>XY - Kart</h4>
-          <div class="item-meta">Projekt 3. Klasse HTBL Kapfenberg</div>
-          <p>Im Zweierteam entwickeltes, ferngesteuertes Modellfahrzeug mit drahtloser Kommunikation über zwei
-            Bluetooth-Module. Mein Schwerpunkt lag auf der Elektronik und der Arduino-Programmierung zur Übertragung
-            und Verarbeitung der Steuersignale sowie zur Ansteuerung der Motoren.</p>
-          <p><a href="https://github.com/neuholdmichael/XY-Kart">GitHub zum Projekt</a></p>
+          <h4>XY-Kart</h4>
+          <div class="item-meta">{tr('Projekt der 3. Klasse an der HTBL Kapfenberg', 'Third-year project at HTBL Kapfenberg')}</div>
+          <p>{tr('Im Zweierteam entwickeltes, ferngesteuertes Modellfahrzeug mit Bluetooth-Kommunikation. Mein Schwerpunkt lag auf Elektronik und Arduino-Programmierung zur Verarbeitung der Steuersignale und Ansteuerung der Motoren.', 'A remote-controlled model vehicle developed by a two-person team using Bluetooth communication. I focused on electronics and Arduino programming for processing control signals and driving the motors.')}</p>
+          <p><a href="https://github.com/neuholdmichael/XY-Kart">{tr('Projekt auf GitHub', 'Project on GitHub')}</a></p>
         </div>
       </div>
     </div>
@@ -1408,20 +1573,20 @@ const translate = useTranslations(locale);
     <!-- Skills snapshot -->
     <div class="year-section" id="skills">
       <div class="year-header">
-        <h3>Fähigkeiten</h3>
+        <h3>{tr('Fähigkeiten', 'Skills')}</h3>
       </div>
       <div class="items">
         <div class="item">
-          <h4>Programmierung</h4>
+          <h4>{tr('Programmierung', 'Programming')}</h4>
           <p>C++, Java, Python, C, SQL, JavaScript, Scala, Machine Learning, Deep Learning</p>
         </div>
         <div class="item">
-          <h4>Technologien & Tools</h4>
+          <h4>{tr('Technologien & Werkzeuge', 'Technologies & Tools')}</h4>
           <p>LaTeX, Git, Linux, Office 365, Web Development, SolidWorks</p>
         </div>
         <div class="item">
-          <h4>Sprachen</h4>
-          <p>Deutsch (Muttersprache), Englisch (B2/C1), Französisch (A1)</p>
+          <h4>{tr('Sprachen', 'Languages')}</h4>
+          <p>{tr('Deutsch (Muttersprache), Englisch (B2/C1), Französisch (A1)', 'German (native), English (B2/C1), French (A1)')}</p>
         </div>
       </div>
     </div>
@@ -1430,12 +1595,12 @@ const translate = useTranslations(locale);
   <!-- sports -->
   <section class="section">
     <div class="section-header" id="section-sport" onclick="document.getElementById('sport-highlights').scrollIntoView({ behavior: 'smooth' })">
-      <span class="section-eyebrow">Sport</span>
+      <span class="section-eyebrow">{tr('Sport', 'Sport')}</span>
       <h2>Sport</h2>
     </div>
     <div class="year-section sport-text-links">
       <div class="year-header">
-        <h3>Sponsoren</h3>
+        <h3>{tr('Sponsoren', 'Sponsors')}</h3>
       </div>
       <div class="items">
         <a class="item" href="https://www.roterakete.at">Rote Rakete</a>
@@ -1445,26 +1610,59 @@ const translate = useTranslations(locale);
     </div>
     <div class="year-section achievement-links sport-text-links" id="achievements">
       <div class="year-header">
-        <h3>Erfolge</h3>
+        <h3>{tr('Erfolge', 'Achievements')}</h3>
       </div>
       <div class="items">
-        <a class="item" href="#race-od-tarragona-2026">AG Europa Meisterschaft: 5. Platz</a>
-        <a class="item" href="#race-sd-vulkandland-2026">2026 Steirischer Meisterschaft: 1. Platz Sprint Distanz U20</a>
-        <a class="item" href="#race-sd-vulkandland-2026">2026 Steirischer Meisterschaft: 3. Platz Sprint Distanz Gesamt</a>
-        <a class="item" href="#race-od-knittelfeld-2025">2025 Steirischer Meisterschaft: 1. Platz Olympische Distanz U18</a>
-        <a class="item" href="#race-cross-frohnleiten-2024">2024 Steirischer Meisterschaft: 1. Platz Crosslauf U18</a>
+        <a class="item" href="#race-summer-run-2026">{tr('10k Lauf: erster Gesamtsieg', '10k Run: first Win overall')}</a>
+        <a class="item" href="#race-od-tarragona-2026">{tr('Age-Group-Europameisterschaft: 5. Platz', 'Age Group European Championship: 5th place')}</a>
+        <a class="item" href="#race-sd-vulkandland-2026">{tr('Steirische Meisterschaft 2026: 1. Platz Sprintdistanz U20', '2026 Styrian Championship: 1st place, U20 sprint distance')}</a>
+        <a class="item" href="#race-sd-vulkandland-2026">{tr('Steirische Meisterschaft 2026: 3. Platz Sprintdistanz gesamt', '2026 Styrian Championship: 3rd overall, sprint distance')}</a>
+        <a class="item" href="#race-od-knittelfeld-2025">{tr('Steirische Meisterschaft 2025: 1. Platz Olympische Distanz U18', '2025 Styrian Championship: 1st place, U18 Olympic distance')}</a>
+        <a class="item" href="#race-cross-frohnleiten-2022">{tr('Steirische Meisterschaft 2022: 1. Platz Crosslauf U18', '2022 Styrian Championship: 1st place, U18 cross-country')}</a>
       </div>
     </div>
   </section>
       <div class="race-log" id="races">
-        <h3>Alle Rennen</h3>
+        <h3>{tr('Alle Rennen', 'All Races')}</h3>
 
         <div class="race-year-group">
           <div class="year-section">
           <div class="year-header" onclick="this.parentElement.scrollIntoView()">
             <h3>2026</h3>
           </div>
+          <article class="race-card" id="race-od-tarragona-2026">
+              <p class="race-type">Supersprint Distanz 08.08.2026</p>
+              <h5 class="race-name-location">Röthlstein</h5>
+              <p>erster Gesamtsieg Triathlon</p>
+              <div class="race-times">
+                <div class="race-time-item">
+                  <p>Schwimmen: 250m</p>
+                  <p class="race-time-value">3:53min, 1:32min/100m <a class="race-official-link" href="https://www.strava.com/activities/19655756756">Strava</a></p>
+                </div>
+                <div class="race-time-item">
+                  <p>Rad: 16.5km</p>
+                  <p class="race-time-value">23:10min, 255W, 42.5km/h <a class="race-official-link" href="https://www.strava.com/activities/19655745262">Strava</a></p>
+                </div>
+                <div class="race-time-item">
+                  <p>Laufen: 4.6km</p>
+                  <p class="race-time-value">17:46min, 3:49min/km <a class="race-official-link" href="https://www.strava.com/activities/19655756785">Strava</a></p>
+                </div>
+              </div>
+            </article>
           <div class="race-cards-grid">
+            <article class="race-card" id="race-summer-run-2026">
+              <p class="race-type">10k 01.08.2026</p>
+              <h5 class="race-name-location">Graz</h5>
+              <a class="race-official-link" href="https://my.raceresult.com/370901/#0_9D55AF">official results</a>
+              <p>erster Gesamtsieg</p>
+              <p>30°C +</p>
+              <div class="race-times">
+                <div class="race-time-item">
+                  <p>Laufen: 10km</p>
+                  <p class="race-time-value">36:24min, 3:38min/km <a class="race-official-link" href="https://strava.app.link/uffK8AE1g5b">Strava</a></p>
+                </div>
+              </div>
+            </article>
             <article class="race-card" id="race-od-tarragona-2026">
               <p class="race-type">Olympische Distanz 14.06.2026</p>
               <h5 class="race-name-location">Europameisterschaft Tarragona</h5>
@@ -1617,6 +1815,7 @@ const translate = useTranslations(locale);
               <h5 class="race-name-location">Porec</h5>
               <a class="race-official-link" href="https://www.ironman.com/races/im703-croatia/results">official results</a>
               <p>5. Platz M18-24</p>
+              <p>schnellster Bike-Split M18-24</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Schwimmen: 1900m</p>
@@ -1749,7 +1948,7 @@ const translate = useTranslations(locale);
               <h5 class="race-name-location">Graz</h5>
               <a class="race-official-link" href="https://my.raceresult.com/298580/#0_9D55AF">official results</a>
               <p>erstes Mal sub40</p>
-              <p>1. U20</p>
+              <p>1. Platz U20</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Laufen: 10km</p>
@@ -1767,7 +1966,7 @@ const translate = useTranslations(locale);
               <p class="race-type">5k 31.12.2024</p>
               <h5 class="race-name-location">Graz</h5>
               <a class="race-official-link" href="https://my.raceresult.com/303552/#2_67B2C3">official results</a>
-              <p>5. U20</p>
+              <p>5. Platz U20</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Laufen: 5.3km</p>
@@ -1779,7 +1978,7 @@ const translate = useTranslations(locale);
               <p class="race-type">5k 01.12.2024</p>
               <h5 class="race-name-location">Graz</h5>
               <a class="race-official-link" href="https://my.raceresult.com/298580/#0_B50C50">official results</a>
-              <p>1. U20</p>
+              <p>1. Platz U20</p>
               <div class="race-times">
                 <div class="race-time-item">
                   <p>Laufen: 5km</p>
@@ -1802,7 +2001,7 @@ const translate = useTranslations(locale);
               <p class="race-type">Olympische Distanz 18.08.2024</p>
               <h5 class="race-name-location">Südsteiermark</h5>
               <a class="race-official-link" href="https://www.pentek-timing.at/results.html?pnr=14532&cnr=2">official results</a>
-              <p>17. Gesamt, 1. U18</p>
+              <p>17. Platz Gesamt, 1. Platz U18</p>
               <div class="race-times">
                 <div class="race-time-item">
                     <p>Schwimmen: 1500m</p>
@@ -1821,7 +2020,7 @@ const translate = useTranslations(locale);
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">Supersprint Distanz 10.08.2024</p>
               <h5 class="race-name-location">Röthlstein</h5>
-              <p>4. Gesamt, 1. U18</p>
+              <p>4. Platz Gesamt, 1. Platz U18</p>
               <div class="race-times">
                 <div class="race-time-item">
                     <p>Schwimmen: 250m</p>
@@ -1841,7 +2040,7 @@ const translate = useTranslations(locale);
               <p class="race-type">Berglauf 28.07.2024</p>
               <h5 class="race-name-location">Paracup Oberaich</h5>
               <!-- <a class="race-official-link" href="#">official results</a> -->
-              <p>1. Teamwertung, 2. Gesamt Läufer</p>
+              <p>1. Platz Teamwertung, 2. Platz Gesamt Läufer</p>
               <div class="race-times">
                   <div class="race-time-item">
                     <p>Laufen: 6.1km mit 300HM</p>
@@ -1859,7 +2058,7 @@ const translate = useTranslations(locale);
               <p class="race-type">Olympische Distanz 01.05.2024</p>
               <h5 class="race-name-location">Knittelfeld</h5>
               <a class="race-official-link" href="https://time2win.at/event/530/results?page=2">official results</a>
-              <p>erster Triathlon, 1. U18</p>
+              <p>erster Triathlon, 1. Platz U18</p>
             </article>
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">Radrennen 21.04.2024</p>
@@ -1906,6 +2105,38 @@ const translate = useTranslations(locale);
               <h5 class="race-name-location">Röthlstein</h5>
               <!-- <a class="race-official-link" href="#">official results</a> -->
               <p>erster Triathlon (Staffel)</p>
+            </article>
+            <article class="race-card" id="">
+              <p class="race-type">Crosslauf 05.03.2023</p>
+              <h5 class="race-name-location">Frohnleiten</h5>
+              <a class="race-official-link" href="https://ergebnisliste.at/Ergebnis/1123/5080/-/-/-/">official results</a>
+            </article>
+          </div>
+        </div>
+        <div class="race-year-group">
+          <h4>2022</h4>
+          <div class="race-cards-grid">
+            <article class="race-card" id="race-cross-frohnleiten-2022">
+              <p class="race-type">Viertelmarathon 08.10.2022</p>
+              <h5 class="race-name-location">Graz</h5>
+              <a class="race-official-link" href="https://www.maxfunsports.com/result/competition?id=563595382">official results</a>
+              <div class="race-times">
+                  <div class="race-time-item">
+                    <p>Laufen: 10k</p>
+                    <p class="race-time-value">43:56min</p>
+                  </div>
+              </div>
+            </article>
+            <article class="race-card" id="race-cross-frohnleiten-2022">
+              <p class="race-type">Crosslauf 13.03.2022</p>
+              <h5 class="race-name-location">Frohnleiten</h5>
+              <a class="race-official-link" href="https://ergebnisliste.at/Ergebnis/1086/4860/-/-/-/">official results</a>
+              <div class="race-times">
+                  <div class="race-time-item">
+                    <p>Laufen: 3.8k</p>
+                    <p class="race-time-value">15:24min</p>
+                  </div>
+              </div>
             </article>
           </div>
         </div>
@@ -2010,6 +2241,64 @@ const translate = useTranslations(locale);
   </section> -->
 </div>
 
+<script is:inline>
+  // Race results contain many numbers and names. Translate their repeated
+  // terminology in one place while keeping each result next to its markup.
+  const raceLog = document.getElementById('races');
+  const isEnglish = document.documentElement.lang === 'en';
+
+  if (raceLog) {
+    raceLog.querySelectorAll('.race-official-link').forEach((link) => {
+      if (link.textContent?.trim() === 'official results') {
+        link.textContent = isEnglish ? 'official results' : 'offizielle Ergebnisse';
+      }
+    });
+
+    if (isEnglish) {
+      const replacements = [
+        ['Olympische Distanz', 'Olympic distance'],
+        ['Supersprint Distanz', 'Supersprint distance'],
+        ['Sprint Distanz', 'Sprint distance'],
+        ['Viertelmarathon', 'Quarter marathon'],
+        ['Halbmarathon', 'Half marathon'],
+        ['Bergtriathlon', 'Mountain triathlon'],
+        ['Berglauf', 'Mountain run'],
+        ['Radrennen', 'Cycling race'],
+        ['Europameisterschaft', 'European Championship'],
+        ['erste Europameisterschaft', 'first European Championship'],
+        ['erster Halbmarathon', 'first half marathon'],
+        ['erster Triathlon', 'first triathlon'],
+        ['erstes Mal sub40', 'first sub-40-minute 10K'],
+        ['erstes Radrennen', 'first cycling race'],
+        ['Schwimmen:', 'Swim:'],
+        ['Radfahren:', 'Bike:'],
+        ['Laufen:', 'Run:'],
+        ['Lauf:', 'Run:'],
+        ['Rad:', 'Bike:'],
+        ['Platz Gesamt', 'place overall'],
+        ['Platz', 'place'],
+        ['Gesamt Läufer', 'overall runner'],
+        ['Gesamt', 'overall'],
+        ['Teamwertung', 'team ranking'],
+        ['Allgemein', 'open category'],
+        ['mit', 'with'],
+      ];
+
+      const walker = document.createTreeWalker(raceLog, NodeFilter.SHOW_TEXT);
+      const textNodes = [];
+      while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+      textNodes.forEach((node) => {
+        let value = node.nodeValue || '';
+        replacements.forEach(([from, to]) => {
+          value = value.replaceAll(from, to);
+        });
+        node.nodeValue = value;
+      });
+    }
+  }
+</script>
+
 <script>
   // Sticky section navigation - only headlines, not years
   const sections = document.querySelectorAll('.section');
@@ -2065,6 +2354,16 @@ const translate = useTranslations(locale);
   );
 
   sections.forEach(section => observer.observe(section));
+
+  // Open linked thesis abstracts before the browser scrolls to them.
+  document.querySelectorAll<HTMLAnchorElement>('a[data-open-details]').forEach(link => {
+    link.addEventListener('click', () => {
+      const targetId = link.hash.slice(1);
+      const target = document.getElementById(targetId);
+      if (target instanceof HTMLDetailsElement)
+        target.open = true;
+    });
+  });
 
   const achievementLinks = document.querySelectorAll('.achievement-links a[href^="#race-"]');
 

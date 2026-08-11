@@ -7,13 +7,33 @@
 // -------------------
 
 // Frontmatter
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
+import { getLocaleFromUrl } from '../i18n/utils';
+
+const content = {
+  de: {
+    description: 'Willkommen bei neulanc! Entdecke persönliche Profile und Portfolios auf Faces.',
+    heading: 'Willkommen bei neulanc!',
+    text: 'Diese Website befindet sich gerade im Aufbau. Du kannst aber bereits mein persönliches Portfolio besuchen:',
+    link: 'Portfolio von Michael Neuhold',
+  },
+  en: {
+    description: 'Welcome to neulanc! Discover personal profiles and portfolios on Faces.',
+    heading: 'Welcome to neulanc!',
+    text: 'This website is currently under construction, but you can already visit my personal portfolio:',
+    link: 'Michael Neuhold`s portfolio',
+  },
+} as const;
+
+const locale = getLocaleFromUrl(Astro.url);
+const t = content[locale];
 ---
 
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Welcome to Neulanc! Go to Faces - Personal profiles and portfolios." />
+    <meta name="description" content={t.description} />
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -25,21 +45,21 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://neulanc.com/" />
     <meta property="og:title" content="neulanc" />
-    <meta property="og:description" content="Welcome to Neulanc! Go to Faces - Personal profiles and portfolios." />
+    <meta property="og:description" content={t.description} />
     <meta property="og:image" content="https://neulanc.com/og-image.png" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://neulanc.com/" />
     <meta property="twitter:title" content="neulanc" />
-    <meta property="twitter:description" content="Welcome to Neulanc! Go to Faces - Personal profiles and portfolios." />
+    <meta property="twitter:description" content={t.description} />
     <meta property="twitter:image" content="https://neulanc.com/og-image.png" />
     
     <title>neulanc</title>
   </head>
   <body>
-    <h1>Welcome to Neulanc!</h1>
-    this website ist currently under construction, but you can visit my personal portfolio <a href="https://faces.neulanc.com/people/neuhold-michael">here</a> (Michael Neuhold).
-    <!-- <a href="https://faces.neulanc.com">Go to Faces</a> -->
+    <LanguageSwitcher currentLocale={locale} currentPath={Astro.url.pathname} />
+    <h1>{t.heading}</h1>
+    <p>{t.text} <a href="https://faces.neulanc.com/@neuhold-michael">{t.link}</a></p>
   </body>
 </html>
