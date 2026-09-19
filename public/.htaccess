@@ -1,4 +1,6 @@
 RewriteEngine On
+DirectoryIndex index.html
+Options -Indexes -MultiViews
 
 # Canonical main-domain host.
 RewriteCond %{HTTP_HOST} ^www\.neulanc\.com$ [NC]
@@ -8,7 +10,13 @@ RewriteRule ^ https://neulanc.com%{REQUEST_URI} [R=301,L]
 RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-# Let Apache keep the real 404 status while displaying the custom page.
-ErrorDocument 404 /404.html
+# Resolve Astro's directory-style routes explicitly (for example /imprint/).
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME}/index.html -f
+RewriteRule ^(.+?)/?$ $1/index.html [L]
 
-Options -Indexes
+# Hostinger can replace ErrorDocument responses with its own error page.
+# Route unknown paths through a handler that returns our page with status 404.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ 404.php [L]

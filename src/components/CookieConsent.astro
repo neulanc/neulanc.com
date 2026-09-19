@@ -1,0 +1,250 @@
+---
+import type { Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = (de: string, en: string) => locale === 'de' ? de : en;
+const cookiePolicyUrl = locale === 'de'
+  ? 'https://neulanc.com/cookies/'
+  : 'https://neulanc.com/en/cookies/';
+---
+
+<aside class="consent-banner" id="consentBanner" aria-labelledby="consentTitle" hidden>
+  <div class="consent-copy">
+    <p class="consent-kicker">{tr('Datenschutz', 'Privacy')}</p>
+    <h2 id="consentTitle">{tr('Deine Entscheidung zählt.', 'Your choice matters.')}</h2>
+    <p>
+      {tr(
+        'Wir verwenden notwendige lokale Speicherung für Sprache und Einwilligungsstatus. Optionale externe Inhalte laden wir nur mit deiner Zustimmung.',
+        'We use necessary local storage for language and consent status. Optional external content loads only with your permission.'
+      )}
+      <a href={cookiePolicyUrl}>{tr('Mehr erfahren', 'Learn more')}</a>
+    </p>
+  </div>
+  <div class="consent-actions">
+    <button class="consent-button consent-button-secondary" type="button" data-consent="necessary">
+      {tr('Nur notwendig', 'Necessary only')}
+    </button>
+    <button class="consent-button consent-button-primary" type="button" data-consent="all">
+      {tr('Optionale akzeptieren', 'Accept optional')}
+    </button>
+  </div>
+</aside>
+
+<script>
+  const consentStorageKey = 'neulanc-consent-v1';
+  const consentMaxAge = 1000 * 60 * 60 * 24 * 180;
+  const consentBanner = document.getElementById('consentBanner');
+
+  type ConsentChoice = 'all' | 'necessary';
+  type StoredConsent = { choice: ConsentChoice; savedAt: number };
+
+  const readConsent = (): ConsentChoice | null => {
+    try {
+      const rawConsent = localStorage.getItem(consentStorageKey);
+      if (!rawConsent) return null;
+
+      const storedConsent = JSON.parse(rawConsent) as StoredConsent;
+      const isKnownChoice = storedConsent.choice === 'all' || storedConsent.choice === 'necessary';
+      const isCurrent = Date.now() - storedConsent.savedAt < consentMaxAge;
+      return isKnownChoice && isCurrent ? storedConsent.choice : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const publishConsent = (choice: ConsentChoice) => {
+    document.documentElement.dataset.consent = choice;
+    document.dispatchEvent(new CustomEvent('neulanc:consentchange', { detail: { choice } }));
+  };
+
+  const saveConsent = (choice: ConsentChoice) => {
+    try {
+      localStorage.setItem(consentStorageKey, JSON.stringify({ choice, savedAt: Date.now() }));
+    } catch {
+      // The current page can still honor the choice when storage is unavailable.
+    }
+    publishConsent(choice);
+    document.documentElement.dataset.consentPrompt = 'closed';
+    if (consentBanner) consentBanner.hidden = true;
+  };
+
+  const showConsent = () => {
+    if (!consentBanner) return;
+    document.documentElement.dataset.consentPrompt = 'open';
+    consentBanner.hidden = false;
+    window.requestAnimationFrame(() => consentBanner.classList.add('is-visible'));
+  };
+
+  const storedChoice = readConsent();
+  if (storedChoice) {
+    document.documentElement.dataset.consentPrompt = 'closed';
+    publishConsent(storedChoice);
+  }
+  else showConsent();
+
+  document.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach(button => {
+    button.addEventListener('click', () => {
+      const choice = button.dataset.consent;
+      if (choice === 'all' || choice === 'necessary') saveConsent(choice);
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('[data-cookie-settings]').forEach(button => {
+    button.addEventListener('click', () => {
+      showConsent();
+      consentBanner?.querySelector<HTMLButtonElement>('[data-consent="necessary"]')?.focus();
+    });
+  });
+</script>
+
+<style>
+  .consent-banner,
+  .consent-banner * {
+    box-sizing: border-box;
+  }
+
+  .consent-banner[hidden] {
+    display: none;
+  }
+
+  .consent-banner {
+    position: fixed;
+    right: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    left: 20px;
+    z-index: 1000;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1.5rem;
+    align-items: end;
+    width: min(820px, calc(100% - 40px));
+    margin-left: auto;
+    padding: 1.3rem;
+    transform: translateY(18px);
+    border: 1px solid rgba(147, 171, 195, 0.3);
+    border-radius: 18px;
+    background: rgba(9, 27, 47, 0.96);
+    box-shadow: 0 22px 64px rgba(4, 18, 34, 0.3);
+    color: #f4f8fc;
+    opacity: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    transition: opacity 0.25s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .consent-banner.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .consent-kicker {
+    margin: 0 0 0.25rem !important;
+    color: #79bffc !important;
+    font-size: 0.65rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.11em;
+    line-height: 1.3 !important;
+    text-transform: uppercase;
+  }
+
+  .consent-copy h2 {
+    margin: 0 0 0.38rem;
+    color: #fff;
+    font-size: 1.08rem;
+    line-height: 1.25;
+  }
+
+  .consent-copy > p:last-child {
+    max-width: 58ch;
+    margin: 0;
+    color: #bdc9d6;
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  .consent-copy a {
+    margin-left: 0.25rem;
+    color: #ddecfb;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.16em;
+  }
+
+  .consent-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    align-items: center;
+  }
+
+  .consent-button {
+    min-height: 43px;
+    padding: 0.68rem 0.85rem;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    color: #fff;
+    font: inherit;
+    font-size: 0.76rem;
+    font-weight: 750;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease;
+  }
+
+  .consent-button:hover {
+    transform: translateY(-1px);
+  }
+
+  .consent-button-secondary,
+  .consent-button-primary {
+    border-color: #5d86ad;
+    background: #23486b;
+  }
+
+  .consent-button-secondary:hover,
+  .consent-button-primary:hover {
+    background: #306087;
+  }
+
+  .consent-button:focus-visible,
+  .consent-copy a:focus-visible {
+    outline: 3px solid #76bfff;
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 720px) {
+    .consent-banner {
+      right: 12px;
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      left: 12px;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      width: calc(100% - 24px);
+      padding: 1.1rem;
+      border-radius: 16px;
+    }
+
+    .consent-button {
+      white-space: normal;
+    }
+  }
+
+  @media (max-width: 390px) {
+    .consent-actions {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .consent-banner,
+    .consent-button {
+      transition: none;
+    }
+  }
+</style>

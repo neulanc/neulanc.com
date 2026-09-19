@@ -1,0 +1,145 @@
+---
+import LegalLayout from '../components/LegalLayout.astro';
+import { getLocaleFromUrl } from '../i18n/utils';
+
+const locale = getLocaleFromUrl(Astro.url);
+const tr = (de: string, en: string) => locale === 'de' ? de : en;
+const updated = locale === 'de' ? '17. September 2026' : '17 September 2026';
+---
+
+<LegalLayout
+  locale={locale}
+  slug="privacy"
+  title={tr('Datenschutzerklärung', 'Privacy Policy')}
+  eyebrow={tr('Transparenz und Datenschutz', 'Transparency and privacy')}
+  description={tr('Datenschutzerklärung von neulanc.', 'Privacy policy for neulanc.')}
+  updated={updated}
+>
+  <p class="legal-notice">
+    {tr(
+      'Vor der Veröffentlichung ergänzen: vollständige ladungsfähige Anschrift und gegebenenfalls weitere eingesetzte Dienste. Der Text beschreibt den derzeit im Quellcode erkennbaren Stand.',
+      'Complete before publication: full service address and any additional services in use. This text reflects the processing currently identifiable in the source code.'
+    )}
+  </p>
+
+  <p class="legal-lead">
+    {tr(
+      'Diese Erklärung informiert darüber, welche personenbezogenen Daten beim Besuch von neulanc verarbeitet werden, zu welchen Zwecken dies geschieht und welche Rechte dir zustehen.',
+      'This notice explains what personal data may be processed when you visit neulanc, why it is processed, and which rights are available to you.'
+    )}
+  </p>
+
+  <section>
+    <h2>{tr('1. Verantwortlicher', '1. Controller')}</h2>
+    <address>
+      Michael Neuhold<br />
+      neulanc<br />
+      {tr('Schrems 49a', 'Schrems 49a')}<br />
+      E-Mail: <a href="mailto:neuhold-michael@neulanc.com">neuhold-michael@neulanc.com</a>
+    </address>
+  </section>
+
+  <section>
+    <h2>{tr('2. Bereitstellung der Website und Server-Logs', '2. Website delivery and server logs')}</h2>
+    <p>{tr(
+      'Beim Aufruf der Website kann der Hosting-Anbieter technisch erforderliche Verbindungsdaten verarbeiten. Dazu können IP-Adresse, Datum und Uhrzeit, aufgerufene Adresse, Referrer, Browser, Betriebssystem und HTTP-Status gehören.',
+      'When the website is accessed, the hosting provider may process connection data required for technical delivery. This can include the IP address, date and time, requested address, referrer, browser, operating system and HTTP status.'
+    )}</p>
+    <p>{tr(
+      'Die Verarbeitung dient der sicheren und stabilen Bereitstellung, der Fehleranalyse und der Abwehr von Missbrauch. Rechtsgrundlage ist das berechtigte Interesse an einem sicheren Webauftritt gemäß Art. 6 Abs. 1 lit. f DSGVO.',
+      'Processing serves secure and stable delivery, error analysis and abuse prevention. The legal basis is the legitimate interest in operating a secure website under Article 6(1)(f) GDPR.'
+    )}</p>
+    <p>
+      <strong>{tr('Hosting-Anbieter:', 'Hosting provider:')}</strong><br />
+      Hostinger International Ltd.<br />
+      61 Lordou Vironos Street<br />
+      6023 Larnaca<br />
+      {tr('Zypern', 'Cyprus')}
+    </p>
+    <p>{tr(
+      'Server-Logdaten werden nur so lange gespeichert, wie dies für die sichere und stabile Bereitstellung der Website, die Fehleranalyse, die Abwehr von Missbrauch oder die Erfüllung gesetzlicher Pflichten erforderlich ist. Anschließend werden sie gelöscht. Die konkrete Speicherdauer richtet sich nach Art und Zweck des jeweiligen Protokolls.',
+      'Server-log data is retained only for as long as necessary to provide the website securely and reliably, diagnose errors, prevent misuse or comply with legal obligations. It is subsequently deleted. The specific retention period depends on the type and purpose of the relevant log.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('3. Lokale Speicherung und Einwilligung', '3. Local storage and consent')}</h2>
+    <p>{tr(
+      'neulanc speichert die gewählte Sprache und deine Entscheidung zu optionalen Diensten im lokalen Speicher des Browsers. Diese Informationen werden benötigt, um die von dir gewählte Einstellung beizubehalten. Die Einwilligungsentscheidung wird nach 180 Tagen erneut abgefragt.',
+      'neulanc stores the selected language and your optional-service choice in your browsers local storage. This information is required to preserve your chosen settings. The consent choice is requested again after 180 days.'
+    )}</p>
+    <p>{tr(
+      'Du kannst die Entscheidung jederzeit über „Cookie-Einstellungen“ im Footer ändern oder die Website-Daten in deinem Browser löschen.',
+      'You can change the decision at any time through “Cookie settings” in the footer or by deleting website data in your browser.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('4. Optionaler externer Dienst: MathJax', '4. Optional external service: MathJax')}</h2>
+    <p>{tr(
+      'Auf der Portfolio-Seite kann MathJax zur Darstellung mathematischer Formeln von jsDelivr geladen werden. Der Abruf erfolgt erst, wenn du optionale Dienste akzeptiert hast. Dabei wird technisch eine Verbindung zu Servern des CDN-Anbieters hergestellt; insbesondere IP-Adresse, Zeitpunkt, angeforderte Datei und Browserdaten können übermittelt werden.',
+      'The portfolio page can load MathJax from jsDelivr to render mathematical notation. It is requested only after you accept optional services. This establishes a technical connection to the CDN providers servers; in particular, the IP address, request time, requested file and browser information may be transmitted.'
+    )}</p>
+    <p>{tr('Rechtsgrundlage ist deine Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO. Du kannst sie jederzeit mit Wirkung für die Zukunft widerrufen.', 'The legal basis is your consent under Article 6(1)(a) GDPR. You may withdraw it at any time with effect for the future.')}</p>
+    <p>{tr(
+      'Je nach technischer Auslieferung können Daten außerhalb des EWR verarbeitet werden. Vor Veröffentlichung sind Anbieter, Vertragsgrundlage und konkrete Transfermechanismen anhand des tatsächlichen Hosting-Setups zu prüfen.',
+      'Depending on technical delivery, data may be processed outside the EEA. Before publication, the provider, contractual basis and specific transfer safeguards must be verified against the actual hosting setup.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('5. Externe Links und Kontaktaufnahme', '5. External links and contacting us')}</h2>
+    <p>{tr(
+      'Links zu GitHub, LinkedIn, Strava, Instagram, X und weiteren externen Angeboten stellen erst beim Anklicken eine Verbindung zum jeweiligen Anbieter her. Ab diesem Zeitpunkt gelten auch dessen Datenschutzbestimmungen.',
+      'Links to GitHub, LinkedIn, Strava, Instagram, X and other external services establish a connection only when clicked. From that point, the relevant providers privacy terms also apply.'
+    )}</p>
+    <p>{tr(
+      'Wenn du per E-Mail Kontakt aufnimmst, werden die von dir übermittelten Daten zur Bearbeitung der Anfrage verarbeitet. Rechtsgrundlage ist je nach Inhalt Art. 6 Abs. 1 lit. b oder lit. f DSGVO. Die Daten werden gelöscht, sobald sie für die Bearbeitung nicht mehr erforderlich sind und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.',
+      'If you contact us by email, the information you provide is processed to handle your request. Depending on its content, the legal basis is Article 6(1)(b) or (f) GDPR. The data is deleted when no longer required to deal with the request, unless statutory retention obligations apply.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('6. Empfänger und Auftragsverarbeiter', '6. Recipients and processors')}</h2>
+    <p>{tr(
+      'Daten werden nur an technische Dienstleister weitergegeben, soweit dies für Betrieb, Sicherheit oder eine von dir angeforderte Funktion erforderlich ist. Mit Auftragsverarbeitern werden, soweit erforderlich, Vereinbarungen gemäß Art. 28 DSGVO geschlossen.',
+      'Data is disclosed to technical service providers only where required for operation, security or a function you requested. Where required, processor agreements are concluded under Article 28 GDPR.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('7. Deine Rechte', '7. Your rights')}</h2>
+    <p>{tr('Nach Maßgabe der DSGVO stehen dir insbesondere folgende Rechte zu:', 'Subject to the GDPR, you have the following rights in particular:')}</p>
+    <ul>
+      <li>{tr('Auskunft über verarbeitete personenbezogene Daten (Art. 15)', 'Access to personal data being processed (Article 15)')}</li>
+      <li>{tr('Berichtigung unrichtiger Daten (Art. 16)', 'Rectification of inaccurate data (Article 16)')}</li>
+      <li>{tr('Löschung oder Einschränkung der Verarbeitung (Art. 17 und 18)', 'Erasure or restriction of processing (Articles 17 and 18)')}</li>
+      <li>{tr('Datenübertragbarkeit, soweit anwendbar (Art. 20)', 'Data portability where applicable (Article 20)')}</li>
+      <li>{tr('Widerspruch gegen Verarbeitungen auf Grundlage berechtigter Interessen (Art. 21)', 'Objection to processing based on legitimate interests (Article 21)')}</li>
+      <li>{tr('Widerruf einer Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3)', 'Withdrawal of consent with effect for the future (Article 7(3))')}</li>
+    </ul>
+    <p>{tr('Zur Ausübung deiner Rechte genügt eine Nachricht an die oben genannte E-Mail-Adresse.', 'To exercise your rights, send a message to the email address stated above.')}</p>
+  </section>
+
+  <section>
+    <h2>{tr('8. Beschwerderecht', '8. Right to lodge a complaint')}</h2>
+    <p>{tr('Du kannst dich bei einer Datenschutzaufsichtsbehörde beschweren. In Österreich ist dies die:', 'You may lodge a complaint with a data-protection supervisory authority. In Austria, this is:')}</p>
+    <address>
+      {tr('Österreichische Datenschutzbehörde', 'Austrian Data Protection Authority')}<br />
+      Barichgasse 40–42, 1030 Wien<br />
+      <a href="https://www.dsb.gv.at" target="_blank" rel="noreferrer">www.dsb.gv.at</a>
+    </address>
+  </section>
+
+  <section>
+    <h2>{tr('9. Änderungen dieser Erklärung', '9. Changes to this notice')}</h2>
+    <p>{tr(
+      'Diese Datenschutzerklärung wird angepasst, wenn sich Funktionen, Dienstleister oder rechtliche Anforderungen ändern. Die aktuelle Fassung ist stets auf dieser Seite abrufbar.',
+      'This privacy policy will be updated when functions, providers or legal requirements change. The current version is always available on this page.'
+    )}</p>
+  </section>
+
+  <p class="legal-source-note">
+    {tr('Grundlage dieses Entwurfs sind insbesondere die Informationspflichten nach Art. 12–14 DSGVO sowie die Hinweise der Österreichischen Datenschutzbehörde zu Cookies. Dieser Entwurf ersetzt keine individuelle Rechtsberatung.', 'This draft is based in particular on the transparency duties in Articles 12–14 GDPR and guidance from the Austrian Data Protection Authority on cookies. It is not a substitute for individual legal advice.')}
+  </p>
+</LegalLayout>

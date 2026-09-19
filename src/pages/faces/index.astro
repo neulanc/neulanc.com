@@ -7,6 +7,8 @@
 // Content: TODO
 // -------------------
 import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import CookieConsent from '../../components/CookieConsent.astro';
 import { getLocaleFromUrl } from '../../i18n/utils';
 
 const content = {
@@ -30,11 +32,68 @@ const t = content[locale];
 <html lang={locale}>
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{t.title}</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        background:
+          radial-gradient(circle at 88% 0%, rgba(0, 145, 220, 0.09), transparent 28rem),
+          linear-gradient(180deg, #f7fbff, #fff 34rem);
+        color: #172b42;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      .faces-topbar {
+        display: flex;
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 1.25rem 0;
+        justify-content: flex-end;
+      }
+      .faces-main {
+        display: grid;
+        width: min(1120px, calc(100% - 40px));
+        min-height: 54vh;
+        margin: 0 auto;
+        align-content: center;
+        padding: 4rem 0 6rem;
+      }
+      .faces-main span {
+        color: #0870cf;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .faces-main h1 {
+        margin: 0.8rem 0 1rem;
+        color: #0c2036;
+        font-size: clamp(2.7rem, 8vw, 5.6rem);
+        letter-spacing: -0.055em;
+        line-height: 1;
+      }
+      .faces-main p {
+        max-width: 58ch;
+        margin: 0;
+        color: #5b6e82;
+        font-size: 1.05rem;
+        line-height: 1.7;
+      }
+    </style>
   </head>
-  <body>
-    <LanguageSwitcher currentLocale={locale} currentPath={Astro.url.pathname.replace(/^\/faces/, '') || '/'} />
-    <h1>{t.heading}</h1>
-    <p>{t.text}</p>
+  <body id="page-top">
+    <header class="faces-topbar">
+      <LanguageSwitcher currentLocale={locale} currentPath={Astro.url.pathname.replace(/^\/faces/, '') || '/'} />
+    </header>
+    <main class="faces-main">
+      <span>neulanc / Faces</span>
+      <h1>{t.heading}</h1>
+      <p>{t.text}</p>
+    </main>
+    <SiteFooter locale={locale} />
+    <CookieConsent locale={locale} />
   </body>
 </html>

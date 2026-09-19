@@ -1,0 +1,127 @@
+---
+import LegalLayout from '../components/LegalLayout.astro';
+import { getLocaleFromUrl } from '../i18n/utils';
+
+const locale = getLocaleFromUrl(Astro.url);
+const tr = (de: string, en: string) => locale === 'de' ? de : en;
+const updated = locale === 'de' ? '14. September 2026' : '14 September 2026';
+---
+
+<LegalLayout
+  locale={locale}
+  slug="cookies"
+  title={tr('Cookie-Richtlinie', 'Cookie Policy')}
+  eyebrow={tr('Cookies und lokale Speicherung', 'Cookies and local storage')}
+  description={tr('Informationen zu Cookies, lokaler Speicherung und Einwilligung bei neulanc.', 'Information about cookies, local storage and consent at neulanc.')}
+  updated={updated}
+>
+  <p class="legal-lead">
+    {tr(
+      'neulanc setzt derzeit keine Analyse- oder Marketing-Cookies ein. Wir verwenden lokale Browser-Speicherung für deine Sprache und Datenschutzentscheidung; optionale externe Inhalte werden erst nach Zustimmung geladen.',
+      'neulanc currently uses no analytics or marketing cookies. We use browser-local storage for your language and privacy choice; optional external content loads only after permission.'
+    )}
+  </p>
+
+  <section>
+    <h2>{tr('1. Was sind Cookies und lokale Speicherungen?', '1. What are cookies and local storage?')}</h2>
+    <p>{tr(
+      'Cookies sind kleine Informationen, die eine Website im Browser speichern und später wieder auslesen kann. Local Storage ist eine ähnliche Browser-Technik, bei der Informationen lokal am Endgerät gespeichert werden. Die gesetzlichen Regeln können beide Technologien erfassen.',
+      'Cookies are small pieces of information that a website can store in a browser and retrieve later. Local storage is a similar browser feature that keeps information on the device. Legal rules can apply to both technologies.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('2. Was neulanc speichert', '2. What neulanc stores')}</h2>
+    <div class="legal-table-wrap">
+      <table class="legal-table">
+        <thead>
+          <tr>
+            <th>{tr('Name', 'Name')}</th>
+            <th>{tr('Technik', 'Technology')}</th>
+            <th>{tr('Zweck', 'Purpose')}</th>
+            <th>{tr('Dauer', 'Duration')}</th>
+            <th>{tr('Kategorie', 'Category')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>preferred-locale</code></td>
+            <td>Local Storage</td>
+            <td>{tr('Speichert die gewählte Sprache.', 'Remembers the selected language.')}</td>
+            <td>{tr('Bis zur manuellen Löschung', 'Until manually deleted')}</td>
+            <td>{tr('Notwendig', 'Necessary')}</td>
+          </tr>
+          <tr>
+            <td><code>neulanc-consent-v1</code></td>
+            <td>Local Storage</td>
+            <td>{tr('Speichert die Auswahl zu optionalen Diensten.', 'Remembers the optional-service choice.')}</td>
+            <td>{tr('180 Tage; danach erneute Abfrage', '180 days; then requested again')}</td>
+            <td>{tr('Notwendig', 'Necessary')}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>{tr(
+      'Diese Speicherungen vergeben keine eindeutige Nutzerkennung und werden nicht für Werbung oder websiteübergreifendes Tracking verwendet.',
+      'These entries do not assign a unique user identifier and are not used for advertising or cross-site tracking.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('3. Optionale externe Inhalte', '3. Optional external content')}</h2>
+    <p>{tr(
+      'Wenn du optionale Dienste akzeptierst, darf die Portfolio-Seite MathJax von jsDelivr laden, um mathematische Formeln darzustellen. Dabei entsteht eine direkte Verbindung zum CDN-Anbieter. neulanc setzt dabei selbst kein Analyse- oder Marketing-Cookie; der externe Anbieter kann jedoch technische Anfragedaten verarbeiten.',
+      'If you accept optional services, the portfolio page may load MathJax from jsDelivr to render mathematical notation. This creates a direct connection to the CDN provider. neulanc itself sets no analytics or marketing cookie in this process, although the external provider may process technical request data.'
+    )}</p>
+    <p>{tr(
+      'Wenn du „Nur notwendig“ wählst, wird dieser externe Dienst nicht geladen. Die Seite bleibt nutzbar; mathematische Formeln erscheinen gegebenenfalls als Text.',
+      'If you choose “Necessary only”, this external service is not loaded. The website remains usable, although mathematical notation may appear as text.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('4. Deine Auswahl ändern', '4. Changing your choice')}</h2>
+    <p>{tr(
+      'Du kannst die Abfrage jederzeit über die Schaltfläche „Cookie-Einstellungen“ im Footer erneut öffnen. Eine neue Auswahl ersetzt die vorherige. Alternativ kannst du die Website-Daten in den Einstellungen deines Browsers löschen.',
+      'You can reopen the choice at any time using the “Cookie settings” button in the footer. A new choice replaces the previous one. Alternatively, delete the website data in your browser settings.'
+    )}</p>
+    <button class="policy-settings-button" type="button" data-cookie-settings>{tr('Cookie-Einstellungen öffnen', 'Open cookie settings')}</button>
+  </section>
+
+  <section>
+    <h2>{tr('5. Browser-Einstellungen', '5. Browser settings')}</h2>
+    <p>{tr(
+      'Die meisten Browser erlauben das Anzeigen und Löschen gespeicherter Website-Daten. Wenn notwendige Speicherung blockiert wird, können Sprache und Datenschutzentscheidung bei einem späteren Besuch nicht erhalten bleiben.',
+      'Most browsers allow you to inspect and delete stored website data. If necessary storage is blocked, language and privacy choices may not be retained for a later visit.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('6. Kontakt', '6. Contact')}</h2>
+    <p>{tr('Bei Fragen zu dieser Richtlinie erreichst du uns unter', 'For questions about this policy, contact us at')} <a href="mailto:neuhold-michael@neulanc.com">neuhold-michael@neulanc.com</a>.</p>
+  </section>
+
+  <p class="legal-source-note">
+    {tr('Weitere Informationen:', 'Further information:')}
+    <a href="https://dsb.gv.at/faqs/datenschutz-cookies" target="_blank" rel="noreferrer">{tr('Österreichische Datenschutzbehörde – Datenschutz & Cookies', 'Austrian Data Protection Authority – privacy and cookies')}</a>.
+  </p>
+</LegalLayout>
+
+<style>
+  .policy-settings-button {
+    margin-top: 0.7rem;
+    padding: 0.72rem 0.9rem;
+    border: 1px solid #1473c8;
+    border-radius: 10px;
+    background: #0b6bc3;
+    color: #fff;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 750;
+    cursor: pointer;
+  }
+
+  .policy-settings-button:hover {
+    background: #075ba8;
+  }
+</style>

@@ -11,6 +11,8 @@
 // Frontmatter
 import { getLocaleFromUrl } from '../../../i18n/utils';
 import LanguageSwitcher from '../../../components/LanguageSwitcher.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import CookieConsent from '../../../components/CookieConsent.astro';
 import main_pic from './assets/neuhold-michael_main-pic.jpg';
 import logoGasthausHoaterwirt from './assets/logo_gasthaus-hoaterwirt.svg';
 import logoRoteRakete from './assets/logo_Rote-Rakete.webp';
@@ -26,6 +28,15 @@ const PDF_THESIS_MASTER = './neuhold-michael/assets/neuhold-michael_master-thesi
 
 const locale = getLocaleFromUrl(Astro.url);
 const tr = (de: string, en: string) => locale === 'de' ? de : en;
+
+const navigationItems = [
+  { href: '#page-top', index: '01', label: tr('Über mich', 'About') },
+  { href: '#section-sponsors', index: '02', label: tr('Sponsoren', 'Sponsors') },
+  { href: '#section-ausbildung', index: '03', label: tr('Ausbildung', 'Education') },
+  { href: '#section-erfahrung', index: '04', label: tr('Erfahrung', 'Experience') },
+  { href: '#section-projekte', index: '05', label: tr('Projekte', 'Projects') },
+  { href: '#section-sport', index: '06', label: 'Sport' },
+];
 ---
 
 <!DOCTYPE html>
@@ -56,19 +67,40 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
   <meta property="twitter:image" content="https://faces.neulanc.com/_astro/neuhold-michael_main-pic.jpg" />
 
   <script>
-    Object.assign(window, {
-      MathJax: {
-        tex: {
-          inlineMath: [['\\(', '\\)']],
-          displayMath: [['$$', '$$']]
-        },
-        svg: {
-          fontCache: 'global'
+    const loadMathJax = () => {
+      if (document.getElementById('MathJax-script')) return;
+
+      Object.assign(window, {
+        MathJax: {
+          tex: {
+            inlineMath: [['\\(', '\\)']],
+            displayMath: [['$$', '$$']]
+          },
+          svg: {
+            fontCache: 'global'
+          }
         }
-      }
+      });
+
+      const mathJaxScript = document.createElement('script');
+      mathJaxScript.id = 'MathJax-script';
+      mathJaxScript.async = true;
+      mathJaxScript.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js';
+      document.head.appendChild(mathJaxScript);
+    };
+
+    document.addEventListener('neulanc:consentchange', (event) => {
+      if (event instanceof CustomEvent && event.detail?.choice === 'all') loadMathJax();
     });
+
+    try {
+      const savedConsent = JSON.parse(localStorage.getItem('neulanc-consent-v1') || 'null');
+      const isCurrentConsent = savedConsent && Date.now() - savedConsent.savedAt < 1000 * 60 * 60 * 24 * 180;
+      if (isCurrentConsent && savedConsent.choice === 'all') loadMathJax();
+    } catch {
+      // Keep formulas as readable TeX when storage is unavailable.
+    }
   </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   
   <title>Michael Neuhold</title>
   <style>
@@ -93,7 +125,7 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
     .container {
       max-width: 1040px;
       margin: 0 auto;
-      padding: 4rem 2rem;
+      padding: 6.5rem 2rem 4rem;
     }
 
     /* Header / About Section */
@@ -141,69 +173,91 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
       font-size: 0.9rem;
     }
 
-    .about-explore-title {
-      margin: 1.75rem 0 0.75rem;
-      color: #6a788a;
-      font-size: 0.78rem;
-      font-weight: 750;
-      letter-spacing: 0.09em;
+    .current-strip {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-top: 1.45rem;
+      padding: 0.75rem;
+      border: 1px solid rgba(0, 102, 204, 0.13);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(238, 247, 255, 0.92), rgba(255, 255, 255, 0.92));
+      box-shadow: 0 9px 22px rgba(16, 30, 54, 0.05);
+    }
+
+    .current-strip::after {
+      content: '';
+      position: absolute;
+      top: -45px;
+      right: -30px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 170, 255, 0.13), transparent 68%);
+      pointer-events: none;
+    }
+
+    .current-strip-label {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 0.42rem;
+      padding: 0 0.2rem;
+      color: #526980;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.11em;
       text-transform: uppercase;
     }
 
-    .about-topics {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
+    .current-strip-dot {
+      width: 0.48rem;
+      height: 0.48rem;
+      border-radius: 50%;
+      background: #16a56f;
+      box-shadow: 0 0 0 4px rgba(22, 165, 111, 0.11);
     }
 
-    .about-topic {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      gap: 0.75rem;
-      align-items: center;
+    .upcoming-strip {
+      margin-top: 0.65rem;
+      border-color: rgba(211, 133, 17, 0.16);
+      background: linear-gradient(135deg, rgba(255, 248, 235, 0.92), rgba(255, 255, 255, 0.92));
+    }
+
+    .upcoming-strip::after {
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.13), transparent 68%);
+    }
+
+    .upcoming-strip .current-strip-dot {
+      background: #e99a19;
+      box-shadow: 0 0 0 4px rgba(233, 154, 25, 0.12);
+    }
+
+    .current-strip-items {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.42rem;
       min-width: 0;
-      padding: 0.85rem 0.95rem;
-      border: 1px solid rgba(0, 102, 204, 0.13);
-      border-radius: 15px;
-      background: rgba(255, 255, 255, 0.88);
-      color: inherit;
-      text-decoration: none;
-      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      list-style: none;
     }
 
-    .about-topic:hover {
-      transform: translateY(-2px);
-      border-color: rgba(0, 102, 204, 0.3);
-      box-shadow: 0 10px 24px rgba(16, 30, 54, 0.08);
-    }
-
-    .about-topic-icon {
-      font-size: 1.25rem;
-    }
-
-    .about-topic strong,
-    .about-topic small {
-      display: block;
-    }
-
-    .about-topic strong {
-      color: #14263a;
-      line-height: 1.25;
-    }
-
-    .about-topic small {
-      overflow: hidden;
-      margin-top: 0.15rem;
-      color: #718095;
-      font-size: 0.8rem;
-      line-height: 1.3;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .about-topic-arrow {
-      color: #0066cc;
-      font-size: 1.15rem;
+    .current-strip-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.58rem;
+      border: 1px solid rgba(24, 60, 94, 0.08);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 2px 7px rgba(16, 30, 54, 0.035);
+      color: #314a63;
+      font-size: 0.76rem;
+      font-weight: 680;
+      line-height: 1.2;
     }
 
     .sponsor-section {
@@ -961,10 +1015,532 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
       min-height: 140px;
     }
 
-    /* Responsive */
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .inline-link {
+      color: #0066cc;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .inline-link:hover {
+      text-decoration: underline;
+    }
+
+    #page-top,
+    .section {
+      scroll-margin-top: 6.5rem;
+    }
+
+    /* Floating portfolio navigation */
+    .portfolio-nav {
+      position: fixed;
+      top: calc(16px + env(safe-area-inset-top, 0px));
+      left: 50%;
+      align-items: center;
+      z-index: 300;
+      display: flex;
+      width: min(980px, calc(100% - 32px));
+      min-height: 58px;
+      padding: 0.38rem;
+      transform: translateX(-50%);
+      border: 1px solid rgba(21, 53, 84, 0.11);
+      border-radius: 19px;
+      background: rgba(251, 253, 255, 0.88);
+      box-shadow: 0 12px 35px rgba(13, 35, 61, 0.12), 0 2px 8px rgba(13, 35, 61, 0.06);
+      backdrop-filter: blur(18px) saturate(150%);
+      -webkit-backdrop-filter: blur(18px) saturate(150%);
+    }
+
+    .nav-bar,
+    .nav-drawer,
+    .nav-links,
+    .nav-meta {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-bar {
+      flex: 0 0 auto;
+    }
+
+    .nav-identity {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #10243a;
+      text-decoration: none;
+    }
+
+    .nav-monogram {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 13px;
+      background: linear-gradient(145deg, #0877dd, #0055ad);
+      box-shadow: 0 7px 16px rgba(0, 102, 204, 0.24);
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 850;
+      letter-spacing: 0.055em;
+    }
+
+    .nav-current {
+      display: none;
+      min-width: 0;
+    }
+
+    .nav-current small,
+    .nav-current strong {
+      display: block;
+    }
+
+    .nav-current small {
+      margin-bottom: 0.08rem;
+      color: #738397;
+      font-size: 0.61rem;
+      font-weight: 750;
+      letter-spacing: 0.1em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .nav-current strong {
+      overflow: hidden;
+      color: #122a43;
+      font-size: 0.86rem;
+      line-height: 1.15;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .nav-drawer {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .nav-drawer-inner {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-links {
+      min-width: 0;
+      gap: 0.15rem;
+      margin-left: 0.35rem;
+    }
+
+    .nav-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.38rem;
+      min-height: 42px;
+      padding: 0.55rem 0.64rem;
+      border-radius: 12px;
+      color: #536579;
+      font-size: 0.76rem;
+      font-weight: 700;
+      line-height: 1;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: #005bb7;
+      background: rgba(0, 102, 204, 0.07);
+    }
+
+    .nav-identity:focus-visible,
+    .nav-link:focus-visible,
+    .menu-toggle:focus-visible {
+      outline: 3px solid rgba(0, 102, 204, 0.28);
+      outline-offset: 2px;
+    }
+
+    .nav-link.active {
+      color: #004f9f;
+      background: rgba(0, 102, 204, 0.095);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      right: 0.65rem;
+      bottom: 0.3rem;
+      left: 0.65rem;
+      height: 2px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #0066cc, #35b6f2);
+    }
+
+    .nav-icon {
+      color: #718399;
+      font-size: 0.62rem;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-meta {
+      flex: 0 0 auto;
+      margin-left: 0.35rem;
+      padding-left: 0.45rem;
+      border-left: 1px solid rgba(21, 53, 84, 0.1);
+    }
+
+    .nav-meta-label,
+    .nav-menu-heading,
+    .menu-toggle,
+    .nav-backdrop {
+      display: none;
+    }
+
+    .nav-meta :global(.lang-link) {
+      padding: 0.38rem 0.48rem;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: #66778a;
+      font-size: 0.7rem;
+    }
+
+    .nav-meta :global(.lang-link.active) {
+      background: #0b68c5;
+      color: #fff;
+    }
+
+    .nav-meta :global(.flag) {
+      font-size: 0.82rem;
+    }
+
+    .nav-meta :global(.lang-name) {
+      font-size: 0.7rem;
+    }
+
+    @media (max-width: 880px) {
+      body {
+        scroll-padding-top: 5.5rem;
+      }
+
+      #page-top,
+      .section {
+        scroll-margin-top: 5.5rem;
+      }
+
+      .portfolio-nav {
+        left: auto;
+        right: 12px;
+        display: block;
+        width: min(360px, calc(100% - 24px));
+        min-height: 0;
+        padding: 0;
+        transform: none;
+        border-radius: 21px;
+        background: rgba(251, 253, 255, 0.94);
+        box-shadow: 0 16px 44px rgba(9, 31, 55, 0.18), 0 2px 8px rgba(9, 31, 55, 0.06);
+        transition:
+          width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+          border-radius 0.35s ease,
+          box-shadow 0.35s ease;
+      }
+
+      .portfolio-nav:not(.is-open) {
+        width: 198px;
+        border-radius: 18px;
+      }
+
+      .portfolio-nav.is-open {
+        max-height: calc(100dvh - 28px - env(safe-area-inset-top, 0px));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        box-shadow: 0 24px 64px rgba(9, 31, 55, 0.24), 0 3px 10px rgba(9, 31, 55, 0.08);
+      }
+
+      .nav-bar {
+        position: relative;
+        z-index: 2;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 56px;
+        padding: 0.4rem;
+      }
+
+      .nav-identity {
+        min-width: 0;
+      }
+
+      .nav-current {
+        display: block;
+        width: 80px;
+      }
+
+      .menu-toggle {
+        position: relative;
+        display: grid;
+        flex: 0 0 auto;
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        place-items: center;
+        border: 0;
+        border-radius: 12px;
+        background: #edf5fd;
+        color: #0d5ca8;
+        cursor: pointer;
+        transition:
+          color 0.25s ease,
+          background 0.25s ease,
+          transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .portfolio-nav.is-open .menu-toggle {
+        background: #0b68c5;
+        color: #fff;
+        transform: scale(0.94);
+      }
+
+      .menu-toggle-lines {
+        position: relative;
+        width: 18px;
+        height: 14px;
+      }
+
+      .menu-toggle-lines::before,
+      .menu-toggle-lines::after,
+      .menu-toggle-lines span {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 18px;
+        height: 2px;
+        border-radius: 2px;
+        background: currentColor;
+        transition: top 0.22s ease, transform 0.22s ease, opacity 0.18s ease;
+      }
+
+      .menu-toggle-lines::before {
+        top: 0;
+      }
+
+      .menu-toggle-lines span {
+        top: 6px;
+      }
+
+      .menu-toggle-lines::after {
+        top: 12px;
+      }
+
+      .portfolio-nav.is-open .menu-toggle-lines::before {
+        top: 6px;
+        transform: rotate(45deg);
+      }
+
+      .portfolio-nav.is-open .menu-toggle-lines span {
+        opacity: 0;
+      }
+
+      .portfolio-nav.is-open .menu-toggle-lines::after {
+        top: 6px;
+        transform: rotate(-45deg);
+      }
+
+      .nav-drawer {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-rows: 0fr;
+        opacity: 0;
+        transform: translate3d(14px, -10px, 0) scale(0.975);
+        transform-origin: top right;
+        pointer-events: none;
+        transition:
+          grid-template-rows 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 0.18s ease,
+          transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .nav-drawer-inner {
+        display: block;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .portfolio-nav.is-open .nav-drawer {
+        grid-template-rows: 1fr;
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+        pointer-events: auto;
+      }
+
+      .nav-menu-heading {
+        display: block;
+        margin: 0 0.85rem;
+        padding: 0.7rem 0.15rem 0.58rem;
+        border-top: 1px solid rgba(21, 53, 84, 0.09);
+        color: #7a8999;
+        font-size: 0.65rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .nav-menu-heading,
+      .nav-link,
+      .nav-meta {
+        opacity: 0;
+        transform: translate3d(20px, -3px, 0);
+        transition:
+          opacity 0.16s ease,
+          transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .portfolio-nav.is-open .nav-menu-heading,
+      .portfolio-nav.is-open .nav-link,
+      .portfolio-nav.is-open .nav-meta {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+
+      .portfolio-nav.is-open .nav-menu-heading {
+        transition-delay: 0.08s;
+      }
+
+      .portfolio-nav.is-open .nav-link:nth-child(1) {
+        transition-delay: 0.11s;
+      }
+
+      .portfolio-nav.is-open .nav-link:nth-child(2) {
+        transition-delay: 0.14s;
+      }
+
+      .portfolio-nav.is-open .nav-link:nth-child(3) {
+        transition-delay: 0.17s;
+      }
+
+      .portfolio-nav.is-open .nav-link:nth-child(4) {
+        transition-delay: 0.2s;
+      }
+
+      .portfolio-nav.is-open .nav-link:nth-child(5) {
+        transition-delay: 0.23s;
+      }
+
+      .portfolio-nav.is-open .nav-link:nth-child(6) {
+        transition-delay: 0.26s;
+      }
+
+      .portfolio-nav.is-open .nav-meta {
+        transition-delay: 0.29s;
+      }
+
+      .nav-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.45rem;
+        margin: 0;
+        padding: 0 0.75rem;
+      }
+
+      .nav-link {
+        display: grid;
+        grid-template-columns: 30px minmax(0, 1fr);
+        gap: 0.55rem;
+        min-height: 52px;
+        padding: 0.62rem 0.7rem;
+        border: 1px solid rgba(21, 53, 84, 0.075);
+        border-radius: 14px;
+        background: rgba(243, 248, 253, 0.72);
+        color: #334b64;
+        font-size: 0.79rem;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        border-color: rgba(0, 102, 204, 0.18);
+        background: rgba(0, 102, 204, 0.075);
+        color: #0056ab;
+      }
+
+      .nav-link.active::after {
+        top: 50%;
+        right: auto;
+        bottom: auto;
+        left: -1px;
+        width: 3px;
+        height: 24px;
+        transform: translateY(-50%);
+        border-radius: 0 3px 3px 0;
+        background: #0876d5;
+      }
+
+      .nav-icon {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border-radius: 9px;
+        background: #fff;
+        box-shadow: 0 2px 7px rgba(23, 52, 80, 0.08);
+        color: #607790;
+        font-size: 0.62rem;
+        font-weight: 850;
+      }
+
+      .nav-meta {
+        justify-content: space-between;
+        margin: 0.72rem 0.75rem 0;
+        padding: 0.72rem 0.1rem 0.78rem;
+        border-top: 1px solid rgba(21, 53, 84, 0.09);
+        border-left: 0;
+      }
+
+      .nav-meta-label {
+        display: block;
+        color: #536579;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .nav-meta :global(.lang-link) {
+        padding: 0.42rem 0.55rem;
+        background: #f0f5fa;
+      }
+
+      .nav-meta :global(.lang-link.active) {
+        background: #0b68c5;
+      }
+
+      .nav-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 290;
+        display: block;
+        border: 0;
+        background: rgba(8, 24, 42, 0.14);
+        opacity: 0;
+        visibility: hidden;
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        transition: opacity 0.2s ease, visibility 0.2s;
+      }
+
+      .nav-backdrop.is-visible {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
     @media (max-width: 768px) {
       .container {
-        padding: 2rem 1rem;
+        padding: 6.1rem 1rem 2rem;
       }
 
       .about-content {
@@ -980,8 +1556,14 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
         font-size: 2rem;
       }
 
-      .about-topics {
-        grid-template-columns: 1fr;
+      .current-strip {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.62rem;
+      }
+
+      .current-strip-items {
+        width: 100%;
       }
 
       .sponsor-cta {
@@ -989,17 +1571,17 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
         flex-direction: column;
       }
 
+      .section-header {
+        padding: 1.05rem 1rem;
+      }
+
       .section-header h2 {
         font-size: 1.5rem;
       }
 
-      .section-header {
-        padding: 1.1rem 1rem;
-      }
-
       .race-cards-grid,
       .gallery-grid {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
+        grid-template-columns: 1fr;
       }
 
       .card-media,
@@ -1010,10 +1592,6 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
       .achievements-panel,
       .race-log {
         padding: 1rem 0.9rem;
-      }
-
-      .year-header {
-        top: 60px;
       }
 
       .year-header h3 {
@@ -1035,169 +1613,87 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
       .item::before {
         left: calc(-1rem - 6px);
       }
+    }
 
-      body {
-        padding-bottom: 140px;
-        scroll-padding-top: 72px;
+    @media (max-width: 340px) {
+      .portfolio-nav:not(.is-open) {
+        width: 184px;
       }
 
-      .lang-switcher-wrapper {
-        top: calc(10px + env(safe-area-inset-top, 0px));
-        bottom: auto;
-        left: auto;
-        right: 12px;
-        transform: none;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0.28rem 0.48rem;
-        max-width: calc(100% - 24px);
-        width: fit-content;
-        background: rgba(255, 255, 255, 0.95);
-        border: 1px solid #e0e0e0;
-        border-radius: 999px;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-        backdrop-filter: blur(8px);
+      .nav-current {
+        width: 69px;
       }
 
-      .sticky-years,
-      .sticky-years#stickyYears {
-        top: calc(10px + env(safe-area-inset-top, 0px) + 40px); /* below switcher */
-        bottom: auto;
-        left: auto;
-        right: 12px;
-        transform: none;
-        display: grid;
-        grid-template-columns: repeat(2, max-content);
-        justify-content: end;
-        align-content: start;
-        align-items: center;
-        overflow: visible;
-        padding: 0.4rem 0.5rem;
-        gap: 0.3rem 0.4rem;
-        border-radius: 12px;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-        border: 1px solid #e0e0e0;
-        width: max-content;
-        max-width: calc(100% - 24px);
-      }
-
-      .sticky-years::-webkit-scrollbar {
-        height: 6px;
-      }
-
-      .sticky-years::-webkit-scrollbar-thumb {
-        background: #d0d0d0;
-        border-radius: 999px;
-      }
-
-      .sticky-year-btn {
-        white-space: nowrap;
-        flex: 0 0 auto;
-        font-size: 0.82rem;
-        padding: 0.45rem 0.75rem;
-      }
-
-      .section-header {
-        padding: 1.05rem 1rem;
+      .nav-links {
+        grid-template-columns: 1fr;
       }
     }
 
-    /* Smooth scrolling */
-    html {
-      scroll-behavior: smooth;
-    }
-
-    /* Language Switcher positioning */
-    .lang-switcher-wrapper {
-      position: fixed;
-      top: calc(16px + env(safe-area-inset-top, 0px));
-      right: 16px;
-      left: auto;
-      z-index: 250;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.3rem 0.55rem;
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid #e0e0e0;
-      border-radius: 999px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-      max-width: min(92vw, 280px);
-      width: fit-content;
-      height: auto;
-      backdrop-filter: blur(8px);
-    }
-
-    .inline-link {
-      color: #0066cc;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .inline-link:hover {
-      text-decoration: underline;
-    }
-
-    /* Sticky year indicators */
-    .sticky-years,
-    .sticky-years#stickyYears {
-      position: fixed;
-      top: calc(16px + env(safe-area-inset-top, 0px) + 42px); /* below switcher */
-      right: 16px;
-      left: auto;
-      display: grid;
-      grid-template-columns: repeat(2, max-content);
-      justify-content: end;
-      align-content: start;
-      align-items: center;
-      gap: 0.35rem 0.45rem;
-      z-index: 200;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 0.35rem 0.45rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      width: max-content;
-      max-width: 92vw;
-      max-height: none;
-      overflow: visible;
-    }
-
-    .sticky-year-btn {
-      background: #f5f5f5;
-      border: 1px solid #ddd;
-      padding: 0.35rem 0.65rem;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #666;
-      transition: all 0.2s ease;
-      line-height: 1.2;
-      flex: 0 0 auto;
-      height: auto;
-    }
-
-    .sticky-year-btn:hover {
-      background: #0066cc;
-      color: #fff;
-      border-color: #0066cc;
-    }
-
-    .sticky-year-btn.active {
-      background: #0066cc;
-      color: #fff;
-      border-color: #0066cc;
+    @media (prefers-reduced-motion: reduce) {
+      .portfolio-nav,
+      .nav-drawer,
+      .nav-menu-heading,
+      .nav-link,
+      .nav-meta,
+      .menu-toggle,
+      .menu-toggle-lines::before,
+      .menu-toggle-lines::after,
+      .menu-toggle-lines span {
+        transition: none;
+      }
     }
   </style>
 </head>
-<body>
+<body id="page-top">
 
-<div class="lang-switcher-wrapper">
-  <LanguageSwitcher currentLocale={locale} currentPath={Astro.url.pathname.replace(/^\/faces/, '') || '/'} />
-</div>
+<button class="nav-backdrop" id="navBackdrop" type="button" tabindex="-1" aria-hidden="true"></button>
+<header class="portfolio-nav" id="portfolioNav">
+  <div class="nav-bar">
+    <a class="nav-identity" href="#page-top" aria-label={tr('Zum Seitenanfang', 'Back to top')}>
+      <span class="nav-monogram" aria-hidden="true">MN</span>
+      <span class="nav-current" aria-live="polite">
+        <small>{tr('Gerade hier', 'You are here')}</small>
+        <strong id="navCurrentLabel">{navigationItems[0].label}</strong>
+      </span>
+    </a>
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="portfolioNavMenu"
+      aria-label={tr('Navigation öffnen', 'Open navigation')}
+      data-label-open={tr('Navigation öffnen', 'Open navigation')}
+      data-label-close={tr('Navigation schließen', 'Close navigation')}
+    >
+      <span class="menu-toggle-lines" aria-hidden="true"><span></span></span>
+    </button>
+  </div>
 
-<div class="sticky-years" id="stickyYears"></div>
+  <div class="nav-drawer" id="portfolioNavMenu">
+    <div class="nav-drawer-inner">
+      <p class="nav-menu-heading">{tr('Portfolio entdecken', 'Explore portfolio')}</p>
+      <nav class="nav-links" aria-label={tr('Portfolio-Navigation', 'Portfolio navigation')}>
+        {navigationItems.map((item, index) => (
+          <a
+            class:list={['nav-link', { active: index === 0 }]}
+            href={item.href}
+            data-nav-link
+            data-nav-label={item.label}
+            aria-current={index === 0 ? 'location' : undefined}
+          >
+            <span class="nav-icon" aria-hidden="true">{item.index}</span>
+            <span>{item.label}</span>
+          </a>
+        ))}
+      </nav>
+      <div class="nav-meta">
+        <span class="nav-meta-label">{tr('Sprache', 'Language')}</span>
+        <LanguageSwitcher currentLocale={locale} currentPath={Astro.url.pathname.replace(/^\/faces/, '') || '/'} />
+      </div>
+    </div>
+  </div>
+</header>
 
 <div class="container">
   <!-- About -->
@@ -1212,43 +1708,40 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
           · <span id="ageDays"></span> {tr('Tage', 'days')} :)
         </p>
 
-        <p class="about-explore-title">{tr('Mehr über mich', 'More about me')}</p>
-        <div class="about-topics">
-          <a class="about-topic" href="#section-ausbildung" aria-label={tr('Mehr erfahren: Ausbildung', 'Learn more: Education')}>
-            <span class="about-topic-icon" aria-hidden="true">🎓</span>
-            <span>
-              <strong>{tr('Ausbildung', 'Education')}</strong>
-              <small>TU Graz</small>
-            </span>
-            <span class="about-topic-arrow" aria-hidden="true">→</span>
-          </a>
+        <div class="current-strip" aria-label={tr('Aktuelle Schwerpunkte', 'Current focus')}>
+          <span class="current-strip-label">
+            <span class="current-strip-dot" aria-hidden="true"></span>
+            {tr('Aktuell', 'Currently')}
+          </span>
+          <ul class="current-strip-items">
+            <li class="current-strip-item">
+              <span>Software Engineering and Management · TU Graz</span>
+            </li>
+            <li class="current-strip-item">
+              <span>Teaching Assistant · TU Graz</span>
+            </li>
+            <li class="current-strip-item">
+              <span>{tr('Triathlon-Saison 2026', '2026 triathlon season')}</span>
+            </li>
+          </ul>
+        </div>
 
-          <a class="about-topic" href="#section-erfahrung" aria-label={tr('Zur Berufserfahrung', 'View experience')}>
-            <span class="about-topic-icon" aria-hidden="true">💻</span>
-            <span>
-              <strong>{tr('Berufserfahrung', 'Experience')}</strong>
-              <small>{tr('Teaching & Software Engineering', 'Teaching & software engineering')}</small>
-            </span>
-            <span class="about-topic-arrow" aria-hidden="true">→</span>
-          </a>
-
-          <a class="about-topic" href="#section-sport" aria-label={tr('Zum Sport', 'Explore sport')}>
-            <span class="about-topic-icon" aria-hidden="true">🏊</span>
-            <span>
-              <strong>Triathlon</strong>
-              <small>{tr('Erfolge, Training & Rennen', 'Achievements, training & races')}</small>
-            </span>
-            <span class="about-topic-arrow" aria-hidden="true">→</span>
-          </a>
-
-          <a class="about-topic" href="#section-sponsors" aria-label={tr('Zu den Sponsoren', 'Meet the sponsors')}>
-            <span class="about-topic-icon" aria-hidden="true">🤝</span>
-            <span>
-              <strong>Sponsoring</strong>
-              <small>{tr('Partner & Zusammenarbeit', 'Partners & collaboration')}</small>
-            </span>
-            <span class="about-topic-arrow" aria-hidden="true">→</span>
-          </a>
+        <div class="current-strip upcoming-strip" aria-label={tr('Anstehende Wettkämpfe', 'Upcoming events')}>
+          <span class="current-strip-label">
+            <span class="current-strip-dot" aria-hidden="true"></span>
+            {tr('Als Nächstes', 'Upcoming')}
+          </span>
+          <ul class="current-strip-items">
+            <li class="current-strip-item">
+              <span>{tr('Age-Group-Weltmeisterschaft', 'Age Group World Championship')}</span>
+            </li>
+            <li class="current-strip-item">
+              <span>{tr('10-km-Österreichische Meisterschaft', '10k Austrian Championship')}</span>
+            </li>
+            <li class="current-strip-item">
+              <span>10k Graz</span>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -1344,29 +1837,33 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
     </div>
     <div class="items">
       <div class="item">
-        <h4>{tr('TU Graz - Software Engineering and Management Bachelor und Master', 'TU Graz - Bachelor`s and Master`s in Software Engineering and Management')}</h4>
+        <h4>{tr('TU Graz - Software Engineering and Management Bachelor', 'TU Graz - Bachelor`s in Software Engineering and Management')}</h4>
         <div class="item-meta">{tr('seit September 2023', 'since September 2023')}</div>
-        <p>{tr('Bachelorstudium (bis 2026 als außerordentlicher Student) an der Technischen Universität Graz.', 'Bachelor`s studies (until 2026 as a non-degree student) at Graz University of Technology.')}</p>
-        <p>{tr('Zusätzlich absolviere ich bereits Lehrveranstaltungen des gleichnamigen Masterstudiums mit Major in Machine Learning und Minor in Business Informatics.', 'I am also already completing courses from the corresponding master`s program, with a major in Machine Learning and a minor in Business Informatics.')}</p>
+        <p>{tr('Bachelorstudium an der Technischen Universität Graz.', 'Bachelor`s studies at Graz University of Technology.')}</p>
         <details class="thesis-abstract">
           <summary>{tr('Abstract der Bachelorarbeit', 'Bachelor`s thesis abstract')}</summary>
           <div class="thesis-abstract-content">
             <p>Compact prediction learning is a training principle that encourages neural networks to reuse a small number of latent representations while maintaining task performance. This bachelor thesis investigates whether such compactness constraints lead to structured and reusable internal representations in neural networks.</p>
             <p>The approach is evaluated on a set of synthetic binary prediction tasks</a> and synthetic linear prediction tasks</a> as well as on a convolutional neural network trained on a pairwise MNIST comparison task</a>. Compactness is enforced by an additional loss term applied to the latent representations. The compactness objective is defined as:</p>
-            <p class="math-block">{String.raw`E = \sum_{k \neq l} \Bigl( 1 + \log \sum_i (\lvert g_i(x^{(k)}) - g_i(x^{(l)}) \rvert) \Bigr).`}</p>
+            <p class="math-block">{String.raw`$$E = \sum_{k \neq l} \Bigl(1 + \log \sum_i\lvert g_i(x^{(k)}) - g_i(x^{(l)}) \rvert\Bigr).$$`}</p>
             <p>The results show that for simple synthetic tasks, compact prediction learning leads to highly structured and low-dimensional latent spaces that reflect task-relevant structure. In contrast, for the convolutional setting, the compact objective causes a strong collapse of the latent space, removing most digit-specific information and reducing classification accuracy.</p>
             <p>These findings indicate that compact prediction learning acts as a strong inductive bias that enforces minimal, task-aligned representations, but may limit information retention in more complex perceptual tasks.</p>
             <a class="inline-link" href={PDF_THESIS_BACHELOR} target="_blank" rel="noreferrer">{tr('Bachelorarbeit als PDF ansehen', 'View bachelor`s thesis PDF')}</a>
           </div>
         </details>
-        <details class="thesis-abstract">
+        <!-- <details class="thesis-abstract">
           <summary>{tr('Abstract der Masterarbeit', 'Master`s thesis abstract')}</summary>
           <div class="thesis-abstract-content">
             <p>{tr('Noch nicht ganz so weit ;) (Sommersemester 2027)', 'Not quite there yet ;) (summer semester 2027)')}</p>
           </div>
-        </details>
+        </details> -->
         <!-- <p><a href="https://github.com/neuholdmichael/Compact-prediction-learning">Github zur Bachelorarbeit</a></p> -->
         <!-- <p><a href={pdf_thesis_bachelor} target="_blank" rel="noreferrer">Thesis Bachelorarbeit (PDF)</a></p> -->
+      </div>
+      <div class="item">
+        <h4>{tr('TU Graz - außerordentlicher Student', 'TU Graz - extraordinary student')}</h4>
+        <div class="item-meta">{tr('September 2023 - Juni 2026', 'September 2023 - June 2026')}</div>
+        <p>{tr('200 ECTS lt. Bachelor und Master Curriculum Software Engineering und Management absolviert', '200 ECTS credits according to Bachelor and Master in Software Engineering and Managemnt done')}</p>
       </div>
       <div class="item">
         <h4>HTBL Kapfenberg - Mechatronik</h4>
@@ -1532,7 +2029,7 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
   </script>
 
   <!-- projects -->
-  <section class="section">
+  <section class="section" id="section-projekte">
     <div class="section-header" onclick="document.getElementById('proj-2025').scrollIntoView({ behavior: 'smooth' })">
       <span class="section-eyebrow">{tr('Projekte', 'Projects')}</span>
       <h2>{tr('Projekte & Fähigkeiten', 'Projects & Skills')}</h2>
@@ -1593,8 +2090,8 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
   </section>
 
   <!-- sports -->
-  <section class="section">
-    <div class="section-header" id="section-sport" onclick="document.getElementById('sport-highlights').scrollIntoView({ behavior: 'smooth' })">
+  <section class="section" id="section-sport">
+    <div class="section-header" onclick="document.getElementById('sport-highlights').scrollIntoView({ behavior: 'smooth' })">
       <span class="section-eyebrow">{tr('Sport', 'Sport')}</span>
       <h2>Sport</h2>
     </div>
@@ -1613,7 +2110,6 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
         <h3>{tr('Erfolge', 'Achievements')}</h3>
       </div>
       <div class="items">
-        <a class="item" href="#race-summer-run-2026">{tr('10k Lauf: erster Gesamtsieg', '10k Run: first Win overall')}</a>
         <a class="item" href="#race-od-tarragona-2026">{tr('Age-Group-Europameisterschaft: 5. Platz', 'Age Group European Championship: 5th place')}</a>
         <a class="item" href="#race-sd-vulkandland-2026">{tr('Steirische Meisterschaft 2026: 1. Platz Sprintdistanz U20', '2026 Styrian Championship: 1st place, U20 sprint distance')}</a>
         <a class="item" href="#race-sd-vulkandland-2026">{tr('Steirische Meisterschaft 2026: 3. Platz Sprintdistanz gesamt', '2026 Styrian Championship: 3rd overall, sprint distance')}</a>
@@ -1630,7 +2126,7 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
           <div class="year-header" onclick="this.parentElement.scrollIntoView()">
             <h3>2026</h3>
           </div>
-          <article class="race-card" id="race-od-tarragona-2026">
+          <article class="race-card" id="">
               <p class="race-type">Supersprint Distanz 08.08.2026</p>
               <h5 class="race-name-location">Röthlstein</h5>
               <p>erster Gesamtsieg Triathlon</p>
@@ -1666,7 +2162,7 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
             <article class="race-card" id="race-od-tarragona-2026">
               <p class="race-type">Olympische Distanz 14.06.2026</p>
               <h5 class="race-name-location">Europameisterschaft Tarragona</h5>
-              <a class="race-official-link" href="https://live.event-timing.com/439">official results</a>
+              <a class="race-official-link" href="https://events.triathlon.org/2026-europe-triathlon-age-groupchampionships-tarragona/results?program=677746">official results</a>
               <p>erste Europameisterschaft</p>
               <p>5. Platz AG 20-24</p>
               <div class="race-times">
@@ -2241,6 +2737,9 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
   </section> -->
 </div>
 
+<SiteFooter locale={locale} />
+<CookieConsent locale={locale} />
+
 <script is:inline>
   // Race results contain many numbers and names. Translate their repeated
   // terminology in one place while keeping each result next to its markup.
@@ -2300,60 +2799,93 @@ const tr = (de: string, en: string) => locale === 'de' ? de : en;
 </script>
 
 <script>
-  // Sticky section navigation - only headlines, not years
-  const sections = document.querySelectorAll('.section');
-  const stickyYearsContainer = document.getElementById('stickyYears');
-  
-  const sectionData: Array<{ name: string; element: Element }> = [];
-  sections.forEach(section => {
-    const headerElement = section.querySelector('.section-header h2');
-    if (headerElement) {
-      const sectionName = headerElement.textContent;
-      sectionData.push({ name: sectionName, element: section });
+  const portfolioNav = document.getElementById('portfolioNav');
+  const menuToggle = document.getElementById('menuToggle');
+  const navDrawer = document.getElementById('portfolioNavMenu');
+  const navBackdrop = document.getElementById('navBackdrop');
+  const navCurrentLabel = document.getElementById('navCurrentLabel');
+  const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-nav-link]'));
+  const mobileNavigation = window.matchMedia('(max-width: 880px)');
+
+  const setMenuOpen = (open: boolean) => {
+    const shouldOpen = mobileNavigation.matches && open;
+    portfolioNav?.classList.toggle('is-open', shouldOpen);
+    navBackdrop?.classList.toggle('is-visible', shouldOpen);
+    menuToggle?.setAttribute('aria-expanded', String(shouldOpen));
+
+    if (menuToggle) {
+      const label = shouldOpen ? menuToggle.dataset.labelClose : menuToggle.dataset.labelOpen;
+      if (label) menuToggle.setAttribute('aria-label', label);
+    }
+
+    if (navDrawer) navDrawer.inert = mobileNavigation.matches && !shouldOpen;
+  };
+
+  menuToggle?.addEventListener('click', () => {
+    setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
+  });
+  navBackdrop?.addEventListener('click', () => setMenuOpen(false));
+  document.querySelector('.nav-identity')?.addEventListener('click', () => setMenuOpen(false));
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && portfolioNav?.classList.contains('is-open')) {
+      setMenuOpen(false);
+      menuToggle?.focus();
     }
   });
 
-  // Create sticky section buttons
-  sectionData.forEach(({ name, element }) => {
-    const btn = document.createElement('button');
-    btn.className = 'sticky-year-btn';
-    btn.textContent = name;
-    btn.onclick = () => {
-      element.scrollIntoView({ behavior: 'smooth' });
-    };
-    if (stickyYearsContainer) {
-      stickyYearsContainer.appendChild(btn);
+  mobileNavigation.addEventListener('change', () => setMenuOpen(false));
+
+  const sectionTargets = navLinks
+    .map(link => {
+      const target = document.querySelector(link.hash);
+      return target ? { link, target } : null;
+    })
+    .filter((item): item is { link: HTMLAnchorElement; target: Element } => item !== null);
+
+  const setActiveLink = (activeLink: HTMLAnchorElement) => {
+    navLinks.forEach(link => {
+      const isActive = link === activeLink;
+      link.classList.toggle('active', isActive);
+      if (isActive) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+
+    if (navCurrentLabel) {
+      navCurrentLabel.textContent = activeLink.dataset.navLabel || activeLink.textContent?.trim() || '';
     }
+  };
+
+  let scrollFrame = 0;
+  const updateActiveSection = () => {
+    scrollFrame = 0;
+    const marker = Math.min(150, window.innerHeight * 0.24);
+    let active = sectionTargets[0];
+
+    sectionTargets.forEach(item => {
+      if (item.target.getBoundingClientRect().top <= marker) active = item;
+    });
+
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+      active = sectionTargets.at(-1) || active;
+    }
+
+    if (active) setActiveLink(active.link);
+  };
+
+  window.addEventListener('scroll', () => {
+    if (!scrollFrame) scrollFrame = window.requestAnimationFrame(updateActiveSection);
+  }, { passive: true });
+  window.addEventListener('resize', updateActiveSection, { passive: true });
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      setActiveLink(link);
+      setMenuOpen(false);
+    });
   });
 
-  // Update active section on scroll
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && stickyYearsContainer) {
-          const currentSection = entry.target;
-          const headerElement = currentSection.querySelector('.section-header h2');
-          if (headerElement) {
-            const sectionName = headerElement.textContent;
-            const buttons = stickyYearsContainer.querySelectorAll('.sticky-year-btn');
-            buttons.forEach(btn => {
-              if (btn.textContent === sectionName) {
-                btn.classList.add('active');
-              } else {
-                btn.classList.remove('active');
-              }
-            });
-          }
-        }
-      });
-    },
-    {
-      threshold: 0.3,
-      rootMargin: '-100px 0px -70% 0px'
-    }
-  );
-
-  sections.forEach(section => observer.observe(section));
+  setMenuOpen(false);
+  updateActiveSection();
 
   // Open linked thesis abstracts before the browser scrolls to them.
   document.querySelectorAll<HTMLAnchorElement>('a[data-open-details]').forEach(link => {

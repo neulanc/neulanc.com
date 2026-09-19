@@ -8,6 +8,8 @@
 
 // Frontmatter
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 import { getLocaleFromUrl } from '../i18n/utils';
 
 const content = {
@@ -56,10 +58,72 @@ const t = content[locale];
     <meta property="twitter:image" content="https://neulanc.com/og-image.png" />
     
     <title>neulanc</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        background:
+          radial-gradient(circle at 12% 0%, rgba(0, 102, 204, 0.09), transparent 28rem),
+          linear-gradient(180deg, #f8fbff, #fff 34rem);
+        color: #172b42;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      .landing-topbar {
+        display: flex;
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 1.25rem 0;
+        justify-content: flex-end;
+      }
+      .landing-main {
+        display: grid;
+        width: min(1120px, calc(100% - 40px));
+        min-height: 54vh;
+        margin: 0 auto;
+        align-content: center;
+        padding: 4rem 0 6rem;
+      }
+      .landing-main span {
+        color: #0870cf;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .landing-main h1 {
+        max-width: 12ch;
+        margin: 0.8rem 0 1.15rem;
+        color: #0c2036;
+        font-size: clamp(2.7rem, 8vw, 6rem);
+        letter-spacing: -0.06em;
+        line-height: 0.98;
+      }
+      .landing-main p {
+        max-width: 58ch;
+        margin: 0;
+        color: #5b6e82;
+        font-size: 1.05rem;
+        line-height: 1.7;
+      }
+      .landing-main a {
+        color: #0066c2;
+        font-weight: 750;
+        text-underline-offset: 0.18em;
+      }
+    </style>
   </head>
-  <body>
-    <LanguageSwitcher currentLocale={locale} currentPath={Astro.url.pathname} />
-    <h1>{t.heading}</h1>
-    <p>{t.text} <a href="https://faces.neulanc.com/@neuhold-michael">{t.link}</a></p>
+  <body id="page-top">
+    <header class="landing-topbar">
+      <LanguageSwitcher currentLocale={locale} currentPath={Astro.url.pathname} />
+    </header>
+    <main class="landing-main">
+      <span>neulanc</span>
+      <h1>{t.heading}</h1>
+      <p>{t.text} <a href="https://faces.neulanc.com/@neuhold-michael">{t.link}</a></p>
+    </main>
+    <SiteFooter locale={locale} />
+    <CookieConsent locale={locale} />
   </body>
 </html>

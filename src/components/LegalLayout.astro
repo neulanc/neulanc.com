@@ -1,0 +1,312 @@
+---
+import type { Locale } from '../i18n/utils';
+import SiteFooter from './SiteFooter.astro';
+import CookieConsent from './CookieConsent.astro';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  eyebrow: string;
+  slug: string;
+  updated: string;
+}
+
+const { locale, title, description, eyebrow, slug, updated } = Astro.props;
+const tr = (de: string, en: string) => locale === 'de' ? de : en;
+const canonicalPath = locale === 'de' ? `/${slug}/` : `/en/${slug}/`;
+---
+
+<!DOCTYPE html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index,follow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="canonical" href={`https://neulanc.com${canonicalPath}`} />
+    <link rel="alternate" hreflang="de" href={`https://neulanc.com/${slug}/`} />
+    <link rel="alternate" hreflang="en" href={`https://neulanc.com/en/${slug}/`} />
+    <link rel="alternate" hreflang="x-default" href={`https://neulanc.com/${slug}/`} />
+    <title>{title} – neulanc</title>
+  </head>
+  <body id="page-top">
+    <header class="legal-topbar">
+      <a class="legal-brand" href={locale === 'de' ? '/' : '/en/'} aria-label="neulanc Home">
+        <span aria-hidden="true">n.</span>
+        neulanc
+      </a>
+      <nav aria-label={tr('Sprachauswahl', 'Language selection')}>
+        <a href={`/${slug}/`} class:list={{ active: locale === 'de' }} lang="de">DE</a>
+        <a href={`/en/${slug}/`} class:list={{ active: locale === 'en' }} lang="en">EN</a>
+      </nav>
+    </header>
+
+    <main class="legal-main">
+      <header class="legal-hero">
+        <p>{eyebrow}</p>
+        <h1>{title}</h1>
+        <div class="legal-meta">
+          <span>{tr('Zuletzt aktualisiert', 'Last updated')}: {updated}</span>
+          <span>neulanc.com</span>
+        </div>
+      </header>
+
+      <article class="legal-document">
+        <slot />
+      </article>
+    </main>
+
+    <SiteFooter locale={locale} />
+    <CookieConsent locale={locale} />
+  </body>
+</html>
+
+<style is:global>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    background:
+      radial-gradient(circle at 8% 0%, rgba(0, 102, 204, 0.07), transparent 28rem),
+      linear-gradient(180deg, #f8fbff 0, #fff 29rem);
+    color: #26384b;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.65;
+  }
+
+  .legal-topbar {
+    display: flex;
+    width: min(1120px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 1.35rem 0;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(34, 66, 98, 0.1);
+  }
+
+  .legal-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.58rem;
+    color: #10243a;
+    font-size: 1.04rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    text-decoration: none;
+  }
+
+  .legal-brand > span {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 10px;
+    background: #076bc9;
+    color: #fff;
+    font-size: 0.8rem;
+  }
+
+  .legal-topbar nav {
+    display: inline-flex;
+    gap: 0.3rem;
+    padding: 0.25rem;
+    border: 1px solid #dce6ef;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.75);
+  }
+
+  .legal-topbar nav a {
+    padding: 0.38rem 0.55rem;
+    border-radius: 7px;
+    color: #69798b;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .legal-topbar nav a.active {
+    background: #096ac6;
+    color: #fff;
+  }
+
+  .legal-main {
+    width: min(920px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: clamp(4rem, 9vw, 7.5rem) 0 2rem;
+  }
+
+  .legal-hero {
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+    border-bottom: 1px solid #dce5ee;
+  }
+
+  .legal-hero > p {
+    margin: 0 0 0.8rem;
+    color: #0870cf;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .legal-hero h1 {
+    max-width: 15ch;
+    margin: 0;
+    color: #0b1f35;
+    font-size: clamp(2.55rem, 7vw, 5.25rem);
+    font-weight: 760;
+    letter-spacing: -0.055em;
+    line-height: 0.98;
+  }
+
+  .legal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 1.2rem;
+    margin-top: 1.6rem;
+    color: #768596;
+    font-size: 0.78rem;
+  }
+
+  .legal-document {
+    max-width: 760px;
+    padding-top: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .legal-document .legal-lead {
+    margin: 0 0 3rem;
+    color: #40566d;
+    font-size: clamp(1.08rem, 2.2vw, 1.25rem);
+    line-height: 1.65;
+  }
+
+  .legal-document section {
+    margin-top: 3rem;
+    scroll-margin-top: 2rem;
+  }
+
+  .legal-document h2 {
+    margin: 0 0 0.85rem;
+    color: #10243a;
+    font-size: clamp(1.3rem, 3vw, 1.65rem);
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+  }
+
+  .legal-document h3 {
+    margin: 1.6rem 0 0.5rem;
+    color: #1c344d;
+    font-size: 1rem;
+  }
+
+  .legal-document p,
+  .legal-document li,
+  .legal-document address {
+    color: #52667a;
+    font-size: 0.96rem;
+  }
+
+  .legal-document p {
+    margin: 0.65rem 0;
+  }
+
+  .legal-document ul {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0.9rem 0;
+    padding-left: 1.15rem;
+  }
+
+  .legal-document a {
+    color: #0066c2;
+    font-weight: 650;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  .legal-document address {
+    font-style: normal;
+    line-height: 1.7;
+  }
+
+  .legal-notice {
+    margin: 0 0 2.5rem;
+    padding: 1.05rem 1.15rem;
+    border: 1px solid #efcf96;
+    border-radius: 14px;
+    background: #fff9ee;
+    color: #6c521f !important;
+    font-size: 0.88rem !important;
+  }
+
+  .legal-table-wrap {
+    overflow-x: auto;
+    margin: 1rem 0;
+    border: 1px solid #dce5ed;
+    border-radius: 14px;
+  }
+
+  .legal-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  .legal-table th,
+  .legal-table td {
+    min-width: 130px;
+    padding: 0.82rem 0.9rem;
+    border-bottom: 1px solid #e3eaf1;
+    color: #52667a;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .legal-table th {
+    background: #f3f7fb;
+    color: #243c54;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .legal-table tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .legal-source-note {
+    margin-top: 3.5rem !important;
+    padding-top: 1.25rem;
+    border-top: 1px solid #dfe7ef;
+    color: #7a8795 !important;
+    font-size: 0.78rem !important;
+  }
+
+  @media (max-width: 580px) {
+    .legal-topbar,
+    .legal-main {
+      width: min(100% - 32px, 920px);
+    }
+
+    .legal-main {
+      padding-top: 3.5rem;
+    }
+
+    .legal-document section {
+      margin-top: 2.5rem;
+    }
+  }
+</style>

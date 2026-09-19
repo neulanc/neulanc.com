@@ -1,0 +1,86 @@
+---
+import LegalLayout from '../components/LegalLayout.astro';
+import { getLocaleFromUrl } from '../i18n/utils';
+
+const locale = getLocaleFromUrl(Astro.url);
+const tr = (de: string, en: string) => locale === 'de' ? de : en;
+const updated = locale === 'de' ? '14. September 2026' : '14 September 2026';
+---
+
+<LegalLayout
+  locale={locale}
+  slug="imprint"
+  title={tr('Impressum', 'Imprint')}
+  eyebrow={tr('Anbieterkennzeichnung', 'Provider information')}
+  description={tr('Impressum und Offenlegung für neulanc.', 'Provider information and legal disclosure for neulanc.')}
+  updated={updated}
+>
+
+  <p class="legal-lead">
+    {tr(
+      'Informationen gemäß § 5 E-Commerce-Gesetz (ECG) und Offenlegung gemäß § 25 Mediengesetz.',
+      'Provider information pursuant to section 5 of the Austrian E-Commerce Act and disclosure pursuant to section 25 of the Austrian Media Act.'
+    )}
+  </p>
+
+  <section>
+    <h2>{tr('Medieninhaber und Diensteanbieter', 'Media owner and service provider')}</h2>
+    <address>
+      <strong>Michael Neuhold</strong><br />
+      neulanc<br />
+      {tr('Schrems 49a', 'Schrems 49a')}<br />
+      {tr('Österreich', 'Austria')}
+    </address>
+    <p>
+      E-Mail: <a href="mailto:neuhold-michael@neulanc.com">neuhold-michael@neulanc.com</a><br />
+      Website: <a href="https://neulanc.com">neulanc.com</a>
+    </p>
+  </section>
+
+  <section>
+    <h2>{tr('Unternehmensangaben', 'Business information')}</h2>
+    <p>{tr('Unternehmensgegenstand', 'Business purpose')}: {tr('Entwicklung und Betrieb digitaler Projekte sowie Veröffentlichung persönlicher Portfolios.', 'Development and operation of digital projects and publication of personal portfolios.')}</p>
+    <p>{tr('Rechtsform', 'Legal form')}: {tr('Einzelperson; vor Veröffentlichung prüfen und gegebenenfalls berichtigen.', 'Individual; verify before publication and amend where necessary.')}</p>
+    <p>{tr('Firmenbuchnummer / Firmenbuchgericht', 'Company-register number / court')}: {tr('nicht eingetragen bzw. ergänzen, falls vorhanden', 'not registered, or add if applicable')}</p>
+    <p>{tr('UID-Nummer', 'VAT identification number')}: {tr('ergänzen, falls vorhanden', 'add if applicable')}</p>
+    <p>{tr('Zuständige Kammer und Aufsichtsbehörde', 'Competent chamber and supervisory authority')}: {tr('ergänzen, falls die Tätigkeit gewerberechtlich ausgeübt wird', 'add if the activity is subject to Austrian trade law')}</p>
+  </section>
+
+  <section>
+    <h2>{tr('Offenlegung nach dem Mediengesetz', 'Disclosure under the Austrian Media Act')}</h2>
+    <p>{tr('Medieninhaber', 'Media owner')}: Michael Neuhold</p>
+    <p>{tr('Wohnort / Sitz', 'Residence / registered office')}: {tr('Frohnleiten', 'Frohnleiten')}</p>
+    <p>{tr('Grundlegende Richtung', 'Editorial purpose')}: {tr(
+      'Information über neulanc, digitale Projekte, persönliche Portfolios sowie berufliche, akademische und sportliche Aktivitäten der dargestellten Personen.',
+      'Information about neulanc, digital projects, personal portfolios, and the professional, academic and sporting activities of the people presented.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('Inhalte und externe Links', 'Content and external links')}</h2>
+    <p>{tr(
+      'Die Inhalte dieser Website werden mit Sorgfalt erstellt. Eine Gewähr für Vollständigkeit, Richtigkeit und ständige Aktualität kann jedoch nicht übernommen werden. Zwingende gesetzliche Haftungsbestimmungen bleiben unberührt.',
+      'The content of this website is prepared with care. However, no guarantee is given that it is complete, accurate or continuously up to date. Mandatory statutory liability remains unaffected.'
+    )}</p>
+    <p>{tr(
+      'Für Inhalte externer Websites sind ausschließlich deren Betreiber verantwortlich. Externe Links werden bei ihrer Aufnahme geprüft; eine laufende Kontrolle ohne konkreten Hinweis auf eine Rechtsverletzung ist nicht zumutbar.',
+      'The operators of external websites are solely responsible for their content. External links are checked when added; continuous monitoring without a specific indication of infringement is not reasonably possible.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('Urheberrecht', 'Copyright')}</h2>
+    <p>{tr(
+      'Soweit nicht anders gekennzeichnet, unterliegen Texte, Gestaltung, Fotografien und sonstige Inhalte dieser Website dem Urheberrecht. Jede Nutzung außerhalb der gesetzlichen Schranken bedarf der vorherigen Zustimmung des jeweiligen Rechteinhabers.',
+      'Unless stated otherwise, text, design, photographs and other website content are protected by copyright. Any use beyond statutory exceptions requires prior permission from the relevant rights holder.'
+    )}</p>
+  </section>
+
+  <p class="legal-source-note">
+    {tr('Rechtsgrundlagen:', 'Legal references:')}
+    <a href="https://ris.bka.gv.at/eli/bgbl/i/2001/152/P5/NOR40025801" target="_blank" rel="noreferrer">§ 5 ECG</a>
+    {tr('und', 'and')}
+    <a href="https://ris.bka.gv.at/eli/bgbl/1981/314/P25/NOR40134353" target="_blank" rel="noreferrer">§ 25 MedienG</a>.
+    {tr('Dieser Entwurf ersetzt keine individuelle Rechtsberatung.', 'This draft is not a substitute for individual legal advice.')}
+  </p>
+</LegalLayout>

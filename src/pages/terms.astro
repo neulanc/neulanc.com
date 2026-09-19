@@ -1,0 +1,126 @@
+---
+import LegalLayout from '../components/LegalLayout.astro';
+import { getLocaleFromUrl } from '../i18n/utils';
+
+const locale = getLocaleFromUrl(Astro.url);
+const tr = (de: string, en: string) => locale === 'de' ? de : en;
+const updated = locale === 'de' ? '14. September 2026' : '14 September 2026';
+---
+
+<LegalLayout
+  locale={locale}
+  slug="terms"
+  title={tr('Nutzungsbedingungen', 'Terms & Conditions')}
+  eyebrow={tr('Regeln für die Nutzung', 'Terms of use')}
+  description={tr('Nutzungsbedingungen für neulanc und Faces.', 'Terms of use for neulanc and Faces.')}
+  updated={updated}
+>
+  <p class="legal-notice">
+    {tr(
+      'Dieser Entwurf ist auf eine derzeit unentgeltliche Informations- und Portfolio-Website ohne Shop, Benutzerkonten oder kostenpflichtige Leistungen zugeschnitten. Vor Einführung solcher Funktionen müssen die Bedingungen rechtlich und inhaltlich erweitert werden.',
+      'This draft is tailored to the current free informational and portfolio website without a shop, user accounts or paid services. It must be reviewed and expanded before any such functions are introduced.'
+    )}
+  </p>
+
+  <p class="legal-lead">
+    {tr(
+      'Diese Bedingungen schaffen einen klaren Rahmen für die Nutzung von neulanc.com und den dazugehörigen Faces-Seiten. Zwingende gesetzliche Rechte bleiben davon unberührt.',
+      'These terms provide a clear framework for using neulanc.com and its related Faces pages. Mandatory statutory rights remain unaffected.'
+    )}
+  </p>
+
+  <section>
+    <h2>{tr('1. Geltungsbereich', '1. Scope')}</h2>
+    <p>{tr(
+      'Diese Nutzungsbedingungen gelten für den Besuch und die Nutzung der unter neulanc.com sowie faces.neulanc.com bereitgestellten Inhalte und Funktionen. Betreiber ist Michael Neuhold; die Kontaktdaten finden sich im Impressum.',
+      'These terms apply to access and use of the content and functions available at neulanc.com and faces.neulanc.com. The operator is Michael Neuhold; contact details are provided in the imprint.'
+    )}</p>
+    <p>{tr(
+      'Abweichende Bedingungen gelten nur, wenn sie ausdrücklich in Textform vereinbart wurden. Die bloße Nutzung der öffentlich zugänglichen Website begründet keinen kostenpflichtigen Vertrag.',
+      'Different terms apply only where expressly agreed in text form. Merely using the publicly available website does not create a paid contract.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('2. Angebot und Verfügbarkeit', '2. Service and availability')}</h2>
+    <p>{tr(
+      'neulanc stellt Informationen zu Projekten, Portfolios und persönlichen Aktivitäten bereit. Inhalte und Funktionen können weiterentwickelt, geändert oder eingestellt werden. Ein Anspruch auf bestimmte Inhalte, Funktionen oder ununterbrochene Verfügbarkeit besteht nicht.',
+      'neulanc provides information about projects, portfolios and personal activities. Content and functions may be developed, changed or discontinued. There is no entitlement to specific content, functions or uninterrupted availability.'
+    )}</p>
+    <p>{tr(
+      'Wartung, Sicherheitsmaßnahmen sowie technische Ereignisse außerhalb des Einflussbereichs von neulanc können die Erreichbarkeit vorübergehend einschränken.',
+      'Maintenance, security measures and technical events outside neulancs control may temporarily limit availability.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('3. Zulässige Nutzung', '3. Permitted use')}</h2>
+    <p>{tr('Die Website darf zu privaten und beruflichen Informationszwecken genutzt werden. Unzulässig sind insbesondere:', 'The website may be used for private and professional information purposes. In particular, users must not:')}</p>
+    <ul>
+      <li>{tr('rechtswidrige, missbräuchliche oder sicherheitsgefährdende Nutzung;', 'use the website unlawfully, abusively or in a manner that threatens security;')}</li>
+      <li>{tr('automatisierte Zugriffe, die den Betrieb unangemessen belasten oder Schutzmaßnahmen umgehen;', 'make automated requests that place an unreasonable load on the service or bypass protective measures;')}</li>
+      <li>{tr('der Versuch, auf nicht öffentliche Bereiche, Systeme oder Daten zuzugreifen;', 'attempt to access non-public areas, systems or data;')}</li>
+      <li>{tr('die irreführende Darstellung, Inhalte oder Aussagen stammten von neulanc oder dargestellten Personen.', 'misleadingly suggest that content or statements originate from neulanc or any person presented on the website.')}</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>{tr('4. Geistiges Eigentum', '4. Intellectual property')}</h2>
+    <p>{tr(
+      'Die auf der Website veröffentlichten Texte, Fotografien, Grafiken, Logos, Dokumente und Gestaltungen können urheber-, marken- oder sonstigen schutzrechtlichen Bestimmungen unterliegen. Rechte Dritter bleiben vorbehalten.',
+      'Text, photographs, graphics, logos, documents and designs published on the website may be protected by copyright, trade mark or other intellectual-property laws. Third-party rights are reserved.'
+    )}</p>
+    <p>{tr(
+      'Das Aufrufen, Verlinken und Anfertigen einzelner Kopien für den persönlichen Gebrauch ist im gesetzlichen Rahmen erlaubt. Veröffentlichung, Bearbeitung, kommerzielle Verwertung oder systematische Vervielfältigung bedürfen einer entsprechenden Berechtigung.',
+      'Accessing, linking to and making individual copies for personal use is permitted within statutory limits. Publication, adaptation, commercial exploitation or systematic reproduction requires appropriate authorisation.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('5. Profile und bereitgestellte Informationen', '5. Profiles and submitted information')}</h2>
+    <p>{tr(
+      'Personenbezogene Portfolio-Inhalte werden mit Zustimmung oder auf Veranlassung der jeweils dargestellten Person veröffentlicht. Wer eine Berichtigung oder Entfernung eigener Angaben wünscht, kann sich an die im Impressum genannte Adresse wenden.',
+      'Personal portfolio content is published with the consent or at the request of the person presented. Anyone seeking correction or removal of their own information may contact the address in the imprint.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('6. Externe Angebote', '6. Third-party services')}</h2>
+    <p>{tr(
+      'Die Website enthält Links zu externen Angeboten. neulanc macht sich deren Inhalte nicht zu eigen und hat keinen Einfluss auf ihre laufende Verfügbarkeit oder Verarbeitung personenbezogener Daten. Für die Nutzung gelten die Bedingungen des jeweiligen Anbieters.',
+      'The website contains links to third-party services. neulanc does not adopt their content and cannot control their ongoing availability or processing of personal data. Use is subject to the relevant providers terms.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('7. Haftung', '7. Liability')}</h2>
+    <p>{tr(
+      'neulanc haftet nach den zwingenden gesetzlichen Bestimmungen. Soweit gesetzlich zulässig, ist die Haftung für leicht fahrlässig verursachte Schäden ausgeschlossen; dies gilt nicht bei Verletzung von Leben, Körper oder Gesundheit sowie bei Verletzung wesentlicher Pflichten.',
+      'neulanc remains liable in accordance with mandatory law. To the extent legally permitted, liability for damage caused by slight negligence is excluded; this does not apply to injury to life, body or health or breach of essential obligations.'
+    )}</p>
+    <p>{tr(
+      'Fachliche, sportliche oder akademische Inhalte dienen der Information und ersetzen keine individuelle medizinische, rechtliche, finanzielle oder sonstige professionelle Beratung.',
+      'Professional, sporting or academic content is provided for information and does not replace individual medical, legal, financial or other professional advice.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('8. Datenschutz', '8. Privacy')}</h2>
+    <p>{tr('Informationen zur Verarbeitung personenbezogener Daten stehen in der', 'Information about the processing of personal data is available in the')} <a href={locale === 'de' ? '/privacy/' : '/en/privacy/'}>{tr('Datenschutzerklärung', 'Privacy Policy')}</a>.</p>
+  </section>
+
+  <section>
+    <h2>{tr('9. Änderungen und anwendbares Recht', '9. Changes and applicable law')}</h2>
+    <p>{tr(
+      'Diese Bedingungen können angepasst werden, wenn sich das Angebot oder rechtliche Anforderungen ändern. Es gilt österreichisches Recht unter Ausschluss seiner Verweisungsnormen. Zwingende Verbraucherschutzvorschriften des Staates, in dem eine Verbraucherin oder ein Verbraucher den gewöhnlichen Aufenthalt hat, bleiben unberührt.',
+      'These terms may be updated when the service or legal requirements change. Austrian law applies, excluding its conflict-of-law rules. Mandatory consumer-protection laws of the country in which a consumer habitually resides remain unaffected.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('10. Kontakt', '10. Contact')}</h2>
+    <p>{tr('Fragen zu diesen Bedingungen können an ', 'Questions about these terms may be sent to ')}<a href="mailto:neuhold-michael@neulanc.com">neuhold-michael@neulanc.com</a>{tr(' gerichtet werden.', '.')}</p>
+  </section>
+
+  <p class="legal-source-note">{tr('Diese allgemeinen Website-Bedingungen ersetzen keine individuelle Rechtsberatung und keine auf ein künftiges entgeltliches Angebot zugeschnittenen AGB.', 'These general website terms are not a substitute for individual legal advice or terms specifically drafted for any future paid service.')}</p>
+</LegalLayout>
