@@ -1844,7 +1844,7 @@ const navigationItems = [
           <summary>{tr('Abstract der Bachelorarbeit', 'Bachelor`s thesis abstract')}</summary>
           <div class="thesis-abstract-content">
             <p>Compact prediction learning is a training principle that encourages neural networks to reuse a small number of latent representations while maintaining task performance. This bachelor thesis investigates whether such compactness constraints lead to structured and reusable internal representations in neural networks.</p>
-            <p>The approach is evaluated on a set of synthetic binary prediction tasks</a> and synthetic linear prediction tasks</a> as well as on a convolutional neural network trained on a pairwise MNIST comparison task</a>. Compactness is enforced by an additional loss term applied to the latent representations. The compactness objective is defined as:</p>
+            <p>The approach is evaluated on a set of synthetic binary prediction tasks and synthetic linear prediction tasks as well as on a convolutional neural network trained on a pairwise MNIST comparison task. Compactness is enforced by an additional loss term applied to the latent representations. The compactness objective is defined as:</p>
             <p class="math-block">{String.raw`$$E = \sum_{k \neq l} \Bigl(1 + \log \sum_i\lvert g_i(x^{(k)}) - g_i(x^{(l)}) \rvert\Bigr).$$`}</p>
             <p>The results show that for simple synthetic tasks, compact prediction learning leads to highly structured and low-dimensional latent spaces that reflect task-relevant structure. In contrast, for the convolutional setting, the compact objective causes a strong collapse of the latent space, removing most digit-specific information and reducing classification accuracy.</p>
             <p>These findings indicate that compact prediction learning acts as a strong inductive bias that enforces minimal, task-aligned representations, but may limit information retention in more complex perceptual tasks.</p>
@@ -2117,7 +2117,6 @@ const navigationItems = [
         <a class="item" href="#race-cross-frohnleiten-2022">{tr('Steirische Meisterschaft 2022: 1. Platz Crosslauf U18', '2022 Styrian Championship: 1st place, U18 cross-country')}</a>
       </div>
     </div>
-  </section>
       <div class="race-log" id="races">
         <h3>{tr('Alle Rennen', 'All Races')}</h3>
 
@@ -2276,7 +2275,6 @@ const navigationItems = [
                 </div>
               </div>
             </article>
-          </div>
           </div>
         </div>
         <div class="race-year-group">
@@ -2543,7 +2541,6 @@ const navigationItems = [
                     <p class="race-time-value">39:30min <a class="race-official-link" href="https://www.strava.com/activities/12001833231">Strava</a></p>
                   </div>
               </div>
-            </article>
             </article>
             <article class="race-card" id="race-10k-2025">
               <p class="race-type">Bergtriathlon 01.06.2024</p>

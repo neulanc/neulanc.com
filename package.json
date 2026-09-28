@@ -3,11 +3,12 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && cp -R public_html/_astro public_html/faces/_astro && cp public_html/404.html public_html/faces/404.html && mkdir -p public_html/faces/assets && cp src/pages/faces/@neuhold-michael/assets/neuhold-michael_bachelor-thesis.pdf public_html/faces/assets/neuhold-michael_bachelor-thesis.pdf",
+    "build": "astro build && cp -R public_html/_astro public_html/faces/_astro && cp -R public_html/_astro public_html/app/_astro && cp public_html/404.html public_html/faces/404.html && cp public_html/404.html public_html/app/404.html && mkdir -p public_html/faces/assets && cp src/pages/faces/@neuhold-michael/assets/neuhold-michael_bachelor-thesis.pdf public_html/faces/assets/neuhold-michael_bachelor-thesis.pdf",
     "preview": "astro preview"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",
-    "astro": "^6.2.2"
+    "astro": "^7.3.3",
+    "pdf-lib": "^1.17.1"
   }
 }
