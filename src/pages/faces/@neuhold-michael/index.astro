@@ -485,69 +485,54 @@ const navigationItems = [
     }
 
     .items {
+      --timeline-offset: 1.5rem;
+      --timeline-rail-width: 2px;
+      --timeline-marker-size: 12px;
       margin-left: 3rem;
       margin-bottom: 2rem;
       position: relative;
     }
 
-    /* Creative animated line */
     .items::before {
       content: '';
       position: absolute;
-      left: -2rem;
+      left: calc(var(--timeline-offset) * -1);
       top: 0;
       bottom: 0;
-      width: 2px;
+      width: var(--timeline-rail-width);
+      border-radius: 999px;
       background: linear-gradient(
         180deg,
         transparent 0%,
-        #0066cc 10%,
-        #00aaff 50%,
-        #0066cc 90%,
+        rgba(0, 102, 204, 0.24) 6%,
+        rgba(0, 170, 255, 0.72) 48%,
+        rgba(0, 102, 204, 0.24) 94%,
         transparent 100%
       );
-      animation: lineGlow 2s ease-in-out infinite alternate;
+      background-size: 100% 180%;
+      animation: lineShift 6s ease-in-out infinite alternate;
     }
 
-    /* Animated dots flowing down the line */
     .items::after {
       content: '';
       position: absolute;
-      left: calc(-2rem - 2px);
-      top: 0;
-      width: 6px;
-      height: 6px;
-      background: #00aaff;
+      left: calc(var(--timeline-offset) * -1);
+      bottom: 0;
+      width: 0.45rem;
+      height: 0.45rem;
+      border: 2px solid #fff;
       border-radius: 50%;
-      box-shadow: 0 0 10px #00aaff, 0 0 20px rgba(0, 170, 255, 0.5);
-      animation: dotFlow 3s ease-in-out infinite;
+      background: #35b6f2;
+      box-shadow: 0 0 0 3px rgba(53, 182, 242, 0.12);
+      transform: translateX(-50%);
     }
 
-    @keyframes lineGlow {
+    @keyframes lineShift {
       0% {
-        opacity: 0.5;
-        box-shadow: 0 0 5px rgba(0, 102, 204, 0.3);
+        background-position: 0 0;
       }
       100% {
-        opacity: 1;
-        box-shadow: 0 0 15px rgba(0, 170, 255, 0.6);
-      }
-    }
-
-    @keyframes dotFlow {
-      0% {
-        top: 0%;
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      90% {
-        opacity: 1;
-      }
-      100% {
-        top: 100%;
-        opacity: 0;
+        background-position: 0 100%;
       }
     }
 
@@ -559,33 +544,35 @@ const navigationItems = [
       background: rgba(255, 255, 255, 0.92);
       box-shadow: 0 10px 28px rgba(16, 30, 54, 0.05);
       position: relative;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    /* Item indicator dot - perfectly centered on line */
     .item::before {
       content: '';
       position: absolute;
-      left: calc(-2rem - 6px);
-      top: 0.4rem;
-      width: 12px;
-      height: 12px;
+      left: calc(var(--timeline-offset) * -1);
+      top: 1.45rem;
+      width: var(--timeline-marker-size);
+      height: var(--timeline-marker-size);
       background: #fff;
       border: 3px solid #0066cc;
       border-radius: 50%;
       z-index: 2;
-      transition: all 0.3s ease;
+      transform: translateX(-50%);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
     }
 
     .item:hover::before {
-      transform: scale(1.4);
+      transform: translateX(-50%) scale(1.35);
       border-color: #00aaff;
       box-shadow: 0 0 0 4px rgba(0, 170, 255, 0.2), 0 0 15px rgba(0, 170, 255, 0.4);
       background: #00aaff;
     }
 
     .item:hover {
-      transform: translateX(4px);
+      transform: translateY(-2px);
+      border-color: rgba(0, 102, 204, 0.18);
+      box-shadow: 0 14px 32px rgba(16, 30, 54, 0.09);
     }
 
     .item:hover h4 {
@@ -1599,19 +1586,12 @@ const navigationItems = [
       }
 
       .items {
-        margin-left: 1.5rem;
+        --timeline-offset: 1rem;
+        margin-left: 1.75rem;
       }
 
       .items::before {
-        left: -1rem;
-      }
-
-      .items::after {
-        left: calc(-1rem - 2px);
-      }
-
-      .item::before {
-        left: calc(-1rem - 6px);
+        left: calc(var(--timeline-offset) * -1);
       }
     }
 
@@ -1640,6 +1620,10 @@ const navigationItems = [
       .menu-toggle-lines::after,
       .menu-toggle-lines span {
         transition: none;
+      }
+
+      .items::before {
+        animation: none;
       }
     }
   </style>
@@ -1705,7 +1689,7 @@ const navigationItems = [
         <p class="bio-intro">{tr('Software-Engineering-Student und Triathlet.', 'Software engineering student and triathlete.')}</p>
         <p class="bio-age">
           <span id="ageYears"></span> {tr('Jahre alt', 'years old')}
-          · <span id="ageDays"></span> {tr('Tage', 'days')} :)
+          · <span id="ageDays"></span> {tr('Tage', 'days')}
         </p>
 
         <div class="current-strip" aria-label={tr('Aktuelle Schwerpunkte', 'Current focus')}>
@@ -1721,25 +1705,22 @@ const navigationItems = [
               <span>Teaching Assistant · TU Graz</span>
             </li>
             <li class="current-strip-item">
-              <span>{tr('Triathlon-Saison 2026', '2026 triathlon season')}</span>
+              <span>Triathlon · KSV Tri-Team Kapfenberg</span>
             </li>
           </ul>
         </div>
 
-        <div class="current-strip upcoming-strip" aria-label={tr('Anstehende Wettkämpfe', 'Upcoming events')}>
+        <!-- <div class="current-strip upcoming-strip" aria-label={tr('Anstehende Wettkämpfe', 'Upcoming events')}>
           <span class="current-strip-label">
             <span class="current-strip-dot" aria-hidden="true"></span>
             {tr('Als Nächstes', 'Upcoming')}
           </span>
           <ul class="current-strip-items">
             <li class="current-strip-item">
-              <span>{tr('10-km-Österreichische Meisterschaft', '10k Austrian Championship')}</span>
-            </li>
-            <li class="current-strip-item">
               <span>10k Graz</span>
             </li>
           </ul>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="social-links">
@@ -1899,26 +1880,36 @@ const navigationItems = [
 
   <!-- work experience -->
   <section class="section" id="section-erfahrung">
-    <div class="section-header" onclick="document.getElementById('exp-2025').scrollIntoView({ behavior: 'smooth' })">
+    <div class="section-header" onclick="document.getElementById('exp-current').scrollIntoView({ behavior: 'smooth' })">
       <span class="section-eyebrow">{tr('Beruf', 'Work')}</span>
       <h2>{tr('Berufserfahrung', 'Work Experience')}</h2>
       <!-- <p class="section-subtitle">Roles and internships, grouped by year with the most recent work at the top.</p> -->
     </div>
 
-    <!-- Work experience year: 2025 -->
-    <div class="year-section" id="exp-2025">
+    <!-- Current work experience -->
+    <div class="year-section" id="exp-current">
       <div class="year-header" onclick="this.parentElement.scrollIntoView()">
-        <h3>2026</h3>
+        <h3>{tr('Aktuell', 'Current')}</h3>
       </div>
       <div class="items">
         <div class="item">
           <h4>{tr('Teaching Assistant an der TU Graz', 'Teaching Assistant at TU Graz')}</h4>
           <div class="item-meta">{tr('Oktober 2024 - Januar 2027', 'October 2024 - January 2027')}</div>
-          <p>{tr('Betreuung und Bewertung von Studierenden sowie Erstellung von Aufgaben für Einführung in die strukturierte Programmierung, Computer Methods for Statistics sowie Datenstrukturen und Algorithmen.', 'Supporting and assessing students and creating assignments for Introduction to Structured Programming, Computer Methods for Statistics, and Data Structures and Algorithms.')}</p>
+          <p>{tr('Betreuung und Bewertung von Studierenden sowie Erstellung von Aufgaben für Einführung in die strukturierte Programmierung, Computer Methods for Statistics, Advanced Information Retrieval sowie Datenstrukturen und Algorithmen.', 'Supporting and assessing students and creating assignments for Introduction to Structured Programming, Computer Methods for Statistics, Advanced Information Retrieval and Data Structures and Algorithms.')}</p>
         </div>
+      </div>
+    </div>
+
+    <!-- Work experience year: 2026 -->
+    <div class="year-section" id="exp-2026">
+      <div class="year-header" onclick="this.parentElement.scrollIntoView()">
+        <h3>2026</h3>
+      </div>
+      <div class="items">
         <div class="item">
           <h4>{tr('Praktikum - Software Engineer bei Raiffeisen-Landesbank', 'Software Engineering Intern at Raiffeisen-Landesbank')}</h4>
-          <div class="item-meta">August 2026</div>
+          <div class="item-meta">August 2026 - Graz</div>
+          <p>{tr('Appian Programmierung, statische und dynamische, 2 eigene Projekte, 1x Mithilfe in einen Projekt', 'Appian Programming, static and dynamic, 2 projects on my own, 1 project as a helper')}</p>
           <p></p>
         </div>
       </div>
@@ -1946,11 +1937,6 @@ const navigationItems = [
         <h3>2024</h3>
       </div>
       <div class="items">
-        <div class="item">
-          <h4>{tr('Teaching Assistant an der TU Graz', 'Teaching Assistant at TU Graz')}</h4>
-          <div class="item-meta">{tr('Oktober 2024 - Juni 2026', 'October 2024 - June 2026')}</div>
-          <p>{tr('Betreuung und Bewertung von Studierenden sowie Erstellung von Aufgaben für die Lehrveranstaltung Einführung in die strukturierte Programmierung.', 'Supported and assessed students and created assignments for Introduction to Structured Programming.')}</p>
-        </div>
         <div class="item">
           <h4>{tr('Praktikum - PLC Engineer bei EPI Energietechnik', 'PLC Engineering Intern at EPI Energietechnik')}</h4>
           <div class="item-meta">{tr('Juli 2024 - Graz', 'July 2024 - Graz')}</div>
@@ -1984,8 +1970,6 @@ const navigationItems = [
           <div class="item-meta">{tr('August 2022', 'August 2022')}</div>
           <p>{tr('Motoren servisieren (säubern, zerlegen, reparieren, …)', 'Service motors (clean, disassemble, repair, …)')}</p>
         </div>
-      </div>
-      <div class="items">
         <div class="item">
           <h4>{tr('Tutor an der HTBL Kapfenberg', 'Tutor at HTBL Kapfenberg')}</h4>
           <div class="item-meta">{tr('März 2022 - Juni 2026', 'March 2022 - June 2026')}</div>
@@ -2075,7 +2059,7 @@ const navigationItems = [
           <p>C++, Java, Python, C, SQL, JavaScript, Scala, Machine Learning, Deep Learning</p>
         </div>
         <div class="item">
-          <h4>{tr('Technologien & Werkzeuge', 'Technologies & Tools')}</h4>
+          <h4>{tr('Technologien', 'Technologies')}</h4>
           <p>LaTeX, Git, Linux, Office 365, Web Development, SolidWorks</p>
         </div>
         <div class="item">
@@ -2120,10 +2104,36 @@ const navigationItems = [
 
         <div class="race-year-group">
           <div class="year-section">
-          <div class="year-header" onclick="this.parentElement.scrollIntoView()">
-            <h3>2026</h3>
-          </div>
-          <article class="race-card" id="race-od-pontevedra-2026">
+            <div class="year-header" onclick="this.parentElement.scrollIntoView()">
+              <h3>2026</h3>
+            </div>
+            <div class="race-cards-grid">
+            <article class="race-card" id="race-graz-vm2-2026">
+              <p class="race-type">Viertelmarathon 11.10.2026</p>
+              <h5 class="race-name-location">Graz</h5>
+              <a class="race-official-link" href="https://www.maxfunsports.com/result/competition?id=327466895">official results</a>
+              <p>5. Gesamt, 3. AK</p>
+              <p>10k: 34:38, 5k: 16:54</p>
+              <div class="race-times">
+                <div class="race-time-item">
+                  <p>Laufen: 10.5km</p>
+                  <p class="race-time-value">36:12min, 3:29min/km <a class="race-official-link" href="https://www.strava.com/activities/20537813657">Strava</a></p>
+                </div>
+              </div>
+            </article>
+            <article class="race-card" id="race-öm-10k-2026">
+              <p class="race-type">10k 03.10.2026</p>
+              <h5 class="race-name-location">Kobersdorf</h5>
+              <a class="race-official-link" href="https://my.raceresult.com/391812/#0_8AF0E5">official results</a>
+              <p>6. U23</p>
+              <div class="race-times">
+                <div class="race-time-item">
+                  <p>Laufen: 10km</p>
+                  <p class="race-time-value">36:57min, 3:39min/km <a class="race-official-link" href="https://www.strava.com/activities/20441711365">Strava</a></p>
+                </div>
+              </div>
+            </article>
+            <article class="race-card" id="race-od-pontevedra-2026">
               <p class="race-type">Olympische Distanz 26.09.2026</p>
               <h5 class="race-name-location">Pontevedra</h5>
               <a class="race-official-link" href="https://triathlon.org/events/2026-world-triathlon-age-group-championships-pontevedra/results?program=678525">official results</a>
@@ -2143,7 +2153,7 @@ const navigationItems = [
                 </div>
               </div>
             </article>
-          <article class="race-card" id="">
+            <article class="race-card" id="">
               <p class="race-type">Supersprint Distanz 08.08.2026</p>
               <h5 class="race-name-location">Röthlstein</h5>
               <p>erster Gesamtsieg Triathlon</p>
@@ -2162,7 +2172,6 @@ const navigationItems = [
                 </div>
               </div>
             </article>
-          <div class="race-cards-grid">
             <article class="race-card" id="race-summer-run-2026">
               <p class="race-type">10k 01.08.2026</p>
               <h5 class="race-name-location">Graz</h5>
@@ -2293,6 +2302,7 @@ const navigationItems = [
                 </div>
               </div>
             </article>
+            </div>
           </div>
         </div>
         <div class="race-year-group">
@@ -2627,7 +2637,7 @@ const navigationItems = [
         <div class="race-year-group">
           <h4>2022</h4>
           <div class="race-cards-grid">
-            <article class="race-card" id="race-cross-frohnleiten-2022">
+            <article class="race-card" id="race-graz-vm-2022">
               <p class="race-type">Viertelmarathon 08.10.2022</p>
               <h5 class="race-name-location">Graz</h5>
               <a class="race-official-link" href="https://www.maxfunsports.com/result/competition?id=563595382">official results</a>
@@ -2652,7 +2662,6 @@ const navigationItems = [
           </div>
         </div>
       </div>
-    </div>
 
     <!-- Personal bests section: running, swimming, and cycling records
     <div class="year-section" id="sport-bests">
