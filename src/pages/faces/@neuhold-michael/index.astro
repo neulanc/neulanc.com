@@ -1054,6 +1054,36 @@ const navigationItems = [
       flex: 0 0 auto;
     }
 
+    .home-return {
+      display: grid;
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      margin-right: 0.35rem;
+      place-items: center;
+      border-radius: 13px;
+      background: #edf5fd;
+      color: #0b62b6;
+      text-decoration: none;
+      transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+
+    .home-return svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2;
+    }
+
+    .home-return:hover {
+      background: #0b68c5;
+      color: #fff;
+      transform: translateX(-2px);
+    }
+
     .nav-identity {
       display: flex;
       align-items: center;
@@ -1147,6 +1177,7 @@ const navigationItems = [
     }
 
     .nav-identity:focus-visible,
+    .home-return:focus-visible,
     .nav-link:focus-visible,
     .menu-toggle:focus-visible {
       outline: 3px solid rgba(0, 102, 204, 0.28);
@@ -1262,6 +1293,10 @@ const navigationItems = [
 
       .nav-identity {
         min-width: 0;
+      }
+
+      .nav-monogram {
+        display: none;
       }
 
       .nav-current {
@@ -1633,6 +1668,16 @@ const navigationItems = [
 <button class="nav-backdrop" id="navBackdrop" type="button" tabindex="-1" aria-hidden="true"></button>
 <header class="portfolio-nav" id="portfolioNav">
   <div class="nav-bar">
+    <a
+      class="home-return"
+      href="https://neulanc.com/"
+      aria-label={tr('Zurück zur neulanc Startseite', 'Back to the neulanc homepage')}
+      title={tr('Zurück zur Startseite', 'Back to homepage')}
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M19 12H5m6-6-6 6 6 6"></path>
+      </svg>
+    </a>
     <a class="nav-identity" href="#page-top" aria-label={tr('Zum Seitenanfang', 'Back to top')}>
       <span class="nav-monogram" aria-hidden="true">MN</span>
       <span class="nav-current" aria-live="polite">
