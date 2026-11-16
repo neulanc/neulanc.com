@@ -22,9 +22,10 @@ const isDe = locale === 'de';
       
       <h2 id="apps-title">{isDe ? 'Alle Apps' : 'All apps'}</h2>
     </div>
-    <span class="count">01</span>
+    <span class="count">02</span>
   </div>
 
+  <div class="app-list">
   <a class="app-card" href={isDe ? '/meldpdf/' : '/en/meldpdf/'}>
     <div class="app-icon" aria-hidden="true">
       <span class="sheet sheet-back"></span>
@@ -49,6 +50,34 @@ const isDe = locale === 'de';
     </div>
     <span class="open-app">{isDe ? 'Öffnen' : 'Open'} <b aria-hidden="true">↗</b></span>
   </a>
+
+  <a class="app-card" href={isDe ? '/spendflow/' : '/en/spendflow/'}>
+    <div class="app-icon spendflow-icon" aria-hidden="true">
+      <span class="flow-node node-source"></span>
+      <span class="flow-node node-a"></span>
+      <span class="flow-node node-b"></span>
+      <span class="flow-node node-c"></span>
+      <svg viewBox="0 0 180 150"><path d="M39 75C72 75 76 38 112 38M39 75c33 0 37 4 73 10M39 75c33 0 37 37 73 37"/></svg>
+    </div>
+    <div class="app-copy">
+      <div class="app-title-row">
+        <h3>SpendFlow</h3>
+        <span class="badge">{isDe ? 'Neu' : 'New'}</span>
+      </div>
+      <p>
+        {isDe
+          ? 'Ausgaben in flexiblen Kategorien erfassen und sofort sehen, wohin dein Budget fließt.'
+          : 'Track expenses in flexible categories and instantly see where your budget flows.'}
+      </p>
+      <ul aria-label={isDe ? 'Funktionen' : 'Features'}>
+        <li>{isDe ? 'Dynamische Kategorien' : 'Dynamic categories'}</li>
+        <li>{isDe ? 'Visueller Geldfluss' : 'Visual money flow'}</li>
+        <li>{isDe ? 'Lokal & privat' : 'Local & private'}</li>
+      </ul>
+    </div>
+    <span class="open-app">{isDe ? 'Öffnen' : 'Open'} <b aria-hidden="true">↗</b></span>
+  </a>
+  </div>
 </section>
 
 <style>
@@ -133,13 +162,19 @@ const isDe = locale === 'de';
     font-size: 0.76rem;
   }
 
+  .app-list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.4rem;
+  }
+
   .app-card {
     position: relative;
     display: grid;
     grid-template-columns: 180px minmax(0, 1fr) auto;
     gap: clamp(1.5rem, 4vw, 3.5rem);
     align-items: center;
-    margin-top: 1.4rem;
+    margin-top: 0;
     padding: clamp(1.3rem, 3vw, 2.2rem);
     overflow: hidden;
     border: 1px solid #d8dbd3;
@@ -194,6 +229,32 @@ const isDe = locale === 'de';
   .sheet-front { top: 31px; left: 72px; transform: rotate(7deg); }
   .merge-arrow { position: absolute; right: 17px; bottom: 12px; color: var(--lime); font-size: 2rem; }
 
+  .spendflow-icon {
+    background: #242a25;
+  }
+
+  .spendflow-icon svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: rgba(216, 255, 95, 0.34);
+    stroke-width: 12;
+  }
+
+  .flow-node {
+    position: absolute;
+    z-index: 1;
+    width: 10px;
+    border-radius: 8px;
+  }
+
+  .node-source { top: 47px; left: 31px; height: 56px; background: var(--lime); }
+  .node-a { top: 24px; left: 111px; height: 28px; background: #9c91f1; }
+  .node-b { top: 68px; left: 111px; height: 34px; background: #ff8764; }
+  .node-c { top: 104px; left: 111px; height: 23px; background: #65c6a4; }
+
   .app-title-row { display: flex; gap: 0.75rem; align-items: center; }
   .app-copy h3 { margin: 0; font-size: clamp(1.4rem, 2.5vw, 1.85rem); letter-spacing: -0.04em; }
   .badge { padding: 0.3rem 0.55rem; border-radius: 99px; background: var(--lime); font-size: 0.65rem; font-weight: 850; text-transform: uppercase; }
@@ -214,6 +275,10 @@ const isDe = locale === 'de';
     .sheet-front { top: 23px; left: 43px; }
     .sheet::after { top: 10px; right: 9px; left: 9px; height: 3px; box-shadow: 0 8px 0 #e8ece6, 0 16px 0 #e8ece6; }
     .merge-arrow { font-size: 1.4rem; }
+    .node-source { top: 36px; left: 20px; height: 42px; }
+    .node-a { top: 18px; left: 70px; height: 21px; }
+    .node-b { top: 51px; left: 70px; height: 26px; }
+    .node-c { top: 78px; left: 70px; height: 18px; }
     .open-app { grid-column: 2; }
   }
 
@@ -225,6 +290,10 @@ const isDe = locale === 'de';
     .sheet { width: 65px; height: 83px; }
     .sheet-back { top: 26px; left: calc(50% - 57px); }
     .sheet-front { top: 30px; left: calc(50% - 15px); }
+    .node-source { top: 46px; left: calc(50% - 58px); height: 54px; }
+    .node-a { top: 23px; left: calc(50% + 18px); height: 28px; }
+    .node-b { top: 66px; left: calc(50% + 18px); height: 34px; }
+    .node-c { top: 105px; left: calc(50% + 18px); height: 23px; }
     .open-app { grid-column: 1; }
   }
 </style>

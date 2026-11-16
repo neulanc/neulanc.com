@@ -7,8 +7,10 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.2",
-    "astro": "^7.3.3",
-    "pdf-lib": "^1.17.1"
+    "@astrojs/sitemap": "^3.7.4",
+    "@types/qrcode": "^1.5.6",
+    "astro": "^7.4.4",
+    "pdf-lib": "^1.17.1",
+    "qrcode": "^1.5.4"
   }
 }

@@ -1,0 +1,3396 @@
+---
+import type { Locale } from '../i18n/utils';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const isDe = locale === 'de';
+---
+
+<section
+  class="spendflow"
+  data-spendflow
+  data-locale={locale}
+  data-currency-locale={isDe ? 'de-AT' : 'en-IE'}
+  data-storage-error={isDe ? 'Deine Änderungen konnten nicht im Browser gespeichert werden.' : 'Your changes could not be saved in this browser.'}
+  data-empty={isDe ? 'Noch keine Ausgaben in diesem Zeitraum.' : 'No spending in this period yet.'}
+  data-category-required={isDe ? 'Lege zuerst eine Kategorie an.' : 'Create a category first.'}
+  data-saved={isDe ? 'Ausgabe gespeichert.' : 'Expense saved.'}
+  data-updated={isDe ? 'Buchung aktualisiert.' : 'Expense updated.'}
+  data-deleted={isDe ? 'Ausgabe gelöscht.' : 'Expense deleted.'}
+  data-project-renamed={isDe ? 'Projekt aktualisiert.' : 'Project updated.'}
+  data-category-in-use={isDe ? 'Diese Kategorie wird noch von Buchungen verwendet.' : 'This category is still used by entries.'}
+  data-confirm-project={isDe ? 'Projekt und alle Buchungen wirklich löschen?' : 'Delete this project and all its entries?'}
+  data-confirm-category={isDe ? 'Diese Kategorie wirklich löschen?' : 'Delete this category?'}
+  data-rename={isDe ? 'Neuer Name' : 'New name'}
+  data-sync-error={isDe ? 'Synchronisierung fehlgeschlagen. Deine lokalen Daten sind weiterhin sicher.' : 'Sync failed. Your local data is still safe.'}
+  data-sync-ready={isDe ? 'Ende-zu-Ende verschlüsselt synchronisiert.' : 'Synced with end-to-end encryption.'}
+  data-pair-success={isDe ? 'Dieses Gerät ist jetzt verbunden.' : 'This device is now connected.'}
+  data-pair-invalid={isDe ? 'Dieser QR-Code ist abgelaufen oder wurde bereits verwendet.' : 'This QR code has expired or has already been used.'}
+>
+  <header class="toolbar">
+    <div class="tool-title">
+      <a class="back-link" href={isDe ? '/' : '/en/'} aria-label={isDe ? 'Zurück zu allen Apps' : 'Back to all apps'}>←</a>
+      <span class="flow-logo" aria-hidden="true">
+        <i></i><i></i><i></i>
+      </span>
+      <div>
+        <h1>SpendFlow</h1>
+        <p>{isDe ? 'Sieh, wohin jeder Euro fließt.' : 'See where every euro goes.'}</p>
+      </div>
+    </div>
+
+    <div class="project-switcher">
+      <label for="project-select">{isDe ? 'Projekt' : 'Project'}</label>
+      <select id="project-select" data-project-select></select>
+      <button class="icon-button project-edit-button" data-project-content data-edit-project hidden type="button" aria-label={isDe ? 'Projekt bearbeiten' : 'Edit project'} title={isDe ? 'Projekt bearbeiten' : 'Edit project'}>✎</button>
+      <button class="icon-button" type="button" data-open-project aria-label={isDe ? 'Neues Projekt' : 'New project'} title={isDe ? 'Neues Projekt' : 'New project'}>+</button>
+    </div>
+
+    <div class="toolbar-actions" data-project-actions hidden>
+      <button class="quiet-button" type="button" data-open-projects>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h6v6H4zM14 5h6v6h-6zM4 15h6v4H4zM14 15h6v4h-6z"/></svg>
+        <span>{isDe ? 'Projekte' : 'Projects'}</span>
+      </button>
+      <button class="quiet-button sync-button" type="button" data-open-sync>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 16a5 5 0 0 1 .7-9.95A6.5 6.5 0 0 1 20 9a4 4 0 0 1-1 7.87M8 20l4-4 4 4m-4-4v7"/></svg>
+        <span data-sync-button-label>{isDe ? 'Synchronisieren' : 'Sync'}</span>
+        <i class="sync-dot" data-sync-dot aria-hidden="true"></i>
+      </button>
+      <button class="quiet-button" type="button" data-export>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>
+        {isDe ? 'Sichern' : 'Back up'}
+      </button>
+      <button class="quiet-button danger" type="button" data-delete-project>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5"/></svg>
+        <span>{isDe ? 'Projekt löschen' : 'Delete project'}</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="project-overview" data-project-overview hidden>
+    <header class="project-overview-head">
+      <div>
+        <span class="eyebrow">{isDe ? 'ÜBERSICHT' : 'OVERVIEW'}</span>
+        <h2>{isDe ? 'Alle Projekte' : 'All projects'}</h2>
+        <p>{isDe ? 'Öffne, verwalte oder lösche deine lokalen und synchronisierten Projekte.' : 'Open, manage or delete your local and synced projects.'}</p>
+      </div>
+      <div class="project-overview-head-actions">
+        <button class="mini-button" type="button" data-overview-new-project>+ {isDe ? 'Neues Projekt' : 'New project'}</button>
+        <button class="quiet-button" type="button" data-close-projects>← {isDe ? 'Zurück' : 'Back'}</button>
+      </div>
+    </header>
+    <div class="project-overview-list" data-project-overview-list></div>
+  </section>
+
+  <section class="onboarding" data-onboarding hidden>
+    <span class="onboarding-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="eyebrow">{isDe ? 'DEIN GELD. DEINE STRUKTUR.' : 'YOUR MONEY. YOUR STRUCTURE.'}</span>
+    <h2>{isDe ? 'Starte mit einer leeren Fläche.' : 'Start with a blank canvas.'}</h2>
+    <p>{isDe ? 'Erstelle einen Tracker und baue ihn genau so auf, wie du ihn brauchst.' : 'Create a tracker and structure it exactly the way you need.'}</p>
+    <button class="onboarding-button" type="button" data-create-first>
+      {isDe ? 'Ersten Tracker erstellen' : 'Create your first tracker'}
+      <span aria-hidden="true">→</span>
+    </button>
+    <button class="recovery-link" type="button" data-recover-project>{isDe ? 'Projekt mit Recovery-Datei wiederherstellen' : 'Recover a project from a recovery file'}</button>
+    <input class="visually-hidden" type="file" accept="application/json,.json" data-recovery-file />
+    <small>{isDe ? 'Keine Vorlagen. Keine Beispieldaten.' : 'No templates. No sample data.'}</small>
+  </section>
+
+  <div class="local-note" data-project-content hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2m-11 0h12v10H6V10Z"/><path d="M12 14v2"/></svg>
+    <p data-privacy-note><strong>{isDe ? 'Privat auf diesem Gerät.' : 'Private on this device.'}</strong> {isDe ? 'Synchronisierung ist aus. Deine Finanzdaten verlassen den Browser nicht.' : 'Sync is off. Your financial data does not leave this browser.'}</p>
+  </div>
+
+  <div class="workspace" data-project-content hidden>
+    <aside class="control-column" id="add-expense">
+      <form class="panel quick-entry" data-expense-form>
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">{isDe ? 'SCHNELLEINGABE' : 'QUICK ENTRY'}</span>
+            <h2 data-entry-form-title>{isDe ? 'Ausgabe hinzufügen' : 'Add an expense'}</h2>
+          </div>
+          <span class="shortcut" aria-hidden="true">⌘ ↵</span>
+        </div>
+
+        <fieldset class="entry-type-switch" data-entry-type-field hidden>
+          <legend>{isDe ? 'Art der Buchung' : 'Entry type'}</legend>
+          <label><input type="radio" name="entryType" value="expense" checked /><span>{isDe ? 'Ausgabe' : 'Outgoing'}</span></label>
+          <label><input type="radio" name="entryType" value="income" /><span>{isDe ? 'Einnahme' : 'Incoming'}</span></label>
+        </fieldset>
+
+        <label class="amount-field">
+          <span>{isDe ? 'Betrag' : 'Amount'}</span>
+          <span class="amount-input"><b data-currency-symbol>€</b><input name="amount" data-amount data-money-input type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" required /></span>
+        </label>
+
+        <label class="field">
+          <span data-entry-name-label>{isDe ? 'Bezeichnung' : 'Entry name'}</span>
+          <input name="note" maxlength="80" placeholder={isDe ? 'z. B. 70.3 Poreč' : 'e.g. 70.3 Poreč'} required />
+        </label>
+
+        <label class="field">
+          <span>{isDe ? 'Kategorie' : 'Category'}</span>
+          <select name="category" data-category-select required></select>
+        </label>
+
+        <div class="quick-category-create" data-quick-category-create hidden>
+          <label>
+            <span>{isDe ? 'Neue Kategorie' : 'New category'}</span>
+            <input data-quick-category-name type="text" maxlength="40" placeholder={isDe ? 'Name der Kategorie' : 'Category name'} />
+          </label>
+          <label class="quick-color" title={isDe ? 'Farbe auswählen' : 'Choose color'}>
+            <span class="visually-hidden">{isDe ? 'Farbe' : 'Color'}</span>
+            <input data-quick-category-color type="color" value="#6657d9" />
+          </label>
+          <button type="button" data-save-quick-category>{isDe ? 'Hinzufügen' : 'Add'}</button>
+        </div>
+
+        <label class="field">
+          <span>{isDe ? 'Datum' : 'Date'}</span>
+          <input name="date" data-date type="date" required />
+        </label>
+
+        <button class="primary-button" type="submit">
+          <span data-entry-submit-label>{isDe ? 'Ausgabe speichern' : 'Save expense'}</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
+        </button>
+      </form>
+
+      <section class="panel category-panel" id="categories" aria-labelledby="category-title">
+        <div class="panel-heading compact">
+          <div>
+            <span class="eyebrow">{isDe ? 'STRUKTUR' : 'STRUCTURE'}</span>
+            <h2 id="category-title">{isDe ? 'Kategorien' : 'Categories'}</h2>
+          </div>
+          <button class="mini-button" type="button" data-open-category>+ {isDe ? 'Neu' : 'New'}</button>
+        </div>
+        <div class="category-list" data-category-list></div>
+      </section>
+    </aside>
+
+    <div class="main-column">
+      <section class="stats" aria-label={isDe ? 'Projektübersicht' : 'Project overview'}>
+        <article data-income-stat hidden>
+          <span>{isDe ? 'Eingenommen' : 'Income'}</span>
+          <strong data-total-income>€0</strong>
+          <small data-income-period>{isDe ? 'gesamt' : 'all time'}</small>
+        </article>
+        <article>
+          <span>{isDe ? 'Ausgegeben' : 'Spent'}</span>
+          <strong data-total-spent>€0</strong>
+          <small data-period-label>{isDe ? 'gesamt' : 'all time'}</small>
+        </article>
+        <article data-balance-stat hidden>
+          <span>{isDe ? 'Saldo' : 'Balance'}</span>
+          <strong data-balance>€0</strong>
+          <small>{isDe ? 'Einnahmen minus Ausgaben' : 'Income minus outgoing'}</small>
+        </article>
+        <article>
+          <span>{isDe ? 'Budget übrig' : 'Budget left'}</span>
+          <strong data-budget-left>—</strong>
+          <small data-budget-meta>{isDe ? 'kein Budget gesetzt' : 'no budget set'}</small>
+        </article>
+        <article>
+          <span>{isDe ? 'Größte Kategorie' : 'Largest category'}</span>
+          <strong data-largest-group>—</strong>
+          <small data-largest-meta>—</small>
+        </article>
+      </section>
+
+      <section class="panel flow-panel" id="flow" aria-labelledby="flow-title">
+        <div class="flow-heading">
+          <div>
+            <span class="eyebrow">{isDe ? 'GELDFLUSS' : 'MONEY FLOW'}</span>
+            <h2 id="flow-title" data-flow-title>{isDe ? 'Wohin dein Geld fließt' : 'Where your money goes'}</h2>
+          </div>
+          <div class="flow-heading-actions">
+            <div class="inline-flow-zoom" aria-label={isDe ? 'Zoom-Steuerung' : 'Zoom controls'}>
+              <button type="button" data-inline-flow-zoom-out aria-label={isDe ? 'Verkleinern' : 'Zoom out'}>−</button>
+              <output data-inline-flow-zoom-label>100%</output>
+              <button type="button" data-inline-flow-zoom-in aria-label={isDe ? 'Vergrößern' : 'Zoom in'}>+</button>
+              <button class="inline-flow-zoom-reset" type="button" data-inline-flow-zoom-reset aria-label={isDe ? 'Zoom zurücksetzen' : 'Reset zoom'}>1:1</button>
+            </div>
+            <label class="period-filter">
+              <span class="visually-hidden">{isDe ? 'Zeitraum' : 'Period'}</span>
+              <select data-period>
+                <option value="all">{isDe ? 'Gesamter Zeitraum' : 'All time'}</option>
+                <option value="year">{isDe ? 'Dieses Jahr' : 'This year'}</option>
+                <option value="30">{isDe ? 'Letzte 30 Tage' : 'Last 30 days'}</option>
+              </select>
+            </label>
+            <button class="flow-fullscreen-button" type="button" data-open-flow-fullscreen>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M8 21H3v-5m13 5h5v-5"/></svg>
+              <span>{isDe ? 'Vollbild' : 'Full screen'}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flow-canvas" data-flow-canvas>
+          <div class="flow-labels" data-flow-labels aria-hidden="true">
+            <span>{isDe ? 'EINNAHMEN' : 'INCOME'}</span>
+            <span>{isDe ? 'GESAMT' : 'TOTAL'}</span>
+            <span>{isDe ? 'AUSGABEN' : 'OUTGOING'}</span>
+          </div>
+          <div class="flow-scroll" data-flow-scroll>
+            <div class="flow-inline-zoom-surface" data-inline-flow-zoom-surface>
+              <svg data-flow-svg viewBox="0 0 980 440" role="img" aria-labelledby="flow-title flow-description">
+                <desc id="flow-description">{isDe ? 'Sankey-Diagramm der Ausgaben nach Kategorie.' : 'Sankey diagram of expenses by category.'}</desc>
+              </svg>
+            </div>
+          </div>
+          <div class="empty-state" data-empty-state hidden>
+            <span aria-hidden="true">↗</span>
+            <h3>{isDe ? 'Dein Flow beginnt hier.' : 'Your flow starts here.'}</h3>
+            <p>{isDe ? 'Füge links deine erste Ausgabe hinzu.' : 'Add your first expense on the left.'}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel transactions" id="transactions" aria-labelledby="transactions-title">
+        <div class="panel-heading compact">
+          <div>
+            <span class="eyebrow">{isDe ? 'VERLAUF' : 'ACTIVITY'}</span>
+            <h2 id="transactions-title" data-transactions-title>{isDe ? 'Letzte Ausgaben' : 'Recent expenses'}</h2>
+          </div>
+          <span class="entry-count" data-entry-count>0</span>
+        </div>
+        <div class="transaction-list" data-transaction-list></div>
+      </section>
+    </div>
+  </div>
+
+  <dialog class="flow-fullscreen-dialog" data-flow-fullscreen-dialog aria-label={isDe ? 'Geldfluss im Vollbild' : 'Money flow in full screen'}>
+    <div class="flow-fullscreen-shell">
+      <header class="flow-fullscreen-toolbar">
+        <div>
+          <span class="eyebrow">{isDe ? 'GELDFLUSS' : 'MONEY FLOW'}</span>
+          <strong>{isDe ? 'Vollbildansicht' : 'Full-screen view'}</strong>
+        </div>
+        <div class="flow-zoom-controls" aria-label={isDe ? 'Zoom-Steuerung' : 'Zoom controls'}>
+          <button type="button" data-flow-zoom-out aria-label={isDe ? 'Verkleinern' : 'Zoom out'}>−</button>
+          <output data-flow-zoom-label>100%</output>
+          <button type="button" data-flow-zoom-in aria-label={isDe ? 'Vergrößern' : 'Zoom in'}>+</button>
+          <button class="flow-zoom-reset" type="button" data-flow-zoom-reset>{isDe ? 'Zurücksetzen' : 'Reset'}</button>
+          <button class="flow-fullscreen-close" type="button" data-close-flow-fullscreen aria-label={isDe ? 'Vollbild schließen' : 'Close full screen'}>×</button>
+        </div>
+      </header>
+      <div class="flow-fullscreen-viewport" data-flow-fullscreen-viewport>
+        <div class="flow-zoom-surface" data-flow-zoom-surface></div>
+      </div>
+      <p class="flow-gesture-hint">{isDe ? 'Ziehen zum Verschieben · Zwei Finger oder Strg/⌘ + Mausrad zum Zoomen' : 'Drag to move · Pinch or Ctrl/⌘ + mouse wheel to zoom'}</p>
+    </div>
+  </dialog>
+
+  <nav class="mobile-nav" data-project-content hidden aria-label={isDe ? 'App-Navigation' : 'App navigation'}>
+    <a href="#flow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18V9m6 9V5m6 13v-7m4 7H2"/></svg><span>Flow</span></a>
+    <a href="#transactions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6m-6 4h6m-6 4h4"/></svg><span data-mobile-entries-label>{isDe ? 'Ausgaben' : 'Expenses'}</span></a>
+    <a href="#categories"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h7v6H4zM13 4h7v6h-7zm0 8h7v8h-7zM4 15h7v5H4z"/></svg><span>{isDe ? 'Kategorien' : 'Categories'}</span></a>
+  </nav>
+  <button class="mobile-add" data-project-content data-mobile-add hidden type="button" aria-label={isDe ? 'Ausgabe hinzufügen' : 'Add expense'}>+</button>
+
+  <dialog class="app-dialog" data-category-dialog>
+    <form data-category-form>
+      <div class="dialog-head">
+        <div>
+          <span class="eyebrow">{isDe ? 'STRUKTUR' : 'STRUCTURE'}</span>
+          <h2>{isDe ? 'Kategorie hinzufügen' : 'Add category'}</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-category aria-label={isDe ? 'Schließen' : 'Close'}>×</button>
+      </div>
+      <label class="field">
+        <span>{isDe ? 'Name der Kategorie' : 'Category name'}</span>
+        <input name="groupName" maxlength="40" placeholder={isDe ? 'z. B. Startgelder' : 'e.g. Entry fees'} required />
+      </label>
+      <label class="field" data-category-type-field hidden>
+        <span>{isDe ? 'Verwendung' : 'Used for'}</span>
+        <select name="type">
+          <option value="expense">{isDe ? 'Ausgaben' : 'Outgoing'}</option>
+          <option value="income">{isDe ? 'Einnahmen' : 'Incoming'}</option>
+        </select>
+      </label>
+      <fieldset class="color-picker">
+        <legend>{isDe ? 'Farbe der Kategorie' : 'Category color'}</legend>
+        <div class="custom-color">
+          <input
+            type="color"
+            name="color"
+            value="#6657d9"
+            data-color-input
+            aria-label={isDe ? 'Beliebige Farbe auswählen' : 'Choose any color'}
+          />
+          <span>
+            <strong data-color-hex>#6657D9</strong>
+            <small>{isDe ? 'Klicken, um eine beliebige Farbe zu wählen' : 'Click to choose any color'}</small>
+          </span>
+        </div>
+        <div class="color-presets" aria-label={isDe ? 'Schnellauswahl' : 'Quick colors'}>
+          {['#6657d9', '#1b8a70', '#e06b3c', '#d3a51f', '#2788bd', '#c14e77'].map((color) => (
+            <button type="button" data-color-preset={color} style={`--swatch:${color}`} aria-label={color}></button>
+          ))}
+        </div>
+      </fieldset>
+      <button class="primary-button" type="submit">{isDe ? 'Kategorie speichern' : 'Save category'} <span>→</span></button>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog" data-expense-dialog>
+    <form data-edit-expense-form>
+      <div class="dialog-head">
+        <div>
+          <span class="eyebrow">{isDe ? 'BUCHUNG' : 'ENTRY'}</span>
+          <h2>{isDe ? 'Buchung bearbeiten' : 'Edit entry'}</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-expense aria-label={isDe ? 'Schließen' : 'Close'}>×</button>
+      </div>
+      <label class="field" data-edit-entry-type-field hidden>
+        <span>{isDe ? 'Art der Buchung' : 'Entry type'}</span>
+        <select name="entryType" data-edit-entry-type>
+          <option value="expense">{isDe ? 'Ausgabe' : 'Outgoing'}</option>
+          <option value="income">{isDe ? 'Einnahme' : 'Incoming'}</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>{isDe ? 'Betrag' : 'Amount'}</span>
+        <input name="amount" data-money-input type="text" inputmode="decimal" autocomplete="off" required />
+      </label>
+      <label class="field">
+          <span>{isDe ? 'Bezeichnung' : 'Entry name'}</span>
+        <input name="note" maxlength="80" required />
+      </label>
+      <label class="field">
+        <span>{isDe ? 'Kategorie' : 'Category'}</span>
+        <select name="category" data-edit-category required></select>
+      </label>
+      <label class="field">
+        <span>{isDe ? 'Datum' : 'Date'}</span>
+        <input name="date" type="date" required />
+      </label>
+      <button class="primary-button" type="submit">{isDe ? 'Änderungen speichern' : 'Save changes'} <span>→</span></button>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog" data-project-dialog>
+    <form data-project-form>
+      <div class="dialog-head">
+        <div>
+          <span class="eyebrow">{isDe ? 'NEUES PROJEKT' : 'NEW PROJECT'}</span>
+          <h2>{isDe ? 'Was möchtest du tracken?' : 'What do you want to track?'}</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-project aria-label={isDe ? 'Schließen' : 'Close'}>×</button>
+      </div>
+      <label class="field">
+        <span>{isDe ? 'Projektname' : 'Project name'}</span>
+        <input name="name" maxlength="50" placeholder={isDe ? 'Name des Projekts' : 'Project name'} required />
+      </label>
+      <label class="field">
+        <span>{isDe ? 'Budget' : 'Budget'} <small>{isDe ? 'optional' : 'optional'}</small></span>
+        <input name="budget" data-money-input type="text" inputmode="decimal" autocomplete="off" />
+      </label>
+      <label class="field">
+        <span>{isDe ? 'Währung' : 'Currency'}</span>
+        <select name="currency">
+          <option value="EUR">EUR · €</option>
+          <option value="USD">USD · $</option>
+          <option value="GBP">GBP · £</option>
+          <option value="CHF">CHF</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>{isDe ? 'Was möchtest du erfassen?' : 'What do you want to track?'}</span>
+        <select name="trackingMode">
+          <option value="expense">{isDe ? 'Nur Ausgaben' : 'Outgoing only'}</option>
+          <option value="both">{isDe ? 'Einnahmen und Ausgaben' : 'Income and outgoing'}</option>
+        </select>
+      </label>
+      <button class="primary-button" type="submit">{isDe ? 'Projekt erstellen' : 'Create project'} <span>→</span></button>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog" data-edit-project-dialog>
+    <form data-edit-project-form>
+      <div class="dialog-head">
+        <div>
+          <span class="eyebrow">{isDe ? 'PROJEKT' : 'PROJECT'}</span>
+          <h2>{isDe ? 'Projekt bearbeiten' : 'Edit project'}</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-edit-project aria-label={isDe ? 'Schließen' : 'Close'}>×</button>
+      </div>
+      <label class="field">
+        <span>{isDe ? 'Projektname' : 'Project name'}</span>
+        <input name="name" maxlength="50" required />
+      </label>
+      <label class="field">
+        <span>{isDe ? 'Erfassung' : 'Tracking'}</span>
+        <select name="trackingMode">
+          <option value="expense">{isDe ? 'Nur Ausgaben' : 'Outgoing only'}</option>
+          <option value="both">{isDe ? 'Einnahmen und Ausgaben' : 'Income and outgoing'}</option>
+        </select>
+        <small>{isDe ? 'Beim Wechsel auf „nur Ausgaben“ bleiben vorhandene Einnahmen gespeichert und erscheinen wieder, wenn du zurückwechselst.' : 'When switching to outgoing only, existing income stays saved and appears again if you switch back.'}</small>
+      </label>
+      <button class="primary-button" type="submit">{isDe ? 'Projekt speichern' : 'Save project'} <span>→</span></button>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog sync-dialog" data-sync-dialog>
+    <div class="sync-dialog-content">
+      <div class="dialog-head">
+        <div>
+          <span class="eyebrow">{isDe ? 'SICHER AUF ALLEN GERÄTEN' : 'SECURE ON EVERY DEVICE'}</span>
+          <h2>{isDe ? 'Verschlüsselte Synchronisierung' : 'Encrypted sync'}</h2>
+        </div>
+        <button class="dialog-close" type="button" data-close-sync aria-label={isDe ? 'Schließen' : 'Close'}>×</button>
+      </div>
+
+      <div class="sync-loading" data-sync-loading hidden>
+        <span class="spinner" aria-hidden="true"></span>
+        <p>{isDe ? 'Sichere Verbindung wird hergestellt …' : 'Creating a secure connection…'}</p>
+      </div>
+
+      <div data-sync-setup>
+        <div class="security-summary">
+          <span aria-hidden="true">⌁</span>
+          <div>
+            <strong>{isDe ? 'Nur deine Geräte können die Daten lesen.' : 'Only your devices can read the data.'}</strong>
+            <p>{isDe ? 'Das Projekt wird bereits in deinem Browser verschlüsselt. Der Server erhält nur unlesbaren Geheimtext.' : 'The project is encrypted in your browser. The server receives unreadable ciphertext only.'}</p>
+          </div>
+        </div>
+        <ul class="security-points">
+          <li>{isDe ? 'Eigener Schlüssel für jedes Projekt' : 'A separate key for every project'}</li>
+          <li>{isDe ? 'Jeder QR-Code gilt nur einmal und läuft nach 1 Minute ab' : 'Every QR code works once and expires after 1 minute'}</li>
+          <li>{isDe ? 'Jedes Gerät erhält einen eigenen widerrufbaren Zugang' : 'Every device receives its own revocable access'}</li>
+          <li>{isDe ? 'Nur das Besitzergerät verwaltet Zugriffe und Recovery' : 'Only the owner device manages access and recovery'}</li>
+        </ul>
+        <label class="field device-name-field">
+          <span>{isDe ? 'Name dieses Geräts' : 'Name this device'}</span>
+          <input data-device-name maxlength="60" autocomplete="off" />
+        </label>
+        <button class="primary-button" type="button" data-enable-sync>{isDe ? 'Sichere Synchronisierung aktivieren' : 'Enable secure sync'} <span>→</span></button>
+        <small class="sync-legal">{isDe ? 'Mit der Aktivierung wird die verschlüsselte Projektdatei zum Hosting-Server übertragen. Du kannst die Synchronisierung und Cloud-Kopie jederzeit löschen.' : 'Enabling sync uploads the encrypted project file to the hosting server. You can remove sync and the cloud copy at any time.'}</small>
+      </div>
+
+      <div data-sync-connected hidden>
+        <div class="sync-status-card">
+          <span class="status-lock" aria-hidden="true">✓</span>
+          <div><strong>{isDe ? 'Ende-zu-Ende verschlüsselt' : 'End-to-end encrypted'}</strong><small><span data-sync-role></span> · <span data-sync-status-text>{isDe ? 'Aktuell' : 'Up to date'}</span></small></div>
+        </div>
+
+        <div data-owner-controls hidden>
+          <section class="recovery-card">
+            <div><strong>{isDe ? 'Recovery-Datei sicher aufbewahren' : 'Keep your recovery file safe'}</strong><small>{isDe ? 'Sie kann den Besitzerzugang wiederherstellen. Wer sie besitzt, kann das Projekt öffnen.' : 'It can restore owner access. Anyone holding it can open the project.'}</small></div>
+            <button class="mini-button" type="button" data-download-recovery>{isDe ? 'Herunterladen' : 'Download'}</button>
+          </section>
+
+          <section class="invite-panel" data-invite-panel hidden>
+          <span class="eyebrow">{isDe ? 'NEUES GERÄT VERBINDEN' : 'CONNECT A NEW DEVICE'}</span>
+          <h3>{isDe ? 'Mit der Kamera scannen' : 'Scan with the camera'}</h3>
+          <div class="qr-frame"><canvas data-sync-qr width="240" height="240"></canvas></div>
+          <p>{isDe ? 'Dieser QR-Code ist nur für dieses Projekt, funktioniert genau einmal und läuft in ' : 'This QR code is for this project only, works exactly once, and expires in '}<strong data-invite-countdown>1:00</strong>.</p>
+          <div class="invite-actions">
+            <button class="mini-button" type="button" data-copy-invite>{isDe ? 'Link kopieren' : 'Copy link'}</button>
+            <button class="mini-button" type="button" data-cancel-invite>{isDe ? 'QR-Code schließen' : 'Close QR code'}</button>
+          </div>
+          </section>
+
+          <section class="transfer-panel" data-transfer-panel hidden>
+            <span class="eyebrow">{isDe ? 'BESITZERWECHSEL' : 'OWNERSHIP TRANSFER'}</span>
+            <h3>{isDe ? 'Code am Zielgerät eingeben' : 'Enter this code on the target device'}</h3>
+            <strong data-transfer-code></strong>
+            <p data-transfer-message></p>
+            <button class="mini-button" type="button" data-close-transfer>{isDe ? 'Schließen' : 'Close'}</button>
+          </section>
+
+          <button class="primary-button connect-device-button" type="button" data-create-invite>{isDe ? 'Neues Gerät verbinden' : 'Connect a new device'} <span>＋</span></button>
+
+          <section class="devices-section">
+          <div class="devices-heading"><strong>{isDe ? 'Verbundene Geräte' : 'Connected devices'}</strong><button type="button" data-refresh-devices aria-label={isDe ? 'Aktualisieren' : 'Refresh'}>↻</button></div>
+          <div class="device-list" data-device-list></div>
+          </section>
+
+          <button class="remove-cloud-button" type="button" data-remove-cloud>{isDe ? 'Synchronisierung und Cloud-Kopie löschen' : 'Delete sync and cloud copy'}</button>
+        </div>
+
+        <div class="member-controls" data-member-controls hidden>
+          <div class="member-notice"><strong>{isDe ? 'Dieses Gerät kann Daten bearbeiten und synchronisieren.' : 'This device can edit and sync data.'}</strong><p>{isDe ? 'Nur das Besitzergerät kann weitere Geräte verbinden, Zugriffe entfernen oder die Cloud-Kopie löschen.' : 'Only the owner device can connect or remove devices and delete the cloud copy.'}</p></div>
+          <label class="field">
+            <span>{isDe ? 'Einmal-Code für Besitzerwechsel' : 'One-time ownership code'}</span>
+            <input data-transfer-code-input maxlength="20" autocomplete="off" autocapitalize="characters" />
+          </label>
+          <button class="primary-button" type="button" data-claim-transfer>{isDe ? 'Besitzerzugang übernehmen' : 'Claim owner access'} <span>→</span></button>
+          <button class="recovery-link member-recovery" type="button" data-recover-project>{isDe ? 'Stattdessen Recovery-Datei verwenden' : 'Use a recovery file instead'}</button>
+          <button class="remove-cloud-button" type="button" data-leave-sync>{isDe ? 'Dieses Gerät trennen' : 'Disconnect this device'}</button>
+        </div>
+      </div>
+
+      <div class="pair-result" data-pair-result hidden>
+        <span data-pair-icon aria-hidden="true">✓</span>
+        <h3 data-pair-title></h3>
+        <p data-pair-message></p>
+        <button class="primary-button" type="button" data-close-pair-result>{isDe ? 'SpendFlow öffnen' : 'Open SpendFlow'} <span>→</span></button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+</section>
+
+<script>
+  import QRCode from 'qrcode';
+
+  type EntryType = 'expense' | 'income';
+  type TrackingMode = 'expense' | 'both';
+  type Subcategory = { id: string; name: string; parentId: string | null };
+  type Group = { id: string; name: string; color: string; type: EntryType; subcategories: Subcategory[] };
+  type Expense = { id: string; amount: number; groupId: string; subcategoryId: string; note: string; date: string; type: EntryType };
+  type FlowNode = {
+    id: string;
+    name: string;
+    value: number;
+    percentageBase: number;
+    color: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    radius?: number;
+    roundLeft?: boolean;
+    roundRight?: boolean;
+    roundTopLeft?: boolean;
+    roundTopRight?: boolean;
+    roundBottomLeft?: boolean;
+    roundBottomRight?: boolean;
+    showPercentage?: boolean;
+    labelSide: 'left' | 'right';
+  };
+  type FlowLink = {
+    source: FlowNode;
+    target: FlowNode;
+    value: number;
+    color: string;
+    opacity: number;
+    sourceAlignment?: 'start' | 'center';
+    targetAlignment?: 'start' | 'center';
+  };
+  type Project = { id: string; name: string; budget: number | null; currency: string; trackingMode: TrackingMode; groups: Group[]; expenses: Expense[]; updatedAt: number };
+  type AppState = { version: 3; activeProjectId: string; projects: Project[] };
+  type Ciphertext = { iv: string; data: string };
+  type SyncConfig = {
+    localProjectId: string;
+    projectId: string;
+    key: string;
+    deviceId: string;
+    deviceToken: string;
+    label: string;
+    revision: number;
+    lastSyncedAt: number;
+    baseProject?: Project;
+    role: 'owner' | 'member';
+    recoveryToken?: string;
+  };
+  type SyncStore = { version: 1; projects: Record<string, SyncConfig> };
+  type ApiResult = { ok: boolean; error?: string; [key: string]: unknown };
+
+  const root = document.querySelector<HTMLElement>('[data-spendflow]');
+
+  if (root) {
+    const STORAGE_KEY = 'spendflow:v3';
+    const SYNC_KEY = 'spendflow:sync:v1';
+    const API_URL = '/api/spendflow.php';
+    const locale = root.dataset.locale === 'de' ? 'de' : 'en';
+    const currencyLocale = root.dataset.currencyLocale || 'de-AT';
+    const $ = <T extends Element>(selector: string) => root.querySelector<T>(selector)!;
+    const projectSelect = $<HTMLSelectElement>('[data-project-select]');
+    const categorySelect = $<HTMLSelectElement>('[data-category-select]');
+    const quickCategoryCreate = $<HTMLElement>('[data-quick-category-create]');
+    const quickCategoryName = $<HTMLInputElement>('[data-quick-category-name]');
+    const quickCategoryColor = $<HTMLInputElement>('[data-quick-category-color]');
+    const periodSelect = $<HTMLSelectElement>('[data-period]');
+    const categoryList = $<HTMLElement>('[data-category-list]');
+    const transactionList = $<HTMLElement>('[data-transaction-list]');
+    const flowCanvas = $<HTMLElement>('[data-flow-canvas]');
+    const flowCanvasHome = flowCanvas.parentElement!;
+    const flowScroll = $<HTMLElement>('[data-flow-scroll]');
+    const inlineFlowZoomSurface = $<HTMLElement>('[data-inline-flow-zoom-surface]');
+    const flowSvg = $<SVGSVGElement>('[data-flow-svg]');
+    const emptyState = $<HTMLElement>('[data-empty-state]');
+    const flowFullscreenDialog = $<HTMLDialogElement>('[data-flow-fullscreen-dialog]');
+    const flowFullscreenViewport = $<HTMLElement>('[data-flow-fullscreen-viewport]');
+    const flowZoomSurface = $<HTMLElement>('[data-flow-zoom-surface]');
+    const flowZoomLabel = $<HTMLOutputElement>('[data-flow-zoom-label]');
+    const inlineFlowZoomLabel = $<HTMLOutputElement>('[data-inline-flow-zoom-label]');
+    const categoryDialog = $<HTMLDialogElement>('[data-category-dialog]');
+    const expenseDialog = $<HTMLDialogElement>('[data-expense-dialog]');
+    const projectDialog = $<HTMLDialogElement>('[data-project-dialog]');
+    const editProjectDialog = $<HTMLDialogElement>('[data-edit-project-dialog]');
+    const categoryForm = $<HTMLFormElement>('[data-category-form]');
+    const editExpenseForm = $<HTMLFormElement>('[data-edit-expense-form]');
+    const editCategorySelect = $<HTMLSelectElement>('[data-edit-category]');
+    const projectForm = $<HTMLFormElement>('[data-project-form]');
+    const editProjectForm = $<HTMLFormElement>('[data-edit-project-form]');
+    const expenseForm = $<HTMLFormElement>('[data-expense-form]');
+    const colorInput = $<HTMLInputElement>('[data-color-input]');
+    const colorHex = $<HTMLElement>('[data-color-hex]');
+    const onboarding = $<HTMLElement>('[data-onboarding]');
+    const projectContent = root.querySelectorAll<HTMLElement>('[data-project-content]');
+    const projectActions = $<HTMLElement>('[data-project-actions]');
+    const projectOverview = $<HTMLElement>('[data-project-overview]');
+    const projectOverviewList = $<HTMLElement>('[data-project-overview-list]');
+    const entryTypeField = $<HTMLElement>('[data-entry-type-field]');
+    const categoryTypeField = $<HTMLElement>('[data-category-type-field]');
+    const editEntryTypeField = $<HTMLElement>('[data-edit-entry-type-field]');
+    const editEntryType = $<HTMLSelectElement>('[data-edit-entry-type]');
+    const toast = $<HTMLElement>('[data-toast]');
+    const syncDialog = $<HTMLDialogElement>('[data-sync-dialog]');
+    const syncSetup = $<HTMLElement>('[data-sync-setup]');
+    const syncConnected = $<HTMLElement>('[data-sync-connected]');
+    const syncLoading = $<HTMLElement>('[data-sync-loading]');
+    const pairResult = $<HTMLElement>('[data-pair-result]');
+    const privacyNote = $<HTMLElement>('[data-privacy-note]');
+    const syncDot = $<HTMLElement>('[data-sync-dot]');
+    const deviceNameInput = $<HTMLInputElement>('[data-device-name]');
+    const invitePanel = $<HTMLElement>('[data-invite-panel]');
+    const inviteCountdown = $<HTMLElement>('[data-invite-countdown]');
+    const deviceList = $<HTMLElement>('[data-device-list]');
+    const ownerControls = $<HTMLElement>('[data-owner-controls]');
+    const memberControls = $<HTMLElement>('[data-member-controls]');
+    const transferPanel = $<HTMLElement>('[data-transfer-panel]');
+    const recoveryFileInput = $<HTMLInputElement>('[data-recovery-file]');
+    let period = 'all';
+    let editingExpenseId = '';
+    let toastTimer = 0;
+    let syncTimer = 0;
+    let pollTimer = 0;
+    let inviteTimer = 0;
+    let currentInviteUrl = '';
+    let currentInviteToken = '';
+    let syncBusy = false;
+    let localMutationVersion = 0;
+    let showingProjectOverview = false;
+    let flowZoom = 1;
+    let flowBaseWidth = 0;
+    let flowBaseHeight = 0;
+    let pinchStartDistance = 0;
+    let pinchStartZoom = 1;
+    let inlineFlowZoom = 1;
+    let inlineFlowBaseWidth = 0;
+    let inlineFlowBaseHeight = 0;
+    let inlineZoomBeforeFullscreen = 1;
+    let inlineScrollLeftBeforeFullscreen = 0;
+    let inlineScrollTopBeforeFullscreen = 0;
+    let inlinePanPointer = 0;
+    let inlinePanX = 0;
+    let inlinePanY = 0;
+    const flowPointers = new Map<number, { x: number; y: number }>();
+
+    const id = () => globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const today = () => {
+      const value = new Date();
+      const local = new Date(value.getTime() - value.getTimezoneOffset() * 60000);
+      return local.toISOString().slice(0, 10);
+    };
+    const starterState = (): AppState => ({ version: 3, activeProjectId: '', projects: [] });
+    const starterSyncStore = (): SyncStore => ({ version: 1, projects: {} });
+    const normalizeProjectData = (project: Project) => {
+      let changed = false;
+      if (project.trackingMode !== 'both' && project.trackingMode !== 'expense') {
+        project.trackingMode = 'expense';
+        changed = true;
+      }
+      if (!Number.isFinite(project.updatedAt)) {
+        project.updatedAt = Date.now();
+        changed = true;
+      }
+      project.groups.forEach(group => {
+        if (group.type !== 'income' && group.type !== 'expense') {
+          group.type = 'expense';
+          changed = true;
+        }
+        if (!Array.isArray(group.subcategories)) {
+          group.subcategories = [];
+          changed = true;
+        }
+        if (!group.subcategories.some(subcategory => subcategory.name === '')) {
+          group.subcategories.unshift({ id: id(), name: '', parentId: null });
+          changed = true;
+        }
+        group.subcategories.forEach(subcategory => {
+          if (subcategory.parentId === undefined) {
+            subcategory.parentId = null;
+            changed = true;
+          }
+        });
+      });
+      project.expenses.forEach(expense => {
+        if (expense.type !== 'income' && expense.type !== 'expense') {
+          expense.type = project.groups.find(group => group.id === expense.groupId)?.type || 'expense';
+          changed = true;
+        }
+      });
+      return changed;
+    };
+
+    const validState = (value: unknown): value is AppState => {
+      if (!value || typeof value !== 'object') return false;
+      const candidate = value as AppState;
+      return candidate.version === 3 && Array.isArray(candidate.projects) && typeof candidate.activeProjectId === 'string';
+    };
+
+    const load = () => {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (validState(parsed)) {
+            let migrated = false;
+            parsed.projects.forEach(project => { migrated = normalizeProjectData(project) || migrated; });
+            if (migrated) localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+            return parsed;
+          }
+        }
+      } catch { /* Start safely with a blank local state. */ }
+      return starterState();
+    };
+
+    const loadSyncStore = (): SyncStore => {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(SYNC_KEY) || 'null') as SyncStore | null;
+        if (parsed?.version === 1 && parsed.projects && typeof parsed.projects === 'object') return parsed;
+      } catch { /* Ignore invalid device credentials. */ }
+      return starterSyncStore();
+    };
+
+    let state = load();
+    let syncStore = loadSyncStore();
+    const activeProject = () => state.projects.find(project => project.id === state.activeProjectId) || state.projects[0];
+    const syncConfig = (projectId = state.activeProjectId) => syncStore.projects[projectId];
+    const persistSyncStore = () => {
+      try { localStorage.setItem(SYNC_KEY, JSON.stringify(syncStore)); }
+      catch { showToast(root.dataset.storageError || 'Could not save changes.'); }
+    };
+    const save = (shouldSync = true, touchProject = shouldSync) => {
+      const project = activeProject();
+      if (touchProject && project) project.updatedAt = Date.now();
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+      catch { showToast(root.dataset.storageError || 'Could not save changes.'); }
+      if (shouldSync && syncConfig()) {
+        localMutationVersion += 1;
+        schedulePush();
+      }
+    };
+    const showToast = (message: string) => {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove('show'), 2600);
+    };
+    const bytesToBase64url = (bytes: Uint8Array) => {
+      let binary = '';
+      bytes.forEach(byte => { binary += String.fromCharCode(byte); });
+      return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+    };
+    const base64urlToBytes = (value: string) => {
+      const padded = value.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - value.length % 4) % 4);
+      const binary = atob(padded);
+      return Uint8Array.from(binary, character => character.charCodeAt(0));
+    };
+    const randomToken = (bytes = 32) => bytesToBase64url(crypto.getRandomValues(new Uint8Array(bytes)));
+    const encodePairPayload = (value: object) => bytesToBase64url(new TextEncoder().encode(JSON.stringify(value)));
+    const decodePairPayload = (value: string) => JSON.parse(new TextDecoder().decode(base64urlToBytes(value))) as Record<string, unknown>;
+    const defaultDeviceName = () => {
+      const agent = navigator.userAgent;
+      if (/iPhone/i.test(agent)) return 'iPhone';
+      if (/iPad/i.test(agent)) return 'iPad';
+      if (/Android/i.test(agent)) return locale === 'de' ? 'Android-Gerät' : 'Android device';
+      if (/Macintosh/i.test(agent)) return 'Mac';
+      if (/Windows/i.test(agent)) return 'Windows PC';
+      return locale === 'de' ? 'Dieses Gerät' : 'This device';
+    };
+    const importEncryptionKey = (encodedKey: string) => crypto.subtle.importKey(
+      'raw', base64urlToBytes(encodedKey), { name: 'AES-GCM' }, false, ['encrypt', 'decrypt'],
+    );
+    const encryptProject = async (project: Project, config: Pick<SyncConfig, 'projectId' | 'key'>): Promise<Ciphertext> => {
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await importEncryptionKey(config.key);
+      const plaintext = new TextEncoder().encode(JSON.stringify(project));
+      const additionalData = new TextEncoder().encode(`spendflow:${config.projectId}:v1`);
+      const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv, additionalData }, key, plaintext);
+      return { iv: bytesToBase64url(iv), data: bytesToBase64url(new Uint8Array(encrypted)) };
+    };
+    const decryptProject = async (cipher: Ciphertext, config: Pick<SyncConfig, 'projectId' | 'key'>): Promise<Project> => {
+      const key = await importEncryptionKey(config.key);
+      const additionalData = new TextEncoder().encode(`spendflow:${config.projectId}:v1`);
+      const decrypted = await crypto.subtle.decrypt(
+        { name: 'AES-GCM', iv: base64urlToBytes(cipher.iv), additionalData }, key, base64urlToBytes(cipher.data),
+      );
+      const project = JSON.parse(new TextDecoder().decode(decrypted)) as Project;
+      if (!project || typeof project.id !== 'string' || typeof project.name !== 'string' || !Array.isArray(project.groups) || !Array.isArray(project.expenses)) {
+        throw new Error('invalid_project');
+      }
+      normalizeProjectData(project);
+      return project;
+    };
+    const cloneProject = (project: Project): Project => JSON.parse(JSON.stringify(project)) as Project;
+    const equalData = (left: unknown, right: unknown) => JSON.stringify(left) === JSON.stringify(right);
+    const mergeValue = <T,>(base: T, local: T, remote: T): T => {
+      if (equalData(local, base)) return remote;
+      if (equalData(remote, base)) return local;
+      return local;
+    };
+    const mergeRecords = <T extends { id: string }>(baseItems: T[], localItems: T[], remoteItems: T[]): T[] => {
+      const base = new Map(baseItems.map(item => [item.id, item]));
+      const local = new Map(localItems.map(item => [item.id, item]));
+      const remote = new Map(remoteItems.map(item => [item.id, item]));
+      const orderedIds = [...remoteItems.map(item => item.id), ...localItems.map(item => item.id)]
+        .filter((item, index, all) => all.indexOf(item) === index);
+      const merged: T[] = [];
+      orderedIds.forEach(itemId => {
+        const before = base.get(itemId);
+        const here = local.get(itemId);
+        const there = remote.get(itemId);
+        if (!before) {
+          if (here && there) merged.push(equalData(here, there) ? there : here);
+          else if (here || there) merged.push((here || there)!);
+          return;
+        }
+        if (!here || !there) return; // A deletion wins over a concurrent edit.
+        if (equalData(here, before)) { merged.push(there); return; }
+        if (equalData(there, before)) { merged.push(here); return; }
+        const combined = { ...there } as T & Record<string, unknown>;
+        const keys = new Set([...Object.keys(before), ...Object.keys(here), ...Object.keys(there)]);
+        keys.forEach(key => {
+          combined[key] = mergeValue(
+            (before as T & Record<string, unknown>)[key],
+            (here as T & Record<string, unknown>)[key],
+            (there as T & Record<string, unknown>)[key],
+          );
+        });
+        merged.push(combined as T);
+      });
+      return merged;
+    };
+    const mergeProjects = (base: Project, local: Project, remote: Project): Project => {
+      const merged: Project = {
+        id: remote.id,
+        name: mergeValue(base.name, local.name, remote.name),
+        budget: mergeValue(base.budget, local.budget, remote.budget),
+        currency: mergeValue(base.currency, local.currency, remote.currency),
+        trackingMode: mergeValue(base.trackingMode, local.trackingMode, remote.trackingMode),
+        updatedAt: Math.max(base.updatedAt || 0, local.updatedAt || 0, remote.updatedAt || 0),
+        groups: mergeRecords(base.groups, local.groups, remote.groups),
+        expenses: mergeRecords(base.expenses, local.expenses, remote.expenses),
+      };
+      const knownGroups = new Map([...base.groups, ...remote.groups, ...local.groups].map(group => [group.id, group]));
+      merged.expenses.forEach(expense => {
+        if (!merged.groups.some(group => group.id === expense.groupId)) {
+          const required = knownGroups.get(expense.groupId);
+          if (required) merged.groups.push(required);
+        }
+      });
+      return merged;
+    };
+    const api = async (body: Record<string, unknown>, config?: Pick<SyncConfig, 'deviceToken'>): Promise<ApiResult> => {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (config?.deviceToken) headers.Authorization = `Bearer ${config.deviceToken}`;
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers,
+        credentials: 'omit',
+        cache: 'no-store',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(body),
+      });
+      const result = await response.json().catch(() => ({ ok: false, error: 'invalid_response' })) as ApiResult;
+      if (!response.ok && response.status !== 409) {
+        const error = new Error(String(result.error || `http_${response.status}`));
+        (error as Error & { code?: string }).code = String(result.error || 'sync_failed');
+        throw error;
+      }
+      return result;
+    };
+    const isMissingCloudProject = (error: unknown) => error instanceof Error
+      && (((error as Error & { code?: string }).code || error.message) === 'project_not_found');
+    const setPrivacyNote = (synced: boolean, status = '') => {
+      const strong = document.createElement('strong');
+      strong.textContent = synced
+        ? (locale === 'de' ? 'Ende-zu-Ende verschlüsselt.' : 'End-to-end encrypted.')
+        : (locale === 'de' ? 'Privat auf diesem Gerät.' : 'Private on this device.');
+      const text = document.createTextNode(synced
+        ? ` ${status || (locale === 'de' ? 'Nur deine verbundenen Geräte besitzen den Schlüssel.' : 'Only your connected devices hold the key.')}`
+        : ` ${locale === 'de' ? 'Synchronisierung ist aus. Deine Finanzdaten verlassen den Browser nicht.' : 'Sync is off. Your financial data does not leave this browser.'}`);
+      privacyNote.replaceChildren(strong, text);
+    };
+    const renderSyncIndicator = () => {
+      const config = syncConfig();
+      if (config && config.role !== 'owner' && config.role !== 'member') config.role = 'member';
+      syncDot.classList.toggle('connected', Boolean(config));
+      $('[data-sync-button-label]').textContent = config
+        ? (locale === 'de' ? 'Synchronisiert' : 'Synced')
+        : (locale === 'de' ? 'Synchronisieren' : 'Sync');
+      if (config) {
+        ownerControls.hidden = config.role !== 'owner';
+        memberControls.hidden = config.role === 'owner';
+        $('[data-sync-role]').textContent = config.role === 'owner'
+          ? (locale === 'de' ? 'Besitzergerät' : 'Owner device')
+          : (locale === 'de' ? 'Verbundenes Gerät' : 'Connected device');
+        const last = config.lastSyncedAt
+          ? new Intl.DateTimeFormat(currencyLocale, { hour: '2-digit', minute: '2-digit' }).format(config.lastSyncedAt)
+          : '';
+        setPrivacyNote(true, last
+          ? (locale === 'de' ? `Zuletzt synchronisiert um ${last}.` : `Last synced at ${last}.`)
+          : '');
+      } else {
+        ownerControls.hidden = true;
+        memberControls.hidden = true;
+        setPrivacyNote(false);
+      }
+    };
+    const setSyncBusy = (busy: boolean) => {
+      syncBusy = busy;
+      syncLoading.hidden = !busy;
+      syncSetup.toggleAttribute('inert', busy);
+      syncConnected.toggleAttribute('inert', busy);
+    };
+    const markSynced = (config: SyncConfig, revision: number, baseProject = activeProject()) => {
+      config.revision = revision;
+      config.lastSyncedAt = Date.now();
+      if (baseProject) config.baseProject = cloneProject(baseProject);
+      syncDot.classList.remove('error');
+      persistSyncStore();
+      renderSyncIndicator();
+      const status = root.querySelector<HTMLElement>('[data-sync-status-text]');
+      if (status) status.textContent = locale === 'de' ? 'Aktuell' : 'Up to date';
+    };
+    const pushProject = async (force = false) => {
+      const project = activeProject();
+      const config = syncConfig(project?.id);
+      if (!project || !config) return;
+      if (syncBusy) {
+        window.clearTimeout(syncTimer);
+        syncTimer = window.setTimeout(() => void pushProject(force), 700);
+        return;
+      }
+      const mutationVersion = localMutationVersion;
+      syncBusy = true;
+      syncDot.classList.add('working');
+      try {
+        let projectToPush = project;
+        let cipher = await encryptProject(projectToPush, config);
+        let result = await api({
+          action: 'push', projectId: config.projectId, cipher,
+          baseRevision: config.revision, force,
+        }, config);
+        if (!result.ok && result.error === 'revision_conflict') {
+          const remote = await decryptProject(result.cipher as Ciphertext, config);
+          projectToPush = mergeProjects(config.baseProject || cloneProject(project), project, remote);
+          const index = state.projects.findIndex(item => item.id === project.id);
+          if (index >= 0) state.projects[index] = projectToPush;
+          save(false);
+          render();
+          config.revision = Number(result.revision || config.revision);
+          config.baseProject = cloneProject(remote);
+          cipher = await encryptProject(projectToPush, config);
+          result = await api({
+            action: 'push', projectId: config.projectId, cipher,
+            baseRevision: config.revision, force: true,
+          }, config);
+        }
+        if (!result.ok) throw new Error(String(result.error || 'sync_failed'));
+        if (result.role === 'owner' || result.role === 'member') {
+          config.role = result.role;
+          if (result.role === 'member') delete config.recoveryToken;
+        }
+        if (config.role === 'owner' && !config.recoveryToken) {
+          const recoveryToken = randomToken(48);
+          await api({ action: 'set-recovery', projectId: config.projectId, recoveryToken }, config);
+          config.recoveryToken = recoveryToken;
+        }
+        markSynced(config, Number(result.revision), projectToPush);
+      } catch {
+        syncDot.classList.add('error');
+        showToast(root.dataset.syncError || 'Sync failed.');
+      } finally {
+        syncBusy = false;
+        syncDot.classList.remove('working');
+        if (localMutationVersion > mutationVersion) schedulePush();
+      }
+    };
+    const schedulePush = () => {
+      window.clearTimeout(syncTimer);
+      syncTimer = window.setTimeout(() => void pushProject(), 450);
+    };
+    const pullProject = async (quiet = true) => {
+      const project = activeProject();
+      const config = syncConfig(project?.id);
+      if (!project || !config || syncBusy || document.hidden) return;
+      syncBusy = true;
+      try {
+        const result = await api({ action: 'pull', projectId: config.projectId }, config);
+        if (result.role === 'owner' || result.role === 'member') {
+          config.role = result.role;
+          if (result.role === 'member') delete config.recoveryToken;
+        }
+        if (config.role === 'owner' && !config.recoveryToken) {
+          const recoveryToken = randomToken(48);
+          await api({ action: 'set-recovery', projectId: config.projectId, recoveryToken }, config);
+          config.recoveryToken = recoveryToken;
+        }
+        const revision = Number(result.revision || 0);
+        if (revision > config.revision && result.cipher) {
+          const remote = await decryptProject(result.cipher as Ciphertext, config);
+          const merged = mergeProjects(config.baseProject || cloneProject(project), project, remote);
+          const index = state.projects.findIndex(item => item.id === project.id);
+          if (index >= 0) state.projects[index] = merged;
+          state.activeProjectId = merged.id;
+          if (merged.id !== config.localProjectId) {
+            delete syncStore.projects[config.localProjectId];
+            config.localProjectId = merged.id;
+            syncStore.projects[merged.id] = config;
+          }
+          config.revision = revision;
+          config.baseProject = cloneProject(remote);
+          save(false);
+          render();
+          if (!equalData(merged, remote)) {
+            localMutationVersion += 1;
+            schedulePush();
+          }
+        }
+        if (revision <= config.revision) markSynced(config, revision, config.baseProject || project);
+      } catch {
+        syncDot.classList.add('error');
+        if (!quiet) showToast(root.dataset.syncError || 'Sync failed.');
+      } finally {
+        syncBusy = false;
+        if (syncDialog.open && config.role === 'owner') void loadDevices();
+      }
+    };
+    const syncColorPanel = () => { colorHex.textContent = colorInput.value.toUpperCase(); };
+    const money = (value: number, compact = false) => new Intl.NumberFormat(currencyLocale, {
+      style: 'currency',
+      currency: activeProject().currency,
+      maximumFractionDigits: compact && value >= 1000 ? 0 : 2,
+    }).format(value);
+    const invalidMoneyMessage = locale === 'de'
+      ? 'Bitte gib einen gültigen Betrag ein, z. B. 1,20 oder 1.000,50.'
+      : 'Enter a valid amount, for example 1.20 or 1,000.50.';
+    const parseMoneyInput = (input: FormDataEntryValue | string | null) => {
+      let raw = String(input || '').trim().replace(/[\s'’]/g, '');
+      if (!raw) return Number.NaN;
+      let sign = 1;
+      if (raw.startsWith('-') || raw.startsWith('+')) {
+        sign = raw.startsWith('-') ? -1 : 1;
+        raw = raw.slice(1);
+      }
+      if (!raw || !/^[0-9.,]+$/.test(raw)) return Number.NaN;
+
+      const lastComma = raw.lastIndexOf(',');
+      const lastDot = raw.lastIndexOf('.');
+      let normalized = raw;
+      if (lastComma >= 0 && lastDot >= 0) {
+        const decimalSeparator = lastComma > lastDot ? ',' : '.';
+        const groupingSeparator = decimalSeparator === ',' ? '.' : ',';
+        normalized = raw.split(groupingSeparator).join('');
+        const decimalIndex = normalized.lastIndexOf(decimalSeparator);
+        normalized = `${normalized.slice(0, decimalIndex).split(decimalSeparator).join('')}.${normalized.slice(decimalIndex + 1)}`;
+      } else if (lastComma >= 0 || lastDot >= 0) {
+        const separator = lastComma >= 0 ? ',' : '.';
+        const parts = raw.split(separator);
+        if (parts.length === 2) {
+          const [integerPart, fractionPart] = parts;
+          if (!fractionPart) normalized = integerPart || '0';
+          else if (fractionPart.length === 3 && integerPart.length > 0) normalized = `${integerPart}${fractionPart}`;
+          else if (fractionPart.length <= 2) normalized = `${integerPart || '0'}.${fractionPart}`;
+          else return Number.NaN;
+        } else {
+          const lastPart = parts.at(-1) || '';
+          const allThousands = parts.slice(1).every(part => part.length === 3);
+          if (allThousands) normalized = parts.join('');
+          else if (lastPart.length > 0 && lastPart.length <= 2) normalized = `${parts.slice(0, -1).join('')}.${lastPart}`;
+          else return Number.NaN;
+        }
+      }
+      const value = Number(normalized) * sign;
+      return Number.isFinite(value) ? value : Number.NaN;
+    };
+    const formatMoneyInput = (value: number) => new Intl.NumberFormat(currencyLocale, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
+    const readMoneyField = (form: HTMLFormElement, name: string, allowZero = false) => {
+      const input = form.elements.namedItem(name) as HTMLInputElement;
+      const value = parseMoneyInput(input.value);
+      const valid = Number.isFinite(value) && (allowZero ? value >= 0 : value > 0);
+      input.setCustomValidity(valid ? '' : invalidMoneyMessage);
+      if (!valid) input.reportValidity();
+      return valid ? value : Number.NaN;
+    };
+    const filteredExpenses = () => {
+      const project = activeProject();
+      const expenses = project.expenses.filter(expense => project.trackingMode === 'both' || expense.type === 'expense');
+      const now = new Date();
+      if (period === 'year') return expenses.filter(expense => new Date(`${expense.date}T12:00:00`).getFullYear() === now.getFullYear());
+      if (period === '30') {
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - 30);
+        return expenses.filter(expense => new Date(`${expense.date}T23:59:59`) >= cutoff);
+      }
+      return expenses;
+    };
+    const categoryByIds = (groupId: string, subcategoryId: string) => {
+      const group = activeProject().groups.find(item => item.id === groupId);
+      const subcategory = group?.subcategories.find(item => item.id === subcategoryId);
+      return { group, subcategory };
+    };
+    const totalForGroup = (groupId: string, expenses = activeProject().expenses) => expenses
+      .filter(expense => expense.groupId === groupId)
+      .reduce((sum, expense) => sum + expense.amount, 0);
+    const currentEntryType = (): EntryType => {
+      if (activeProject().trackingMode !== 'both') return 'expense';
+      return (expenseForm.querySelector<HTMLInputElement>('input[name="entryType"]:checked')?.value === 'income') ? 'income' : 'expense';
+    };
+    const directSubcategory = (group: Group) => group.subcategories.find(subcategory => subcategory.name === '');
+    const subcategoryChildren = (group: Group, parentId: string | null) => group.subcategories
+      .filter(subcategory => subcategory.name !== '' && subcategory.parentId === parentId);
+    const subcategoryPath = (group: Group, subcategoryId: string) => {
+      const subcategory = group.subcategories.find(item => item.id === subcategoryId);
+      if (!subcategory || subcategory.name === '') return group.name;
+      const parent = subcategory.parentId ? group.subcategories.find(item => item.id === subcategory.parentId) : null;
+      return [group.name, parent?.name, subcategory.name].filter(Boolean).join(' › ');
+    };
+    const subcategoryIdsWithChildren = (group: Group, subcategoryId: string) => {
+      const childIds = group.subcategories.filter(item => item.parentId === subcategoryId).map(item => item.id);
+      return [subcategoryId, ...childIds];
+    };
+    const totalForSubcategory = (group: Group, subcategoryId: string, expenses = activeProject().expenses) => {
+      const ids = new Set(subcategoryIdsWithChildren(group, subcategoryId));
+      return expenses.filter(expense => expense.groupId === group.id && ids.has(expense.subcategoryId))
+        .reduce((sum, expense) => sum + expense.amount, 0);
+    };
+    const populateCategorySelect = (select: HTMLSelectElement, type: EntryType, selectedValue = '') => {
+      select.replaceChildren();
+      const groups = activeProject().groups.filter(group => group.type === type);
+      if (!groups.length) {
+        const empty = document.createElement('option');
+        empty.textContent = locale === 'de' ? 'Kategorie auswählen …' : 'Choose a category…';
+        empty.value = '';
+        empty.disabled = true;
+        empty.selected = true;
+        select.append(empty);
+      }
+      groups.forEach(group => {
+        const direct = directSubcategory(group);
+        if (!direct) return;
+        const rootOption = document.createElement('option');
+        rootOption.value = `${group.id}:${direct.id}`;
+        rootOption.textContent = group.name;
+        select.append(rootOption);
+        subcategoryChildren(group, null).forEach(levelTwo => {
+          const levelTwoOption = document.createElement('option');
+          levelTwoOption.value = `${group.id}:${levelTwo.id}`;
+          levelTwoOption.textContent = `↳ ${levelTwo.name}`;
+          select.append(levelTwoOption);
+          subcategoryChildren(group, levelTwo.id).forEach(levelThree => {
+            const levelThreeOption = document.createElement('option');
+            levelThreeOption.value = `${group.id}:${levelThree.id}`;
+            levelThreeOption.textContent = `  ↳ ${levelThree.name}`;
+            select.append(levelThreeOption);
+          });
+        });
+      });
+      if (selectedValue && Array.from(select.options).some(option => option.value === selectedValue)) select.value = selectedValue;
+    };
+    const renderProjectSelect = () => {
+      projectSelect.replaceChildren();
+      projectSelect.disabled = state.projects.length === 0;
+      if (!state.projects.length) {
+        const placeholder = document.createElement('option');
+        placeholder.textContent = locale === 'de' ? 'Noch kein Tracker' : 'No tracker yet';
+        placeholder.value = '';
+        projectSelect.append(placeholder);
+        return;
+      }
+      state.projects.forEach(project => {
+        const option = document.createElement('option');
+        option.value = project.id;
+        option.textContent = project.name;
+        option.selected = project.id === state.activeProjectId;
+        projectSelect.append(option);
+      });
+    };
+
+    const renderProjectOverview = () => {
+      projectOverviewList.replaceChildren();
+      const projects = [...state.projects].sort((left, right) => (right.updatedAt || 0) - (left.updatedAt || 0));
+      projects.forEach(project => {
+        const config = syncConfig(project.id);
+        const card = document.createElement('article');
+        card.className = 'project-overview-row';
+        card.classList.toggle('active', project.id === state.activeProjectId);
+
+        const identity = document.createElement('div');
+        identity.className = 'project-overview-identity';
+        const name = document.createElement('strong');
+        name.textContent = project.name;
+        const detail = document.createElement('small');
+        const entryWord = project.trackingMode === 'both'
+          ? (locale === 'de' ? (project.expenses.length === 1 ? 'Buchung' : 'Buchungen') : (project.expenses.length === 1 ? 'entry' : 'entries'))
+          : (locale === 'de' ? (project.expenses.length === 1 ? 'Ausgabe' : 'Ausgaben') : (project.expenses.length === 1 ? 'expense' : 'expenses'));
+        const modeLabel = project.trackingMode === 'both'
+          ? (locale === 'de' ? 'Ein- & Ausgaben' : 'Income & outgoing')
+          : (locale === 'de' ? 'Nur Ausgaben' : 'Outgoing only');
+        detail.textContent = `${project.currency} · ${project.expenses.length} ${entryWord} · ${modeLabel}`;
+        identity.append(name, detail);
+
+        const status = document.createElement('div');
+        status.className = 'project-overview-status';
+        const badge = document.createElement('span');
+        badge.className = config ? 'synced' : 'local';
+        badge.textContent = config
+          ? (locale === 'de' ? 'Synchronisiert' : 'Synced')
+          : (locale === 'de' ? 'Nur lokal' : 'Local only');
+        const role = document.createElement('small');
+        role.textContent = !config
+          ? (locale === 'de' ? 'Nur auf diesem Gerät' : 'Only on this device')
+          : config.role === 'owner'
+            ? (locale === 'de' ? 'Dieses Gerät ist Besitzer' : 'This device is owner')
+            : (locale === 'de' ? 'Besitzer auf anderem Gerät' : 'Owner on another device');
+        status.append(badge, role);
+
+        const edited = document.createElement('div');
+        edited.className = 'project-overview-edited';
+        const editedLabel = document.createElement('small');
+        editedLabel.textContent = locale === 'de' ? 'Zuletzt bearbeitet' : 'Last edited';
+        const editedValue = document.createElement('time');
+        editedValue.dateTime = new Date(project.updatedAt).toISOString();
+        editedValue.textContent = new Intl.DateTimeFormat(currencyLocale, { dateStyle: 'medium', timeStyle: 'short' }).format(project.updatedAt);
+        edited.append(editedLabel, editedValue);
+
+        const actions = document.createElement('div');
+        actions.className = 'project-overview-actions';
+        const open = document.createElement('button');
+        open.type = 'button';
+        open.dataset.openProjectId = project.id;
+        open.textContent = locale === 'de' ? 'Öffnen' : 'Open';
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'project-overview-delete';
+        remove.dataset.deleteProjectId = project.id;
+        remove.setAttribute('aria-label', locale === 'de' ? `${project.name} löschen` : `Delete ${project.name}`);
+        remove.title = locale === 'de' ? 'Projekt löschen' : 'Delete project';
+        remove.textContent = '×';
+        actions.append(open, remove);
+
+        card.append(identity, status, edited, actions);
+        projectOverviewList.append(card);
+      });
+    };
+
+    const renderCategorySelects = () => {
+      populateCategorySelect(categorySelect, currentEntryType());
+      const createOption = document.createElement('option');
+      createOption.value = '__new__';
+      createOption.textContent = locale === 'de' ? '+ Neue Kategorie erstellen' : '+ Create new category';
+      categorySelect.append(createOption);
+      quickCategoryCreate.hidden = true;
+    };
+
+    const renderStats = () => {
+      const entries = filteredExpenses();
+      const project = activeProject();
+      const expenses = entries.filter(entry => entry.type === 'expense');
+      const income = entries.filter(entry => entry.type === 'income');
+      const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+      const totalIncome = income.reduce((sum, entry) => sum + entry.amount, 0);
+      $('[data-total-spent]').textContent = money(total, true);
+      $('[data-total-income]').textContent = money(totalIncome, true);
+      const balance = totalIncome - total;
+      $('[data-balance]').textContent = money(balance, true);
+      $('[data-balance]').classList.toggle('negative', balance < 0);
+      $<HTMLElement>('.stats').classList.toggle('dual', project.trackingMode === 'both');
+      $('[data-income-stat]').hidden = project.trackingMode !== 'both';
+      $('[data-balance-stat]').hidden = project.trackingMode !== 'both';
+      const allSpent = project.expenses.filter(entry => entry.type === 'expense').reduce((sum, expense) => sum + expense.amount, 0);
+      $('[data-budget-left]').classList.remove('negative');
+      if (project.budget === null) {
+        $('[data-budget-left]').textContent = '—';
+        $('[data-budget-meta]').textContent = locale === 'de' ? 'kein Budget gesetzt' : 'no budget set';
+      } else {
+        const remaining = project.budget - allSpent;
+        $('[data-budget-left]').textContent = money(remaining, true);
+        $('[data-budget-left]').classList.toggle('negative', remaining < 0);
+        $('[data-budget-meta]').textContent = `${money(allSpent, true)} / ${money(project.budget, true)}`;
+      }
+      const groupTotals = project.groups.map(group => ({ group, total: totalForGroup(group.id, entries) })).sort((a, b) => b.total - a.total);
+      const largest = groupTotals[0];
+      $('[data-largest-group]').textContent = largest?.total ? largest.group.name : '—';
+      const visibleTotal = total + totalIncome;
+      $('[data-largest-meta]').textContent = largest?.total && visibleTotal ? `${Math.round(largest.total / visibleTotal * 100)}% · ${money(largest.total, true)}` : '—';
+      $('[data-period-label]').textContent = period === 'all'
+        ? (locale === 'de' ? 'gesamt' : 'all time')
+        : period === 'year'
+          ? (locale === 'de' ? 'dieses Jahr' : 'this year')
+          : (locale === 'de' ? 'letzte 30 Tage' : 'last 30 days');
+      $('[data-income-period]').textContent = $('[data-period-label]').textContent || '';
+    };
+
+    const renderCategories = () => {
+      categoryList.replaceChildren();
+      const project = activeProject();
+      const visibleGroups = project.groups.filter(group => project.trackingMode === 'both' || group.type === 'expense');
+      visibleGroups.forEach(group => {
+        const row = document.createElement('div');
+        row.className = 'category-row';
+        const swatch = document.createElement('i');
+        swatch.style.background = group.color;
+        const nameWrap = document.createElement('div');
+        const name = document.createElement('strong');
+        name.textContent = group.name;
+        const meta = document.createElement('small');
+        meta.textContent = `${group.type === 'income' ? (locale === 'de' ? 'Einnahme' : 'Incoming') : (locale === 'de' ? 'Ausgabe' : 'Outgoing')} · ${money(totalForGroup(group.id), true)}`;
+        nameWrap.append(name, meta);
+        const colorPicker = document.createElement('input');
+        colorPicker.type = 'color';
+        colorPicker.className = 'category-color-edit';
+        colorPicker.value = group.color;
+        colorPicker.setAttribute('aria-label', locale === 'de' ? `Farbe für ${group.name}` : `Color for ${group.name}`);
+        colorPicker.addEventListener('input', () => {
+          group.color = colorPicker.value;
+          swatch.style.background = group.color;
+          save();
+          renderFlow();
+          renderTransactions();
+        });
+        const addSubcategoryButton = document.createElement('button');
+        addSubcategoryButton.type = 'button';
+        addSubcategoryButton.className = 'category-icon-button category-add-button';
+        addSubcategoryButton.textContent = '+';
+        addSubcategoryButton.title = locale === 'de' ? 'Unterkategorie hinzufügen' : 'Add subcategory';
+        addSubcategoryButton.setAttribute('aria-label', addSubcategoryButton.title);
+        addSubcategoryButton.addEventListener('click', () => addSubcategory(group, null));
+        const rename = document.createElement('button');
+        rename.type = 'button';
+        rename.className = 'category-icon-button';
+        rename.textContent = '✎';
+        rename.setAttribute('aria-label', locale === 'de' ? 'Kategorie umbenennen' : 'Rename category');
+        rename.addEventListener('click', () => renameCategory(group));
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'category-icon-button';
+        remove.textContent = '×';
+        remove.setAttribute('aria-label', locale === 'de' ? 'Kategorie löschen' : 'Delete category');
+        remove.addEventListener('click', () => removeGroup(group));
+        row.append(swatch, nameWrap, colorPicker, addSubcategoryButton, rename, remove);
+        categoryList.append(row);
+
+        const renderSubcategory = (subcategory: Subcategory, depth: 2 | 3) => {
+          const subRow = document.createElement('div');
+          subRow.className = `category-row subcategory-row depth-${depth}`;
+          const branch = document.createElement('i');
+          branch.textContent = '↳';
+          const subNameWrap = document.createElement('div');
+          const subName = document.createElement('strong');
+          subName.textContent = subcategory.name;
+          const subMeta = document.createElement('small');
+          subMeta.textContent = `${locale === 'de' ? `Ebene ${depth}` : `Level ${depth}`} · ${money(totalForSubcategory(group, subcategory.id), true)}`;
+          subNameWrap.append(subName, subMeta);
+          const spacer = document.createElement('span');
+          const addChild = document.createElement('button');
+          addChild.type = 'button';
+          addChild.className = 'category-icon-button category-add-button';
+          addChild.textContent = '+';
+          addChild.hidden = depth === 3;
+          addChild.title = locale === 'de' ? 'Unterkategorie hinzufügen' : 'Add subcategory';
+          addChild.setAttribute('aria-label', addChild.title);
+          addChild.addEventListener('click', () => addSubcategory(group, subcategory.id));
+          const renameSub = document.createElement('button');
+          renameSub.type = 'button';
+          renameSub.className = 'category-icon-button';
+          renameSub.textContent = '✎';
+          renameSub.setAttribute('aria-label', locale === 'de' ? 'Unterkategorie umbenennen' : 'Rename subcategory');
+          renameSub.addEventListener('click', () => renameSubcategory(subcategory));
+          const removeSub = document.createElement('button');
+          removeSub.type = 'button';
+          removeSub.className = 'category-icon-button';
+          removeSub.textContent = '×';
+          removeSub.setAttribute('aria-label', locale === 'de' ? 'Unterkategorie löschen' : 'Delete subcategory');
+          removeSub.addEventListener('click', () => removeSubcategory(group, subcategory));
+          subRow.append(branch, subNameWrap, spacer, addChild, renameSub, removeSub);
+          categoryList.append(subRow);
+        };
+        subcategoryChildren(group, null).forEach(levelTwo => {
+          renderSubcategory(levelTwo, 2);
+          subcategoryChildren(group, levelTwo.id).forEach(levelThree => renderSubcategory(levelThree, 3));
+        });
+      });
+
+      if (!visibleGroups.length) {
+        const empty = document.createElement('p');
+        empty.className = 'category-empty';
+        empty.textContent = locale === 'de' ? 'Noch keine Kategorien. Lege deine erste an.' : 'No categories yet. Create your first one.';
+        categoryList.append(empty);
+      }
+    };
+
+    const renderTransactions = () => {
+      transactionList.replaceChildren();
+      const expenses = [...filteredExpenses()].sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+      const both = activeProject().trackingMode === 'both';
+      $('[data-transactions-title]').textContent = both
+        ? (locale === 'de' ? 'Letzte Buchungen' : 'Recent entries')
+        : (locale === 'de' ? 'Letzte Ausgaben' : 'Recent expenses');
+      $('[data-mobile-entries-label]').textContent = both ? (locale === 'de' ? 'Buchungen' : 'Entries') : (locale === 'de' ? 'Ausgaben' : 'Expenses');
+      $('[data-entry-count]').textContent = String(expenses.length).padStart(2, '0');
+      expenses.forEach(expense => {
+        const { group } = categoryByIds(expense.groupId, expense.subcategoryId);
+        const row = document.createElement('article');
+        row.className = 'transaction-row';
+        row.classList.toggle('income', expense.type === 'income');
+        const color = document.createElement('i');
+        color.style.background = group?.color || '#8a918b';
+        const date = document.createElement('time');
+        date.dateTime = expense.date;
+        date.textContent = new Intl.DateTimeFormat(currencyLocale, { day: '2-digit', month: 'short' }).format(new Date(`${expense.date}T12:00:00`));
+        const info = document.createElement('div');
+        const note = document.createElement('strong');
+        note.textContent = expense.note || (expense.type === 'income'
+          ? (locale === 'de' ? 'Einnahme' : 'Income')
+          : (locale === 'de' ? 'Ausgabe' : 'Expense'));
+        const category = document.createElement('small');
+        category.textContent = group ? subcategoryPath(group, expense.subcategoryId) : '';
+        info.append(note, category);
+        const amount = document.createElement('b');
+        amount.textContent = `${expense.type === 'income' ? '+' : '−'} ${money(expense.amount)}`;
+        amount.className = expense.type === 'income' ? 'income-amount' : '';
+        const actions = document.createElement('span');
+        actions.className = 'transaction-actions';
+        const edit = document.createElement('button');
+        edit.type = 'button';
+        edit.textContent = '✎';
+        edit.setAttribute('aria-label', locale === 'de' ? 'Buchung bearbeiten' : 'Edit entry');
+        edit.addEventListener('click', () => openExpenseEditor(expense));
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.textContent = '×';
+        remove.setAttribute('aria-label', locale === 'de' ? 'Buchung löschen' : 'Delete entry');
+        remove.addEventListener('click', () => {
+          activeProject().expenses = activeProject().expenses.filter(item => item.id !== expense.id);
+          save();
+          render();
+          showToast(locale === 'de' ? 'Buchung gelöscht.' : 'Entry deleted.');
+        });
+        actions.append(edit, remove);
+        row.append(color, date, info, amount, actions);
+        transactionList.append(row);
+      });
+      if (!expenses.length) {
+        const empty = document.createElement('p');
+        empty.className = 'transaction-empty';
+        empty.textContent = both
+          ? (locale === 'de' ? 'Noch keine Buchungen in diesem Zeitraum.' : 'No entries in this period yet.')
+          : (root.dataset.empty || 'No spending yet.');
+        transactionList.append(empty);
+      }
+    };
+
+    const svgElement = <K extends keyof SVGElementTagNameMap>(name: K, attributes: Record<string, string | number> = {}) => {
+      const element = document.createElementNS('http://www.w3.org/2000/svg', name);
+      Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, String(value)));
+      return element;
+    };
+    const svgText = (x: number, y: number, value: string, className: string, anchor = 'start') => {
+      const element = svgElement('text', { x, y, class: className, 'text-anchor': anchor });
+      element.textContent = value;
+      return element;
+    };
+    const truncate = (value: string, max = 21) => value.length > max ? `${value.slice(0, max - 1)}…` : value;
+
+    const renderFlow = () => {
+      flowSvg.replaceChildren();
+      flowSvg.setAttribute('viewBox', '0 0 980 440');
+      flowSvg.style.height = '';
+      flowSvg.style.minWidth = '';
+      const project = activeProject();
+      const entries = filteredExpenses();
+      const total = entries.reduce((sum, entry) => sum + entry.amount, 0);
+      const both = project.trackingMode === 'both';
+      const groups = project.groups
+        .map(group => ({ ...group, value: totalForGroup(group.id, entries) }))
+        .filter(group => group.value > 0)
+        .sort((a, b) => b.value - a.value);
+      const hasVisibleSubcategories = groups.some(group => group.subcategories.some(subcategory => (
+        subcategory.name !== '' && totalForSubcategory(group, subcategory.id, entries) > 0
+      )));
+      emptyState.hidden = total > 0;
+      flowSvg.style.opacity = total > 0 ? '1' : '0';
+
+      const labels = $<HTMLElement>('[data-flow-labels]');
+      const labelItems = labels.querySelectorAll<HTMLElement>('span');
+      labels.classList.toggle('dual', both);
+      labels.classList.toggle('hierarchical', !both);
+      if (both) {
+        labelItems[0].hidden = false;
+        labelItems[0].textContent = locale === 'de' ? 'EINNAHMEN' : 'INCOME';
+        labelItems[1].hidden = true;
+        labelItems[2].textContent = locale === 'de' ? 'AUSGABEN' : 'OUTGOING';
+      } else if (hasVisibleSubcategories) {
+        labelItems[0].hidden = false;
+        labelItems[1].hidden = false;
+        labelItems[0].textContent = locale === 'de' ? 'GESAMT' : 'TOTAL';
+        labelItems[1].textContent = locale === 'de' ? 'KATEGORIEN' : 'CATEGORIES';
+        labelItems[2].textContent = locale === 'de' ? 'UNTERKATEGORIEN · BEZEICHNUNGEN' : 'SUBCATEGORIES · ENTRIES';
+      } else {
+        labelItems[0].hidden = false;
+        labelItems[1].hidden = false;
+        labelItems[0].textContent = locale === 'de' ? 'GESAMT' : 'TOTAL';
+        labelItems[1].textContent = locale === 'de' ? 'KATEGORIEN' : 'CATEGORIES';
+        labelItems[2].textContent = locale === 'de' ? 'BEZEICHNUNGEN' : 'ENTRIES';
+      }
+      $('[data-flow-title]').textContent = both
+        ? (locale === 'de' ? 'Einnahmen und Ausgaben im Fluss' : 'Income and outgoing in one flow')
+        : (locale === 'de' ? 'Wohin dein Geld fließt' : 'Where your money goes');
+      const flowDescription = svgElement('desc', { id: 'flow-description' });
+      flowDescription.textContent = both
+        ? (locale === 'de' ? 'Sankey-Diagramm der Einnahmen und Ausgaben nach Kategorie, Unterkategorie und Bezeichnung.' : 'Sankey diagram of income and outgoing entries by category, subcategory and entry name.')
+        : (locale === 'de' ? 'Sankey-Diagramm der Ausgaben nach Kategorie, Unterkategorie und Bezeichnung.' : 'Sankey diagram of expenses by category, subcategory and entry name.');
+      flowSvg.append(flowDescription);
+      if (!total) return;
+
+      const nodeWidth = 14;
+      const columns: FlowNode[][] = [];
+      const links: FlowLink[] = [];
+      const hierarchyChildren = new Map<string, FlowNode[]>();
+      const registerNode = (column: number, node: FlowNode) => {
+        if (!columns[column]) columns[column] = [];
+        columns[column].push(node);
+        return node;
+      };
+      const registerChild = (parent: FlowNode, child: FlowNode) => {
+        const children = hierarchyChildren.get(parent.id) || [];
+        children.push(child);
+        hierarchyChildren.set(parent.id, children);
+      };
+      const exactSubcategoryTotal = (group: Group, subcategoryId: string, sourceEntries: Expense[]) => sourceEntries
+        .filter(entry => entry.groupId === group.id && entry.subcategoryId === subcategoryId)
+        .reduce((sum, entry) => sum + entry.amount, 0);
+      const maxSubcategoryDepth = (sourceGroups: typeof groups, sourceEntries: Expense[]) => {
+        let depth = 0;
+        sourceGroups.forEach(group => {
+          subcategoryChildren(group, null).forEach(levelTwo => {
+            if (totalForSubcategory(group, levelTwo.id, sourceEntries) <= 0) return;
+            depth = Math.max(depth, 1);
+            if (subcategoryChildren(group, levelTwo.id).some(levelThree => exactSubcategoryTotal(group, levelThree.id, sourceEntries) > 0)) depth = 2;
+          });
+        });
+        return depth;
+      };
+      const buildHierarchy = (
+        sourceGroups: typeof groups,
+        sourceEntries: Expense[],
+        xByDepth: number[],
+        entryX: number,
+        startColumn: number,
+        direction: 'in' | 'out',
+        sideTotal: number,
+      ) => {
+        const groupNodes = new Map<string, FlowNode>();
+        sourceGroups.forEach(group => {
+          const subcategoryNodes = new Map<string, FlowNode>();
+          const groupNode = registerNode(startColumn, {
+            id: `${direction}:group:${group.id}`,
+            name: group.name,
+            value: group.value,
+            percentageBase: sideTotal,
+            color: group.color,
+            x: xByDepth[0], y: 0, width: nodeWidth, height: 0,
+            roundLeft: direction === 'in', roundRight: direction === 'out',
+            labelSide: direction === 'in' ? 'left' : 'right',
+          });
+          groupNodes.set(group.id, groupNode);
+          subcategoryChildren(group, null).forEach(levelTwo => {
+            const levelTwoValue = totalForSubcategory(group, levelTwo.id, sourceEntries);
+            if (levelTwoValue <= 0 || xByDepth[1] === undefined) return;
+            const levelTwoNode = registerNode(startColumn + 1, {
+              id: `${direction}:subcategory:${levelTwo.id}`,
+              name: levelTwo.name,
+              value: levelTwoValue,
+              percentageBase: group.value,
+              color: group.color,
+              x: xByDepth[1], y: 0, width: nodeWidth, height: 0,
+              roundLeft: direction === 'in', roundRight: direction === 'out',
+              labelSide: direction === 'in' ? 'left' : 'right',
+            });
+            subcategoryNodes.set(levelTwo.id, levelTwoNode);
+            registerChild(groupNode, levelTwoNode);
+            if (direction === 'out') groupNode.roundRight = false;
+            else groupNode.roundLeft = false;
+            links.push(direction === 'out'
+              ? { source: groupNode, target: levelTwoNode, value: levelTwoValue, color: group.color, opacity: .34, sourceAlignment: 'start' }
+              : { source: levelTwoNode, target: groupNode, value: levelTwoValue, color: group.color, opacity: .34, targetAlignment: 'start' });
+            subcategoryChildren(group, levelTwo.id).forEach(levelThree => {
+              const levelThreeValue = exactSubcategoryTotal(group, levelThree.id, sourceEntries);
+              if (levelThreeValue <= 0 || xByDepth[2] === undefined) return;
+              const levelThreeNode = registerNode(startColumn + 2, {
+                id: `${direction}:subcategory:${levelThree.id}`,
+                name: levelThree.name,
+                value: levelThreeValue,
+                percentageBase: levelTwoValue,
+                color: group.color,
+                x: xByDepth[2], y: 0, width: nodeWidth, height: 0,
+                roundLeft: direction === 'in', roundRight: direction === 'out',
+                labelSide: direction === 'in' ? 'left' : 'right',
+              });
+              subcategoryNodes.set(levelThree.id, levelThreeNode);
+              registerChild(levelTwoNode, levelThreeNode);
+              if (direction === 'out') levelTwoNode.roundRight = false;
+              else levelTwoNode.roundLeft = false;
+              links.push(direction === 'out'
+                ? { source: levelTwoNode, target: levelThreeNode, value: levelThreeValue, color: group.color, opacity: .28, sourceAlignment: 'start' }
+                : { source: levelThreeNode, target: levelTwoNode, value: levelThreeValue, color: group.color, opacity: .28, targetAlignment: 'start' });
+            });
+          });
+
+          const subcategoryIndex = new Map(group.subcategories.map((subcategory, index) => [subcategory.id, index]));
+          const entryRank = (entry: Expense) => {
+            const subcategory = group.subcategories.find(item => item.id === entry.subcategoryId);
+            if (!subcategory || subcategory.name === '') return Number.MAX_SAFE_INTEGER;
+            const parentRank = subcategory.parentId ? (subcategoryIndex.get(subcategory.parentId) || 0) : (subcategoryIndex.get(subcategory.id) || 0);
+            const ownRank = subcategory.parentId ? (subcategoryIndex.get(subcategory.id) || 0) : 0;
+            return parentRank * 1000 + ownRank;
+          };
+          sourceEntries
+            .filter(entry => entry.groupId === group.id)
+            .sort((a, b) => entryRank(a) - entryRank(b) || a.date.localeCompare(b.date) || a.id.localeCompare(b.id))
+            .forEach(entry => {
+              const parentNode = subcategoryNodes.get(entry.subcategoryId) || groupNode;
+              const entryNode = registerNode(startColumn + xByDepth.length, {
+                id: `${direction}:entry:${entry.id}`,
+                name: entry.note,
+                value: entry.amount,
+                percentageBase: parentNode.value,
+                color: group.color,
+                x: entryX, y: 0, width: nodeWidth, height: 0,
+                roundLeft: direction === 'in', roundRight: direction === 'out',
+                showPercentage: false,
+                labelSide: direction === 'in' ? 'left' : 'right',
+              });
+              registerChild(parentNode, entryNode);
+              if (direction === 'out') parentNode.roundRight = false;
+              else parentNode.roundLeft = false;
+              links.push(direction === 'out'
+                ? { source: parentNode, target: entryNode, value: entry.amount, color: group.color, opacity: .24, sourceAlignment: 'start' }
+                : { source: entryNode, target: parentNode, value: entry.amount, color: group.color, opacity: .24, targetAlignment: 'start' });
+            });
+        });
+        return groupNodes;
+      };
+      const layoutForest = (roots: FlowNode[], scale: number) => {
+        const branchGap = 28;
+        const rootGap = 42;
+        const layoutSubtree = (node: FlowNode, y: number): number => {
+          node.height = Math.max(3, node.value * scale);
+          node.y = y;
+          const children = hierarchyChildren.get(node.id) || [];
+          if (!children.length) return y + node.height;
+          let childY = y;
+          children.forEach((child, index) => {
+            childY = layoutSubtree(child, childY);
+            if (index < children.length - 1) childY += branchGap;
+          });
+          return Math.max(y + node.height, childY);
+        };
+        let cursor = 0;
+        roots.forEach((rootNode, index) => {
+          cursor = layoutSubtree(rootNode, cursor);
+          if (index < roots.length - 1) cursor += rootGap;
+        });
+        return cursor;
+      };
+      const shiftForest = (roots: FlowNode[], offset: number) => {
+        const shiftSubtree = (node: FlowNode) => {
+          node.y += offset;
+          (hierarchyChildren.get(node.id) || []).forEach(shiftSubtree);
+        };
+        roots.forEach(shiftSubtree);
+      };
+      const drawLinks = (scale: number) => {
+        const sourceStarts = new Map<FlowLink, number>();
+        const targetStarts = new Map<FlowLink, number>();
+        const outgoingTotals = new Map<string, number>();
+        const incomingTotals = new Map<string, number>();
+        const linkThickness = (link: FlowLink) => link.value * scale;
+        const linksBySource = new Map<string, FlowLink[]>();
+        const linksByTarget = new Map<string, FlowLink[]>();
+        links.forEach(link => {
+          const sourceLinks = linksBySource.get(link.source.id) || [];
+          const targetLinks = linksByTarget.get(link.target.id) || [];
+          sourceLinks.push(link);
+          targetLinks.push(link);
+          linksBySource.set(link.source.id, sourceLinks);
+          linksByTarget.set(link.target.id, targetLinks);
+        });
+        linksBySource.forEach(sourceLinks => {
+          let used = 0;
+          sourceLinks.sort((a, b) => a.target.y - b.target.y || a.target.id.localeCompare(b.target.id));
+          sourceLinks.forEach(link => {
+            sourceStarts.set(link, used);
+            used += linkThickness(link);
+          });
+          outgoingTotals.set(sourceLinks[0].source.id, used);
+        });
+        linksByTarget.forEach(targetLinks => {
+          let used = 0;
+          targetLinks.sort((a, b) => a.source.y - b.source.y || a.source.id.localeCompare(b.source.id));
+          targetLinks.forEach(link => {
+            targetStarts.set(link, used);
+            used += linkThickness(link);
+          });
+          incomingTotals.set(targetLinks[0].target.id, used);
+        });
+        links.forEach(link => {
+          const thickness = linkThickness(link);
+          const sourceUsed = sourceStarts.get(link) || 0;
+          const targetUsed = targetStarts.get(link) || 0;
+          const sourceInset = link.sourceAlignment === 'start' ? 0 : Math.max(0, (link.source.height - (outgoingTotals.get(link.source.id) || 0)) / 2);
+          const targetInset = link.targetAlignment === 'start' ? 0 : Math.max(0, (link.target.height - (incomingTotals.get(link.target.id) || 0)) / 2);
+          const sourceTop = link.source.y + sourceInset + sourceUsed;
+          const targetTop = link.target.y + targetInset + targetUsed;
+          const sourceX = link.source.x + link.source.width;
+          const targetX = link.target.x;
+          const curveStart = sourceX + (targetX - sourceX) * .46;
+          const curveEnd = sourceX + (targetX - sourceX) * .54;
+          flowSvg.append(svgElement('path', {
+            d: `M ${sourceX} ${sourceTop} C ${curveStart} ${sourceTop}, ${curveEnd} ${targetTop}, ${targetX} ${targetTop} L ${targetX} ${targetTop + thickness} C ${curveEnd} ${targetTop + thickness}, ${curveStart} ${sourceTop + thickness}, ${sourceX} ${sourceTop + thickness} Z`,
+            fill: link.color,
+            'fill-opacity': link.opacity,
+          }));
+        });
+      };
+      const drawNodes = (canvasHeight: number) => {
+        columns.forEach(nodes => nodes?.forEach(node => {
+          if (node.value <= 0) return;
+          const radius = Math.min(node.radius ?? 5, node.width / 2, node.height / 2);
+          const roundLeft = node.roundLeft ?? true;
+          const roundRight = node.roundRight ?? true;
+          const topLeftRadius = (node.roundTopLeft ?? roundLeft) ? radius : 0;
+          const topRightRadius = (node.roundTopRight ?? roundRight) ? radius : 0;
+          const bottomLeftRadius = (node.roundBottomLeft ?? roundLeft) ? radius : 0;
+          const bottomRightRadius = (node.roundBottomRight ?? roundRight) ? radius : 0;
+          const nodePath = [
+            `M ${node.x + topLeftRadius} ${node.y}`,
+            `L ${node.x + node.width - topRightRadius} ${node.y}`,
+            topRightRadius ? `Q ${node.x + node.width} ${node.y} ${node.x + node.width} ${node.y + topRightRadius}` : `L ${node.x + node.width} ${node.y}`,
+            `L ${node.x + node.width} ${node.y + node.height - bottomRightRadius}`,
+            bottomRightRadius ? `Q ${node.x + node.width} ${node.y + node.height} ${node.x + node.width - bottomRightRadius} ${node.y + node.height}` : `L ${node.x + node.width} ${node.y + node.height}`,
+            `L ${node.x + bottomLeftRadius} ${node.y + node.height}`,
+            bottomLeftRadius ? `Q ${node.x} ${node.y + node.height} ${node.x} ${node.y + node.height - bottomLeftRadius}` : `L ${node.x} ${node.y + node.height}`,
+            `L ${node.x} ${node.y + topLeftRadius}`,
+            topLeftRadius ? `Q ${node.x} ${node.y} ${node.x + topLeftRadius} ${node.y}` : `L ${node.x} ${node.y}`,
+            'Z',
+          ].join(' ');
+          flowSvg.append(svgElement('path', { d: nodePath, fill: node.color }));
+          if (!node.name) return;
+          const labelY = Math.max(18, Math.min(canvasHeight - 15, node.y + node.height / 2 - 4));
+          const labelX = node.labelSide === 'left' ? node.x - 12 : node.x + node.width + 12;
+          const anchor = node.labelSide === 'left' ? 'end' : 'start';
+          flowSvg.append(svgText(labelX, labelY, truncate(node.name, 22), 'flow-name', anchor));
+          const valueLabel = node.showPercentage === false
+            ? money(node.value, true)
+            : `${money(node.value, true)} · ${Math.round(node.value / Math.max(1, node.percentageBase) * 100)}%`;
+          flowSvg.append(svgText(labelX, labelY + 17, valueLabel, 'flow-value', anchor));
+        }));
+      };
+
+      if (both) {
+        const incomeEntries = entries.filter(entry => entry.type === 'income');
+        const expenseEntries = entries.filter(entry => entry.type === 'expense');
+        const totalIncome = incomeEntries.reduce((sum, entry) => sum + entry.amount, 0);
+        const totalExpense = expenseEntries.reduce((sum, entry) => sum + entry.amount, 0);
+        const incomeGroups = groups.filter(group => group.type === 'income');
+        const expenseGroups = groups.filter(group => group.type === 'expense');
+        const incomeDepth = maxSubcategoryDepth(incomeGroups, incomeEntries);
+        const expenseDepth = maxSubcategoryDepth(expenseGroups, expenseEntries);
+        const columnDistance = 235;
+        const margin = 140;
+        const sideColumns = Math.max(incomeDepth, expenseDepth) + 2;
+        const canvasWidth = Math.max(980, margin * 2 + columnDistance * sideColumns * 2 + nodeWidth * 2);
+        const centerExpenseX = canvasWidth / 2;
+        const centerIncomeX = centerExpenseX - nodeWidth;
+        const incomeX = Array.from({ length: incomeDepth + 1 }, (_, depth) => centerIncomeX - columnDistance * (depth + 1));
+        const expenseX = Array.from({ length: expenseDepth + 1 }, (_, depth) => centerExpenseX + columnDistance * (depth + 1));
+        const incomeEntryX = centerIncomeX - columnDistance * (incomeDepth + 2);
+        const expenseEntryX = centerExpenseX + columnDistance * (expenseDepth + 2);
+        const incomeStartColumn = 0;
+        const expenseStartColumn = 6;
+        const incomeGroupNodes = buildHierarchy(incomeGroups, incomeEntries, incomeX, incomeEntryX, incomeStartColumn, 'in', totalIncome);
+        const incomeCenter = registerNode(4, {
+          id: 'income:center', name: '', value: totalIncome, percentageBase: totalIncome, color: '#278462',
+          x: centerIncomeX, y: 0, width: nodeWidth, height: 0,
+          roundLeft: false, roundRight: false, roundBottomRight: totalIncome > totalExpense,
+          labelSide: 'left',
+        });
+        incomeGroupNodes.forEach((node, groupId) => {
+          const group = incomeGroups.find(item => item.id === groupId)!;
+          links.push({ source: node, target: incomeCenter, value: group.value, color: group.color, opacity: .42 });
+        });
+        const expenseCenter = registerNode(5, {
+          id: 'expense:center', name: '', value: totalExpense, percentageBase: totalExpense, color: '#202721',
+          x: centerExpenseX, y: 0, width: nodeWidth, height: 0,
+          roundLeft: false, roundRight: false, roundBottomLeft: totalExpense > totalIncome,
+          labelSide: 'right',
+        });
+        const expenseGroupNodes = buildHierarchy(expenseGroups, expenseEntries, expenseX, expenseEntryX, expenseStartColumn, 'out', totalExpense);
+        expenseGroupNodes.forEach((node, groupId) => {
+          const group = expenseGroups.find(item => item.id === groupId)!;
+          links.push({ source: expenseCenter, target: node, value: group.value, color: group.color, opacity: .42 });
+        });
+        const scale = 270 / Math.max(totalIncome, totalExpense, 1);
+        const incomeRoots = Array.from(incomeGroupNodes.values());
+        const expenseRoots = Array.from(expenseGroupNodes.values());
+        const incomeForestHeight = layoutForest(incomeRoots, scale);
+        const expenseForestHeight = layoutForest(expenseRoots, scale);
+        const forestHeight = Math.max(incomeForestHeight, expenseForestHeight, 270);
+        const chartTop = 90;
+        const canvasHeight = Math.max(440, forestHeight + chartTop + 44);
+        const centerTop = chartTop;
+        shiftForest(incomeRoots, centerTop);
+        shiftForest(expenseRoots, centerTop);
+        incomeCenter.height = Math.max(3, totalIncome * scale);
+        expenseCenter.height = Math.max(3, totalExpense * scale);
+        incomeCenter.y = centerTop;
+        expenseCenter.y = centerTop;
+        flowSvg.setAttribute('viewBox', `0 0 ${canvasWidth} ${canvasHeight}`);
+        flowSvg.style.minWidth = `${Math.max(760, canvasWidth * .82)}px`;
+        flowSvg.style.height = `${Math.max(400, canvasHeight * .91)}px`;
+        drawLinks(scale);
+        drawNodes(canvasHeight);
+        flowSvg.append(svgText(centerIncomeX - 10, 24, money(totalIncome, true), 'flow-total', 'end'));
+        flowSvg.append(svgText(centerExpenseX + nodeWidth + 10, 24, money(totalExpense, true), 'flow-total'));
+        flowSvg.append(svgText(canvasWidth / 2, 48, `${locale === 'de' ? 'Saldo' : 'Balance'} ${money(totalIncome - totalExpense, true)}`, 'flow-balance', 'middle'));
+        centerInlineFlow();
+        return;
+      }
+
+      const depth = maxSubcategoryDepth(groups, entries);
+      const sourceX = 40;
+      const canvasWidth = depth === 0 ? 1080 : depth === 1 ? 1280 : 1480;
+      const hierarchyX = depth === 0 ? [430] : depth === 1 ? [350, 650] : [300, 560, 820];
+      const entryX = depth === 0 ? 850 : depth === 1 ? 1010 : 1180;
+      const sourceNode = registerNode(0, {
+        id: 'expense:total', name: '', value: total, percentageBase: total, color: '#202721',
+        x: sourceX, y: 0, width: nodeWidth, height: 0, roundLeft: true, roundRight: false, labelSide: 'right',
+      });
+      const groupNodes = buildHierarchy(groups, entries, hierarchyX, entryX, 1, 'out', total);
+      groupNodes.forEach((node, groupId) => {
+        const group = groups.find(item => item.id === groupId)!;
+        links.push({ source: sourceNode, target: node, value: group.value, color: group.color, opacity: .38 });
+      });
+      const scale = 270 / total;
+      const roots = Array.from(groupNodes.values());
+      const forestHeight = Math.max(270, layoutForest(roots, scale));
+      const canvasHeight = Math.max(440, forestHeight + 70);
+      const forestTop = (canvasHeight - forestHeight) / 2;
+      shiftForest(roots, forestTop);
+      sourceNode.height = 270;
+      sourceNode.y = forestTop;
+      flowSvg.setAttribute('viewBox', `0 0 ${canvasWidth} ${canvasHeight}`);
+      flowSvg.style.minWidth = `${Math.max(760, canvasWidth * .82)}px`;
+      flowSvg.style.height = `${Math.max(400, canvasHeight * .91)}px`;
+      drawLinks(scale);
+      drawNodes(canvasHeight);
+      flowSvg.append(svgText(sourceX + nodeWidth + 15, sourceNode.y - 16, money(total, true), 'flow-total'));
+      centerInlineFlow();
+    };
+
+    const renderModeControls = () => {
+      const project = activeProject();
+      const both = project.trackingMode === 'both';
+      entryTypeField.hidden = !both;
+      categoryTypeField.hidden = !both;
+      editEntryTypeField.hidden = !both;
+      if (!both) {
+        const outgoing = expenseForm.querySelector<HTMLInputElement>('input[name="entryType"][value="expense"]');
+        if (outgoing) outgoing.checked = true;
+      }
+      const type = currentEntryType();
+      $('[data-entry-form-title]').textContent = type === 'income'
+        ? (locale === 'de' ? 'Einnahme hinzufügen' : 'Add income')
+        : (locale === 'de' ? 'Ausgabe hinzufügen' : 'Add outgoing');
+      $('[data-entry-submit-label]').textContent = type === 'income'
+        ? (locale === 'de' ? 'Einnahme speichern' : 'Save income')
+        : (locale === 'de' ? 'Ausgabe speichern' : 'Save outgoing');
+      $('[data-entry-name-label]').textContent = locale === 'de' ? 'Bezeichnung' : 'Entry name';
+      const emptyTitle = emptyState.querySelector<HTMLElement>('h3');
+      const emptyCopy = emptyState.querySelector<HTMLElement>('p');
+      if (emptyTitle) emptyTitle.textContent = locale === 'de' ? 'Dein Flow beginnt hier.' : 'Your flow starts here.';
+      if (emptyCopy) emptyCopy.textContent = both
+        ? (locale === 'de' ? 'Füge deine erste Einnahme oder Ausgabe hinzu.' : 'Add your first incoming or outgoing entry.')
+        : (locale === 'de' ? 'Füge links deine erste Ausgabe hinzu.' : 'Add your first expense on the left.');
+      const mobileAdd = $<HTMLButtonElement>('[data-mobile-add]');
+      mobileAdd.setAttribute('aria-label', both ? (locale === 'de' ? 'Buchung hinzufügen' : 'Add entry') : (locale === 'de' ? 'Ausgabe hinzufügen' : 'Add expense'));
+    };
+
+    const render = () => {
+      renderProjectSelect();
+      const hasProject = state.projects.length > 0;
+      if (!hasProject) showingProjectOverview = false;
+      onboarding.hidden = hasProject;
+      projectOverview.hidden = !hasProject || !showingProjectOverview;
+      projectActions.hidden = !hasProject || showingProjectOverview;
+      projectContent.forEach(element => { element.hidden = !hasProject || showingProjectOverview; });
+      if (!hasProject) {
+        state.activeProjectId = '';
+        return;
+      }
+      if (!state.projects.some(project => project.id === state.activeProjectId)) state.activeProjectId = state.projects[0].id;
+      renderProjectOverview();
+      if (showingProjectOverview) return;
+      renderModeControls();
+      renderCategorySelects();
+      renderCategories();
+      renderStats();
+      renderFlow();
+      renderTransactions();
+      const symbol = new Intl.NumberFormat(currencyLocale, { style: 'currency', currency: activeProject().currency })
+        .formatToParts(0).find(part => part.type === 'currency')?.value || activeProject().currency;
+      $('[data-currency-symbol]').textContent = symbol;
+      renderSyncIndicator();
+    };
+
+    const openDialog = (dialog: HTMLDialogElement) => {
+      if (dialog.open) return;
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+      else dialog.setAttribute('open', '');
+    };
+    const closeDialog = (dialog: HTMLDialogElement) => dialog.close?.();
+    const clampInlineFlowZoom = (value: number) => Math.min(2.5, Math.max(.6, value));
+    const applyInlineFlowScale = () => {
+      if (!inlineFlowBaseWidth || !inlineFlowBaseHeight) return;
+      const scaledWidth = inlineFlowBaseWidth * inlineFlowZoom;
+      const scaledHeight = inlineFlowBaseHeight * inlineFlowZoom;
+      const surfaceWidth = Math.max(flowScroll.clientWidth, scaledWidth);
+      inlineFlowZoomSurface.style.width = `${surfaceWidth}px`;
+      inlineFlowZoomSurface.style.height = `${scaledHeight}px`;
+      flowSvg.style.left = `${Math.max(0, (surfaceWidth - scaledWidth) / 2)}px`;
+      flowSvg.style.transform = `scale(${inlineFlowZoom})`;
+      inlineFlowZoomLabel.value = `${Math.round(inlineFlowZoom * 100)}%`;
+    };
+    const setInlineFlowZoom = (value: number) => {
+      if (flowFullscreenDialog.open || !inlineFlowBaseWidth || !inlineFlowBaseHeight) return;
+      const nextZoom = clampInlineFlowZoom(value);
+      const anchorX = flowScroll.clientWidth / 2;
+      const anchorY = flowScroll.clientHeight / 2;
+      const contentX = (flowScroll.scrollLeft + anchorX) / inlineFlowZoom;
+      const contentY = (flowScroll.scrollTop + anchorY) / inlineFlowZoom;
+      inlineFlowZoom = nextZoom;
+      applyInlineFlowScale();
+      window.requestAnimationFrame(() => {
+        flowScroll.scrollLeft = contentX * inlineFlowZoom - anchorX;
+        flowScroll.scrollTop = contentY * inlineFlowZoom - anchorY;
+      });
+    };
+    const centerInlineFlow = () => {
+      if (flowFullscreenDialog.open) return;
+      window.requestAnimationFrame(() => {
+        flowSvg.style.transform = 'none';
+        flowSvg.style.width = '';
+        flowSvg.style.left = '0';
+        inlineFlowZoomSurface.style.width = `${Math.max(1, flowScroll.clientWidth)}px`;
+        inlineFlowZoomSurface.style.height = '';
+        inlineFlowBaseWidth = Math.max(flowScroll.clientWidth, Number.parseFloat(flowSvg.style.minWidth) || 0);
+        inlineFlowBaseHeight = Math.max(1, Number.parseFloat(flowSvg.style.height) || flowSvg.getBoundingClientRect().height);
+        flowSvg.style.width = `${inlineFlowBaseWidth}px`;
+        flowSvg.style.transformOrigin = '0 0';
+        applyInlineFlowScale();
+        flowScroll.scrollLeft = Math.max(0, (flowScroll.scrollWidth - flowScroll.clientWidth) / 2);
+        flowScroll.scrollTop = Math.max(0, (flowScroll.scrollHeight - flowScroll.clientHeight) / 2);
+      });
+    };
+    const clampFlowZoom = (value: number) => Math.min(3, Math.max(.5, value));
+    const setFlowZoom = (value: number, clientX?: number, clientY?: number) => {
+      if (!flowFullscreenDialog.open || !flowBaseWidth || !flowBaseHeight) return;
+      const nextZoom = clampFlowZoom(value);
+      const viewportRect = flowFullscreenViewport.getBoundingClientRect();
+      const anchorX = clientX === undefined ? flowFullscreenViewport.clientWidth / 2 : clientX - viewportRect.left;
+      const anchorY = clientY === undefined ? flowFullscreenViewport.clientHeight / 2 : clientY - viewportRect.top;
+      const contentX = (flowFullscreenViewport.scrollLeft + anchorX) / flowZoom;
+      const contentY = (flowFullscreenViewport.scrollTop + anchorY) / flowZoom;
+      flowZoom = nextZoom;
+      flowZoomSurface.style.width = `${flowBaseWidth * flowZoom}px`;
+      flowZoomSurface.style.height = `${flowBaseHeight * flowZoom}px`;
+      flowCanvas.style.transform = `scale(${flowZoom})`;
+      flowZoomLabel.value = `${Math.round(flowZoom * 100)}%`;
+      flowFullscreenViewport.scrollLeft = contentX * flowZoom - anchorX;
+      flowFullscreenViewport.scrollTop = contentY * flowZoom - anchorY;
+    };
+    const measureFullscreenFlow = (resetZoom = false) => {
+      const viewportWidth = Math.max(320, flowFullscreenViewport.clientWidth - 32);
+      const viewportHeight = Math.max(320, flowFullscreenViewport.clientHeight - 32);
+      const retainedZoom = resetZoom ? 1 : flowZoom;
+      flowCanvas.style.transform = 'none';
+      flowCanvas.style.width = `${viewportWidth}px`;
+      flowBaseWidth = Math.max(viewportWidth, flowCanvas.scrollWidth);
+      flowBaseHeight = Math.max(viewportHeight, flowCanvas.scrollHeight);
+      flowCanvas.style.width = `${flowBaseWidth}px`;
+      flowZoom = 1;
+      setFlowZoom(retainedZoom);
+    };
+    const openFlowFullscreen = () => {
+      inlineZoomBeforeFullscreen = inlineFlowZoom;
+      inlineScrollLeftBeforeFullscreen = flowScroll.scrollLeft;
+      inlineScrollTopBeforeFullscreen = flowScroll.scrollTop;
+      inlineFlowZoom = 1;
+      applyInlineFlowScale();
+      flowZoomSurface.append(flowCanvas);
+      flowCanvas.classList.add('is-fullscreen');
+      flowCanvas.style.position = 'absolute';
+      flowCanvas.style.inset = '0 auto auto 0';
+      flowCanvas.style.transformOrigin = '0 0';
+      openDialog(flowFullscreenDialog);
+      window.requestAnimationFrame(() => {
+        measureFullscreenFlow(true);
+        flowFullscreenViewport.scrollTo({ top: 0, left: 0 });
+      });
+    };
+    const restoreFlowCanvas = () => {
+      flowPointers.clear();
+      pinchStartDistance = 0;
+      flowFullscreenViewport.classList.remove('dragging');
+      flowCanvas.classList.remove('is-fullscreen');
+      flowCanvas.style.position = '';
+      flowCanvas.style.inset = '';
+      flowCanvas.style.transformOrigin = '';
+      flowCanvas.style.transform = '';
+      flowCanvas.style.width = '';
+      flowZoomSurface.removeAttribute('style');
+      flowCanvasHome.append(flowCanvas);
+      inlineFlowZoom = inlineZoomBeforeFullscreen;
+      applyInlineFlowScale();
+      window.requestAnimationFrame(() => {
+        flowScroll.scrollLeft = inlineScrollLeftBeforeFullscreen;
+        flowScroll.scrollTop = inlineScrollTopBeforeFullscreen;
+      });
+      flowZoom = 1;
+      flowBaseWidth = 0;
+      flowBaseHeight = 0;
+      flowZoomLabel.value = '100%';
+    };
+    const flowPointerDistance = () => {
+      const points = Array.from(flowPointers.values());
+      if (points.length < 2) return 0;
+      return Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+    };
+    const flowPointerCenter = () => {
+      const points = Array.from(flowPointers.values());
+      if (!points.length) return { x: 0, y: 0 };
+      return {
+        x: points.reduce((sum, point) => sum + point.x, 0) / points.length,
+        y: points.reduce((sum, point) => sum + point.y, 0) / points.length,
+      };
+    };
+    const recoveryKit = (config: SyncConfig) => ({
+      format: 'spendflow-recovery', version: 1, projectId: config.projectId,
+      key: config.key, recoveryToken: config.recoveryToken, createdAt: new Date().toISOString(),
+    });
+    const downloadRecoveryFile = (config = syncConfig(), project = activeProject()) => {
+      if (!config?.recoveryToken || !project || config.role !== 'owner') {
+        showToast(locale === 'de' ? 'Recovery-Datei ist auf diesem Gerät nicht verfügbar.' : 'Recovery file is not available on this device.');
+        return;
+      }
+      const blob = new Blob([JSON.stringify(recoveryKit(config), null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const safeName = project.name.replace(/[^a-z0-9_-]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'project';
+      link.href = url;
+      link.download = `spendflow-recovery-${safeName}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+    const startOwnershipTransfer = async (device: Record<string, unknown>) => {
+      const config = syncConfig();
+      if (!config || config.role !== 'owner') return;
+      try {
+        const result = await api({ action: 'initiate-transfer', projectId: config.projectId, targetDeviceId: device.id }, config);
+        if (!result.ok) throw new Error(String(result.error || 'transfer_failed'));
+        transferPanel.hidden = false;
+        $('[data-transfer-code]').textContent = String(result.transferCode || '');
+        $('[data-transfer-message]').textContent = locale === 'de'
+          ? `Gib diesen einmaligen Code auf „${String(device.label)}“ ein. Er läuft nach 1 Minute ab.`
+          : `Enter this one-time code on “${String(device.label)}”. It expires after 1 minute.`;
+        transferPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch { showToast(root.dataset.syncError || 'Sync failed.'); }
+    };
+    const renderDeviceList = (devices: Array<Record<string, unknown>>) => {
+      deviceList.replaceChildren();
+      devices
+        .sort((a, b) => Number(b.current) - Number(a.current) || Number(b.lastSeenAt) - Number(a.lastSeenAt))
+        .forEach(device => {
+          const row = document.createElement('div');
+          row.className = 'device-row';
+          const icon = document.createElement('span');
+          icon.className = 'device-icon';
+          icon.textContent = String(device.label).toLowerCase().includes('iphone') ? '▯' : '□';
+          const details = document.createElement('div');
+          const label = document.createElement('strong');
+          label.textContent = String(device.label || (locale === 'de' ? 'Gerät' : 'Device'));
+          const meta = document.createElement('small');
+          const seen = Number(device.lastSeenAt) * 1000;
+          const ownerLabel = device.role === 'owner' ? (locale === 'de' ? 'Besitzer' : 'Owner') : '';
+          const activity = device.current
+            ? (locale === 'de' ? 'Dieses Gerät' : 'This device')
+            : (locale === 'de' ? `Zuletzt aktiv ${new Intl.DateTimeFormat(currencyLocale, { dateStyle: 'medium' }).format(seen)}` : `Last active ${new Intl.DateTimeFormat(currencyLocale, { dateStyle: 'medium' }).format(seen)}`);
+          meta.textContent = ownerLabel ? `${ownerLabel} · ${activity}` : activity;
+          details.append(label, meta);
+          row.append(icon, details);
+          if (!device.current) {
+            const actions = document.createElement('span');
+            actions.className = 'device-actions';
+            const transfer = document.createElement('button');
+            transfer.type = 'button';
+            transfer.textContent = locale === 'de' ? 'Besitzer machen' : 'Make owner';
+            transfer.addEventListener('click', () => void startOwnershipTransfer(device));
+            const revoke = document.createElement('button');
+            revoke.type = 'button';
+            revoke.textContent = locale === 'de' ? 'Entfernen' : 'Remove';
+            revoke.addEventListener('click', async () => {
+              const config = syncConfig();
+              if (!config || !window.confirm(locale === 'de' ? 'Zugriff dieses Geräts wirklich entfernen?' : 'Remove access for this device?')) return;
+              try {
+                await api({ action: 'revoke', projectId: config.projectId, targetDeviceId: device.id }, config);
+                await loadDevices();
+              } catch { showToast(root.dataset.syncError || 'Sync failed.'); }
+            });
+            actions.append(transfer, revoke);
+            row.append(actions);
+          }
+          deviceList.append(row);
+        });
+      if (!devices.length) {
+        const empty = document.createElement('p');
+        empty.className = 'device-empty';
+        empty.textContent = locale === 'de' ? 'Keine Geräte gefunden.' : 'No devices found.';
+        deviceList.append(empty);
+      }
+    };
+    const loadDevices = async () => {
+      const config = syncConfig();
+      if (!config || config.role !== 'owner') return;
+      try {
+        const result = await api({ action: 'devices', projectId: config.projectId }, config);
+        renderDeviceList(Array.isArray(result.devices) ? result.devices as Array<Record<string, unknown>> : []);
+      } catch {
+        const empty = document.createElement('p');
+        empty.className = 'device-empty';
+        empty.textContent = locale === 'de' ? 'Geräte konnten nicht geladen werden.' : 'Devices could not be loaded.';
+        deviceList.replaceChildren(empty);
+      }
+    };
+    const openSyncDialog = () => {
+      const config = syncConfig();
+      window.clearInterval(inviteTimer);
+      currentInviteUrl = '';
+      invitePanel.hidden = true;
+      pairResult.hidden = true;
+      syncLoading.hidden = true;
+      syncSetup.hidden = Boolean(config);
+      syncConnected.hidden = !config;
+      deviceNameInput.value = defaultDeviceName();
+      transferPanel.hidden = true;
+      renderSyncIndicator();
+      openDialog(syncDialog);
+      if (config?.role === 'owner') void loadDevices();
+    };
+    const enableSync = async () => {
+      const project = activeProject();
+      if (!project || !crypto?.subtle || !window.isSecureContext) {
+        showToast(locale === 'de' ? 'Sichere Synchronisierung benötigt HTTPS.' : 'Secure sync requires HTTPS.');
+        return;
+      }
+      setSyncBusy(true);
+      try {
+        const config: SyncConfig = {
+          localProjectId: project.id,
+          projectId: randomToken(24),
+          key: randomToken(32),
+          deviceId: randomToken(24),
+          deviceToken: randomToken(48),
+          label: deviceNameInput.value.trim().slice(0, 60) || defaultDeviceName(),
+          revision: 1,
+          lastSyncedAt: Date.now(),
+          baseProject: cloneProject(project),
+          role: 'owner',
+          recoveryToken: randomToken(48),
+        };
+        const cipher = await encryptProject(project, config);
+        const result = await api({
+          action: 'create', projectId: config.projectId, deviceId: config.deviceId,
+          deviceToken: config.deviceToken, recoveryToken: config.recoveryToken,
+          label: config.label, cipher,
+        });
+        if (!result.ok) throw new Error(String(result.error || 'sync_failed'));
+        syncStore.projects[project.id] = config;
+        persistSyncStore();
+        syncSetup.hidden = true;
+        syncConnected.hidden = false;
+        renderSyncIndicator();
+        await loadDevices();
+        downloadRecoveryFile(config, project);
+        showToast(root.dataset.syncReady || 'Encrypted sync is ready.');
+      } catch {
+        showToast(root.dataset.syncError || 'Sync failed.');
+      } finally {
+        setSyncBusy(false);
+      }
+    };
+    const startInviteCountdown = (expiresAt: number) => {
+      window.clearInterval(inviteTimer);
+      const update = () => {
+        const remaining = Math.max(0, expiresAt * 1000 - Date.now());
+        const minutes = Math.floor(remaining / 60000);
+        const seconds = Math.floor(remaining % 60000 / 1000);
+        inviteCountdown.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+        if (!remaining) {
+          window.clearInterval(inviteTimer);
+          currentInviteUrl = '';
+          currentInviteToken = '';
+          invitePanel.hidden = true;
+          showToast(locale === 'de' ? 'Der QR-Code ist abgelaufen.' : 'The QR code has expired.');
+        }
+      };
+      update();
+      inviteTimer = window.setInterval(update, 1000);
+    };
+    const cancelCurrentInvite = async () => {
+      const config = syncConfig();
+      const token = currentInviteToken;
+      currentInviteToken = '';
+      currentInviteUrl = '';
+      window.clearInterval(inviteTimer);
+      invitePanel.hidden = true;
+      if (!config || config.role !== 'owner' || !token) return;
+      try { await api({ action: 'cancel-invite', projectId: config.projectId, inviteToken: token }, config); }
+      catch { /* It may already have been redeemed or expired. */ }
+    };
+    const createInvite = async () => {
+      const config = syncConfig();
+      if (!config || config.role !== 'owner') return;
+      await cancelCurrentInvite();
+      setSyncBusy(true);
+      try {
+        const result = await api({ action: 'invite', projectId: config.projectId }, config);
+        if (!result.ok) throw new Error(String(result.error || 'sync_failed'));
+        const payload = encodePairPayload({ v: 1, p: config.projectId, k: config.key, i: result.inviteToken });
+        currentInviteToken = String(result.inviteToken);
+        currentInviteUrl = `${location.origin}${location.pathname}#pair=${payload}`;
+        const canvas = $<HTMLCanvasElement>('[data-sync-qr]');
+        await QRCode.toCanvas(canvas, currentInviteUrl, {
+          width: 240, margin: 2,
+          color: { dark: '#202721', light: '#fffefa' },
+          errorCorrectionLevel: 'M',
+        });
+        invitePanel.hidden = false;
+        startInviteCountdown(Number(result.expiresAt));
+      } catch {
+        showToast(root.dataset.syncError || 'Sync failed.');
+      } finally {
+        setSyncBusy(false);
+      }
+    };
+    const showPairResult = (success: boolean, message: string) => {
+      syncLoading.hidden = true;
+      syncSetup.hidden = true;
+      syncConnected.hidden = true;
+      pairResult.hidden = false;
+      $('[data-pair-icon]').textContent = success ? '✓' : '!';
+      $('[data-pair-icon]').classList.toggle('error', !success);
+      $('[data-pair-title]').textContent = success
+        ? (locale === 'de' ? 'Gerät verbunden' : 'Device connected')
+        : (locale === 'de' ? 'Verbindung nicht möglich' : 'Could not connect');
+      $('[data-pair-message]').textContent = message;
+      $('[data-close-pair-result]').hidden = !success;
+    };
+    const handlePairingLink = async () => {
+      if (!location.hash.startsWith('#pair=')) return;
+      const encoded = location.hash.slice(6);
+      history.replaceState(null, '', `${location.pathname}${location.search}`);
+      openDialog(syncDialog);
+      syncSetup.hidden = true;
+      syncConnected.hidden = true;
+      pairResult.hidden = true;
+      syncLoading.hidden = false;
+      try {
+        const payload = decodePairPayload(encoded);
+        const projectId = String(payload.p || '');
+        const key = String(payload.k || '');
+        const inviteToken = String(payload.i || '');
+        if (!/^[A-Za-z0-9_-]{32,64}$/.test(projectId) || !/^[A-Za-z0-9_-]{43}$/.test(key) || !/^[A-Za-z0-9_-]{32,160}$/.test(inviteToken)) {
+          throw new Error('invalid_invite');
+        }
+        if (Object.values(syncStore.projects).some(config => config.projectId === projectId)) {
+          throw new Error('already_connected');
+        }
+        const pendingConfig: SyncConfig = {
+          localProjectId: '', projectId, key,
+          deviceId: randomToken(24), deviceToken: '', label: defaultDeviceName(),
+          revision: 0, lastSyncedAt: Date.now(), role: 'member',
+        };
+        const result = await api({
+          action: 'redeem', projectId, inviteToken,
+          deviceId: pendingConfig.deviceId, label: pendingConfig.label,
+        });
+        if (!result.ok || !result.deviceToken || !result.cipher) throw new Error(String(result.error || 'pair_failed'));
+        pendingConfig.deviceToken = String(result.deviceToken);
+        pendingConfig.revision = Number(result.revision);
+        pendingConfig.role = result.role === 'owner' ? 'owner' : 'member';
+        const project = await decryptProject(result.cipher as Ciphertext, pendingConfig);
+        pendingConfig.localProjectId = project.id;
+        pendingConfig.baseProject = cloneProject(project);
+        const existingIndex = state.projects.findIndex(item => item.id === project.id);
+        if (existingIndex >= 0) state.projects[existingIndex] = project;
+        else state.projects.push(project);
+        state.activeProjectId = project.id;
+        syncStore.projects[project.id] = pendingConfig;
+        save(false);
+        persistSyncStore();
+        render();
+        showPairResult(true, root.dataset.pairSuccess || 'This device is now connected.');
+      } catch (error) {
+        const code = error instanceof Error ? error.message : '';
+        const message = code === 'already_connected'
+          ? (locale === 'de' ? 'Dieses Projekt ist auf diesem Gerät bereits verbunden.' : 'This project is already connected on this device.')
+          : (root.dataset.pairInvalid || 'This QR code is invalid, expired, or already used.');
+        showPairResult(false, message);
+      }
+    };
+    const recoverFromFile = async (file: File) => {
+      if (file.size > 65536) {
+        showToast(locale === 'de' ? 'Diese Recovery-Datei ist ungültig.' : 'This recovery file is invalid.');
+        return;
+      }
+      openDialog(syncDialog);
+      syncSetup.hidden = true;
+      syncConnected.hidden = true;
+      pairResult.hidden = true;
+      syncLoading.hidden = false;
+      try {
+        const kit = JSON.parse(await file.text()) as Record<string, unknown>;
+        const projectId = String(kit.projectId || '');
+        const key = String(kit.key || '');
+        const recoveryToken = String(kit.recoveryToken || '');
+        if (kit.format !== 'spendflow-recovery' || kit.version !== 1
+          || !/^[A-Za-z0-9_-]{32,64}$/.test(projectId)
+          || !/^[A-Za-z0-9_-]{43}$/.test(key)
+          || !/^[A-Za-z0-9_-]{32,160}$/.test(recoveryToken)) throw new Error('invalid_recovery_key');
+        const existingConfig = Object.values(syncStore.projects).find(config => config.projectId === projectId);
+        const newRecoveryToken = randomToken(48);
+        const recoveredConfig: SyncConfig = {
+          localProjectId: '', projectId, key,
+          deviceId: randomToken(24), deviceToken: '', label: defaultDeviceName(),
+          revision: 0, lastSyncedAt: Date.now(), role: 'owner', recoveryToken: newRecoveryToken,
+        };
+        const result = await api({
+          action: 'recover-owner', projectId, recoveryToken, newRecoveryToken,
+          previousDeviceId: existingConfig?.deviceId,
+          deviceId: recoveredConfig.deviceId, label: recoveredConfig.label,
+        });
+        if (!result.ok || !result.deviceToken || !result.cipher) throw new Error(String(result.error || 'recovery_failed'));
+        recoveredConfig.deviceToken = String(result.deviceToken);
+        recoveredConfig.revision = Number(result.revision);
+        const project = await decryptProject(result.cipher as Ciphertext, recoveredConfig);
+        recoveredConfig.localProjectId = project.id;
+        recoveredConfig.baseProject = cloneProject(project);
+        if (existingConfig) delete syncStore.projects[existingConfig.localProjectId];
+        const existingIndex = state.projects.findIndex(item => item.id === project.id);
+        if (existingIndex >= 0) state.projects[existingIndex] = project;
+        else state.projects.push(project);
+        state.activeProjectId = project.id;
+        syncStore.projects[project.id] = recoveredConfig;
+        save(false);
+        persistSyncStore();
+        render();
+        downloadRecoveryFile(recoveredConfig, project);
+        showPairResult(true, locale === 'de'
+          ? 'Besitzerzugang wiederhergestellt. Die alte Recovery-Datei ist jetzt ungültig; eine neue wurde heruntergeladen.'
+          : 'Owner access restored. The old recovery file is now invalid; a new one was downloaded.');
+      } catch {
+        showPairResult(false, locale === 'de'
+          ? 'Die Recovery-Datei ist ungültig, veraltet oder gehört zu einem gelöschten Projekt.'
+          : 'The recovery file is invalid, outdated, or belongs to a deleted project.');
+      }
+    };
+    const claimOwnership = async () => {
+      const config = syncConfig();
+      const input = $<HTMLInputElement>('[data-transfer-code-input]');
+      const transferCode = input.value.trim().toUpperCase();
+      if (!config || config.role !== 'member' || !transferCode) return;
+      setSyncBusy(true);
+      try {
+        const newRecoveryToken = randomToken(48);
+        const result = await api({ action: 'claim-transfer', projectId: config.projectId, transferCode, newRecoveryToken }, config);
+        if (!result.ok || result.role !== 'owner') throw new Error(String(result.error || 'transfer_failed'));
+        config.role = 'owner';
+        config.recoveryToken = newRecoveryToken;
+        persistSyncStore();
+        input.value = '';
+        renderSyncIndicator();
+        await loadDevices();
+        downloadRecoveryFile(config, activeProject());
+        showToast(locale === 'de' ? 'Du bist jetzt Besitzer. Neue Recovery-Datei heruntergeladen.' : 'You are now the owner. A new recovery file was downloaded.');
+      } catch {
+        showToast(locale === 'de' ? 'Der Code ist falsch, abgelaufen oder für ein anderes Gerät.' : 'The code is wrong, expired, or intended for another device.');
+      } finally { setSyncBusy(false); }
+    };
+    const leaveSync = async () => {
+      const project = activeProject();
+      const config = syncConfig(project?.id);
+      if (!project || !config || config.role === 'owner') return;
+      if (!window.confirm(locale === 'de'
+        ? 'Dieses Gerät trennen? Das Projekt bleibt lokal, erhält aber keine weiteren Änderungen.'
+        : 'Disconnect this device? The project remains local but will no longer receive updates.')) return;
+      let cloudAlreadyMissing = false;
+      try {
+        await api({ action: 'leave', projectId: config.projectId }, config);
+      } catch (error) {
+        if (!isMissingCloudProject(error)) {
+          showToast(root.dataset.syncError || 'Sync failed.');
+          return;
+        }
+        cloudAlreadyMissing = true;
+      }
+      delete syncStore.projects[project.id];
+      persistSyncStore();
+      closeDialog(syncDialog);
+      render();
+      showToast(cloudAlreadyMissing
+        ? (locale === 'de' ? 'Cloud-Projekt war bereits gelöscht. Verbindung entfernt; Projekt bleibt lokal.' : 'The cloud project was already deleted. Connection removed; the project stays local.')
+        : (locale === 'de' ? 'Gerät getrennt. Projekt bleibt lokal.' : 'Device disconnected. Project remains local.'));
+    };
+    const removeCloudCopy = async () => {
+      const project = activeProject();
+      const config = syncConfig(project?.id);
+      if (!project || !config || config.role !== 'owner') return;
+      if (!window.confirm(locale === 'de'
+        ? 'Synchronisierung beenden und die verschlüsselte Cloud-Kopie löschen? Das Projekt bleibt auf diesem Gerät.'
+        : 'Stop syncing and delete the encrypted cloud copy? The project stays on this device.')) return;
+      setSyncBusy(true);
+      let cloudAlreadyMissing = false;
+      try {
+        await api({ action: 'delete', projectId: config.projectId, confirmation: config.projectId }, config);
+      } catch (error) {
+        if (!isMissingCloudProject(error)) {
+          showToast(root.dataset.syncError || 'Sync failed.');
+          setSyncBusy(false);
+          return;
+        }
+        cloudAlreadyMissing = true;
+      }
+      delete syncStore.projects[project.id];
+      persistSyncStore();
+      closeDialog(syncDialog);
+      setSyncBusy(false);
+      render();
+      showToast(cloudAlreadyMissing
+        ? (locale === 'de' ? 'Cloud-Projekt war bereits gelöscht. Synchronisierung entfernt; Projekt bleibt lokal.' : 'The cloud project was already deleted. Sync removed; the project stays local.')
+        : (locale === 'de' ? 'Cloud-Kopie gelöscht. Projekt bleibt lokal.' : 'Cloud copy deleted. Project remains local.'));
+    };
+    const deleteProject = async (deletingProject: Project) => {
+      const confirmation = locale === 'de'
+        ? `„${deletingProject.name}“ und alle Buchungen wirklich löschen?`
+        : `Delete “${deletingProject.name}” and all its entries?`;
+      if (!window.confirm(confirmation)) return;
+      const config = syncConfig(deletingProject.id);
+      if (config) {
+        try {
+          if (config.role === 'owner') {
+            await api({ action: 'delete', projectId: config.projectId, confirmation: config.projectId }, config);
+          } else {
+            await api({ action: 'leave', projectId: config.projectId }, config);
+          }
+        } catch (error) {
+          if (!isMissingCloudProject(error)) {
+            showToast(locale === 'de' ? 'Projekt wurde nicht gelöscht, weil die Cloud-Kopie nicht erreichbar ist.' : 'Project was not deleted because its cloud copy could not be reached.');
+            return;
+          }
+        }
+        delete syncStore.projects[deletingProject.id];
+        persistSyncStore();
+      }
+      state.projects = state.projects.filter(project => project.id !== deletingProject.id);
+      if (!state.projects.length) {
+        state = starterState();
+        showingProjectOverview = false;
+      } else if (state.activeProjectId === deletingProject.id) {
+        state.activeProjectId = state.projects[0].id;
+      }
+      save(false);
+      render();
+    };
+    const openExpenseEditor = (expense: Expense) => {
+      editingExpenseId = expense.id;
+      editEntryType.value = expense.type;
+      editEntryTypeField.hidden = activeProject().trackingMode !== 'both';
+      populateCategorySelect(editCategorySelect, expense.type, `${expense.groupId}:${expense.subcategoryId}`);
+      (editExpenseForm.elements.namedItem('amount') as HTMLInputElement).value = formatMoneyInput(expense.amount);
+      (editExpenseForm.elements.namedItem('note') as HTMLInputElement).value = expense.note;
+      (editExpenseForm.elements.namedItem('date') as HTMLInputElement).value = expense.date;
+      openDialog(expenseDialog);
+      window.setTimeout(() => (editExpenseForm.elements.namedItem('amount') as HTMLInputElement).focus(), 50);
+    };
+    const openCategoryDialog = () => {
+      categoryForm.reset();
+      (categoryForm.elements.namedItem('type') as HTMLSelectElement).value = currentEntryType();
+      categoryTypeField.hidden = activeProject().trackingMode !== 'both';
+      colorInput.value = '#6657d9';
+      syncColorPanel();
+      openDialog(categoryDialog);
+      window.setTimeout(() => (categoryForm.elements.namedItem('groupName') as HTMLInputElement)?.focus(), 50);
+    };
+    const openProjectEditor = () => {
+      const project = activeProject();
+      if (!project) return;
+      const input = editProjectForm.elements.namedItem('name') as HTMLInputElement;
+      input.value = project.name;
+      (editProjectForm.elements.namedItem('trackingMode') as HTMLSelectElement).value = project.trackingMode;
+      openDialog(editProjectDialog);
+      window.setTimeout(() => {
+        input.focus();
+        input.select();
+      }, 50);
+    };
+    const renameCategory = (group: Group) => {
+      const next = window.prompt(root.dataset.rename || 'New name', group.name)?.trim();
+      if (!next) return;
+      group.name = next.slice(0, 40);
+      save();
+      render();
+    };
+    const removeGroup = (group: Group) => {
+      if (activeProject().expenses.some(expense => expense.groupId === group.id)) {
+        showToast(root.dataset.categoryInUse || 'Category is in use.');
+        return;
+      }
+      if (!window.confirm(root.dataset.confirmCategory || 'Delete this category?')) return;
+      activeProject().groups = activeProject().groups.filter(item => item.id !== group.id);
+      save();
+      render();
+    };
+    const addSubcategory = (group: Group, parentId: string | null) => {
+      if (parentId) {
+        const parent = group.subcategories.find(subcategory => subcategory.id === parentId);
+        if (!parent || parent.parentId) return;
+      }
+      const promptText = parentId
+        ? (locale === 'de' ? 'Name der Unterkategorie auf Ebene 3' : 'Level 3 subcategory name')
+        : (locale === 'de' ? 'Name der Unterkategorie' : 'Subcategory name');
+      const name = window.prompt(promptText)?.trim();
+      if (!name) return;
+      group.subcategories.push({ id: id(), name: name.slice(0, 40), parentId });
+      save();
+      render();
+    };
+    const renameSubcategory = (subcategory: Subcategory) => {
+      const name = window.prompt(root.dataset.rename || 'New name', subcategory.name)?.trim();
+      if (!name) return;
+      subcategory.name = name.slice(0, 40);
+      save();
+      render();
+    };
+    const removeSubcategory = (group: Group, subcategory: Subcategory) => {
+      const ids = new Set(subcategoryIdsWithChildren(group, subcategory.id));
+      if (activeProject().expenses.some(expense => expense.groupId === group.id && ids.has(expense.subcategoryId))) {
+        showToast(locale === 'de' ? 'Diese Unterkategorie enthält noch Buchungen.' : 'This subcategory still contains entries.');
+        return;
+      }
+      if (!window.confirm(locale === 'de' ? 'Diese Unterkategorie wirklich löschen?' : 'Delete this subcategory?')) return;
+      group.subcategories = group.subcategories.filter(item => !ids.has(item.id));
+      save();
+      render();
+    };
+    const createCategory = (name: string, color: string, type: EntryType) => {
+      const internalCategory: Subcategory = { id: id(), name: '', parentId: null };
+      const group: Group = {
+        id: id(),
+        name: name.slice(0, 40),
+        color,
+        type,
+        subcategories: [internalCategory],
+      };
+      activeProject().groups.push(group);
+      save();
+      render();
+      categorySelect.value = `${group.id}:${internalCategory.id}`;
+      return group;
+    };
+    const toggleQuickCategoryCreate = (focus = true) => {
+      const show = categorySelect.value === '__new__';
+      quickCategoryCreate.hidden = !show;
+      if (show && focus) window.setTimeout(() => quickCategoryName.focus(), 0);
+    };
+    const submitQuickCategory = () => {
+      const name = quickCategoryName.value.trim();
+      if (!name) {
+        quickCategoryName.focus();
+        return;
+      }
+      createCategory(name, quickCategoryColor.value || '#6657d9', currentEntryType());
+      quickCategoryName.value = '';
+      quickCategoryColor.value = '#6657d9';
+      quickCategoryCreate.hidden = true;
+    };
+
+    root.querySelectorAll<HTMLInputElement>('[data-money-input]').forEach(input => {
+      input.addEventListener('input', () => input.setCustomValidity(''));
+      input.addEventListener('blur', () => {
+        if (!input.value.trim()) {
+          input.setCustomValidity('');
+          return;
+        }
+        const value = parseMoneyInput(input.value);
+        const valid = Number.isFinite(value) && (input.name === 'budget' ? value >= 0 : value > 0);
+        input.setCustomValidity(valid ? '' : invalidMoneyMessage);
+        if (valid) input.value = formatMoneyInput(value);
+      });
+    });
+    [expenseForm, editExpenseForm, projectForm].forEach(form => {
+      form.addEventListener('reset', () => window.setTimeout(() => {
+        form.querySelectorAll<HTMLInputElement>('[data-money-input]').forEach(input => input.setCustomValidity(''));
+      }, 0));
+    });
+
+    expenseForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const data = new FormData(expenseForm);
+      const amount = readMoneyField(expenseForm, 'amount');
+      const category = String(data.get('category') || '');
+      const note = String(data.get('note') || '').trim().slice(0, 80);
+      const type: EntryType = activeProject().trackingMode === 'both' && data.get('entryType') === 'income' ? 'income' : 'expense';
+      if (category === '__new__' || !category) {
+        if (!category) categorySelect.value = '__new__';
+        toggleQuickCategoryCreate();
+        return;
+      }
+      const [groupId, subcategoryId] = category.split(':');
+      if (!amount || amount <= 0 || !note) return;
+      if (!groupId || !subcategoryId) {
+        showToast(root.dataset.categoryRequired || 'Create a category first.');
+        openCategoryDialog();
+        return;
+      }
+      activeProject().expenses.push({
+        id: id(), amount, groupId, subcategoryId,
+        note,
+        date: String(data.get('date') || today()),
+        type,
+      });
+      save();
+      const preservedCategory = categorySelect.value;
+      expenseForm.reset();
+      const outgoing = expenseForm.querySelector<HTMLInputElement>('input[name="entryType"][value="expense"]');
+      if (outgoing) outgoing.checked = type !== 'income';
+      const incoming = expenseForm.querySelector<HTMLInputElement>('input[name="entryType"][value="income"]');
+      if (incoming) incoming.checked = type === 'income';
+      $('[data-date]').value = today();
+      render();
+      categorySelect.value = preservedCategory;
+      $('[data-amount]').focus();
+      showToast(type === 'income'
+        ? (locale === 'de' ? 'Einnahme gespeichert.' : 'Income saved.')
+        : (locale === 'de' ? 'Ausgabe gespeichert.' : 'Outgoing saved.'));
+    });
+
+    editExpenseForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const expense = activeProject().expenses.find(item => item.id === editingExpenseId);
+      if (!expense) return;
+      const data = new FormData(editExpenseForm);
+      const amount = readMoneyField(editExpenseForm, 'amount');
+      const note = String(data.get('note') || '').trim().slice(0, 80);
+      const [groupId, subcategoryId] = String(data.get('category') || '').split(':');
+      const date = String(data.get('date') || '');
+      const type: EntryType = activeProject().trackingMode === 'both' && data.get('entryType') === 'income' ? 'income' : 'expense';
+      if (!amount || amount <= 0 || !note || !groupId || !subcategoryId || !date) return;
+      expense.amount = amount;
+      expense.note = note;
+      expense.groupId = groupId;
+      expense.subcategoryId = subcategoryId;
+      expense.date = date;
+      expense.type = type;
+      save();
+      editingExpenseId = '';
+      closeDialog(expenseDialog);
+      render();
+      showToast(locale === 'de' ? 'Buchung aktualisiert.' : 'Entry updated.');
+    });
+
+    categoryForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const data = new FormData(categoryForm);
+      const groupName = String(data.get('groupName') || '').trim();
+      if (!groupName) return;
+      const type: EntryType = activeProject().trackingMode === 'both' && data.get('type') === 'income' ? 'income' : 'expense';
+      createCategory(groupName, String(data.get('color') || '#6657d9'), type);
+      closeDialog(categoryDialog);
+    });
+
+    projectForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const data = new FormData(projectForm);
+      const name = String(data.get('name') || '').trim();
+      if (!name) return;
+      const budgetInput = projectForm.elements.namedItem('budget') as HTMLInputElement;
+      const budgetValue = budgetInput.value.trim();
+      const budget = budgetValue ? readMoneyField(projectForm, 'budget', true) : null;
+      if (budgetValue && !Number.isFinite(budget)) return;
+      const trackingMode: TrackingMode = data.get('trackingMode') === 'both' ? 'both' : 'expense';
+      const project: Project = {
+        id: id(), name: name.slice(0, 50), budget,
+        currency: String(data.get('currency') || 'EUR'), trackingMode, groups: [], expenses: [], updatedAt: Date.now(),
+      };
+      state.projects.push(project);
+      state.activeProjectId = project.id;
+      showingProjectOverview = false;
+      save();
+      closeDialog(projectDialog);
+      render();
+      openCategoryDialog();
+    });
+
+    editProjectForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const project = activeProject();
+      const data = new FormData(editProjectForm);
+      const name = String(data.get('name') || '').trim();
+      if (!project || !name) return;
+      project.name = name.slice(0, 50);
+      project.trackingMode = data.get('trackingMode') === 'both' ? 'both' : 'expense';
+      save();
+      closeDialog(editProjectDialog);
+      render();
+      showToast(root.dataset.projectRenamed || 'Project name updated.');
+    });
+
+    projectSelect.addEventListener('change', () => {
+      state.activeProjectId = projectSelect.value;
+      save(false);
+      render();
+      void pullProject();
+    });
+    projectOverviewList.addEventListener('click', event => {
+      const target = event.target as HTMLElement;
+      const openButton = target.closest<HTMLButtonElement>('[data-open-project-id]');
+      if (openButton?.dataset.openProjectId) {
+        state.activeProjectId = openButton.dataset.openProjectId;
+        showingProjectOverview = false;
+        save(false);
+        render();
+        void pullProject();
+        return;
+      }
+      const deleteButton = target.closest<HTMLButtonElement>('[data-delete-project-id]');
+      const project = state.projects.find(item => item.id === deleteButton?.dataset.deleteProjectId);
+      if (project) void deleteProject(project);
+    });
+    categorySelect.addEventListener('change', () => toggleQuickCategoryCreate());
+    expenseForm.querySelectorAll<HTMLInputElement>('input[name="entryType"]').forEach(input => {
+      input.addEventListener('change', () => {
+        renderModeControls();
+        renderCategorySelects();
+      });
+    });
+    editEntryType.addEventListener('change', () => {
+      populateCategorySelect(editCategorySelect, editEntryType.value === 'income' ? 'income' : 'expense');
+    });
+    $('[data-save-quick-category]').addEventListener('click', submitQuickCategory);
+    quickCategoryName.addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        submitQuickCategory();
+      }
+    });
+    periodSelect.addEventListener('change', () => { period = periodSelect.value; renderStats(); renderFlow(); renderTransactions(); });
+    $('[data-inline-flow-zoom-in]').addEventListener('click', () => setInlineFlowZoom(inlineFlowZoom * 1.2));
+    $('[data-inline-flow-zoom-out]').addEventListener('click', () => setInlineFlowZoom(inlineFlowZoom / 1.2));
+    $('[data-inline-flow-zoom-reset]').addEventListener('click', () => setInlineFlowZoom(1));
+    flowScroll.addEventListener('wheel', event => {
+      if (!event.ctrlKey && !event.metaKey) return;
+      event.preventDefault();
+      setInlineFlowZoom(inlineFlowZoom * (event.deltaY < 0 ? 1.1 : 1 / 1.1));
+    }, { passive: false });
+    flowScroll.addEventListener('pointerdown', event => {
+      if (event.pointerType !== 'mouse' || event.button !== 0) return;
+      inlinePanPointer = event.pointerId;
+      inlinePanX = event.clientX;
+      inlinePanY = event.clientY;
+      flowScroll.classList.add('dragging');
+      try { flowScroll.setPointerCapture(event.pointerId); } catch { /* Pointer capture is optional. */ }
+      event.preventDefault();
+    });
+    flowScroll.addEventListener('pointermove', event => {
+      if (event.pointerId !== inlinePanPointer) return;
+      flowScroll.scrollLeft -= event.clientX - inlinePanX;
+      flowScroll.scrollTop -= event.clientY - inlinePanY;
+      inlinePanX = event.clientX;
+      inlinePanY = event.clientY;
+      event.preventDefault();
+    });
+    const releaseInlineFlowPointer = (event: PointerEvent) => {
+      if (event.pointerId !== inlinePanPointer) return;
+      inlinePanPointer = 0;
+      flowScroll.classList.remove('dragging');
+    };
+    flowScroll.addEventListener('pointerup', releaseInlineFlowPointer);
+    flowScroll.addEventListener('pointercancel', releaseInlineFlowPointer);
+    $('[data-open-flow-fullscreen]').addEventListener('click', openFlowFullscreen);
+    $('[data-close-flow-fullscreen]').addEventListener('click', () => closeDialog(flowFullscreenDialog));
+    $('[data-flow-zoom-in]').addEventListener('click', () => setFlowZoom(flowZoom * 1.2));
+    $('[data-flow-zoom-out]').addEventListener('click', () => setFlowZoom(flowZoom / 1.2));
+    $('[data-flow-zoom-reset]').addEventListener('click', () => setFlowZoom(1));
+    flowFullscreenDialog.addEventListener('close', restoreFlowCanvas);
+    flowFullscreenDialog.addEventListener('keydown', event => {
+      if (event.key === '+' || event.key === '=') {
+        event.preventDefault();
+        setFlowZoom(flowZoom * 1.2);
+      } else if (event.key === '-' || event.key === '_') {
+        event.preventDefault();
+        setFlowZoom(flowZoom / 1.2);
+      } else if (event.key === '0') {
+        event.preventDefault();
+        setFlowZoom(1);
+      }
+    });
+    flowFullscreenViewport.addEventListener('wheel', event => {
+      if (!event.ctrlKey && !event.metaKey) return;
+      event.preventDefault();
+      setFlowZoom(flowZoom * (event.deltaY < 0 ? 1.1 : 1 / 1.1), event.clientX, event.clientY);
+    }, { passive: false });
+    flowFullscreenViewport.addEventListener('pointerdown', event => {
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
+      flowPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      flowFullscreenViewport.classList.add('dragging');
+      try { flowFullscreenViewport.setPointerCapture(event.pointerId); } catch { /* Pointer capture is optional. */ }
+      if (flowPointers.size === 2) {
+        pinchStartDistance = flowPointerDistance();
+        pinchStartZoom = flowZoom;
+      }
+      event.preventDefault();
+    });
+    flowFullscreenViewport.addEventListener('pointermove', event => {
+      const previous = flowPointers.get(event.pointerId);
+      if (!previous) return;
+      if (flowPointers.size === 1) {
+        flowFullscreenViewport.scrollLeft -= event.clientX - previous.x;
+        flowFullscreenViewport.scrollTop -= event.clientY - previous.y;
+        flowPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      } else {
+        flowPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        const distance = flowPointerDistance();
+        const center = flowPointerCenter();
+        if (pinchStartDistance > 0) setFlowZoom(pinchStartZoom * distance / pinchStartDistance, center.x, center.y);
+      }
+      event.preventDefault();
+    });
+    const releaseFlowPointer = (event: PointerEvent) => {
+      flowPointers.delete(event.pointerId);
+      if (flowPointers.size < 2) pinchStartDistance = 0;
+      if (!flowPointers.size) flowFullscreenViewport.classList.remove('dragging');
+    };
+    flowFullscreenViewport.addEventListener('pointerup', releaseFlowPointer);
+    flowFullscreenViewport.addEventListener('pointercancel', releaseFlowPointer);
+    colorInput.addEventListener('input', syncColorPanel);
+    root.querySelectorAll<HTMLButtonElement>('[data-color-preset]').forEach(button => {
+      button.addEventListener('click', () => {
+        colorInput.value = button.dataset.colorPreset || '#6657d9';
+        syncColorPanel();
+      });
+    });
+    $('[data-open-category]').addEventListener('click', () => openCategoryDialog());
+    $('[data-mobile-add]').addEventListener('click', () => {
+      expenseForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.setTimeout(() => $('[data-amount]').focus({ preventScroll: true }), 420);
+    });
+    $('[data-close-category]').addEventListener('click', () => closeDialog(categoryDialog));
+    $('[data-close-expense]').addEventListener('click', () => { editingExpenseId = ''; closeDialog(expenseDialog); });
+    $('[data-open-project]').addEventListener('click', () => { projectForm.reset(); openDialog(projectDialog); });
+    $('[data-edit-project]').addEventListener('click', openProjectEditor);
+    $('[data-open-projects]').addEventListener('click', () => { showingProjectOverview = true; render(); });
+    $('[data-close-projects]').addEventListener('click', () => { showingProjectOverview = false; render(); });
+    $('[data-overview-new-project]').addEventListener('click', () => { projectForm.reset(); openDialog(projectDialog); });
+    $('[data-create-first]').addEventListener('click', () => { projectForm.reset(); openDialog(projectDialog); });
+    $('[data-close-project]').addEventListener('click', () => closeDialog(projectDialog));
+    $('[data-close-edit-project]').addEventListener('click', () => closeDialog(editProjectDialog));
+    $('[data-open-sync]').addEventListener('click', openSyncDialog);
+    $('[data-close-sync]').addEventListener('click', () => closeDialog(syncDialog));
+    $('[data-enable-sync]').addEventListener('click', () => void enableSync());
+    $('[data-create-invite]').addEventListener('click', () => void createInvite());
+    $('[data-refresh-devices]').addEventListener('click', () => void loadDevices());
+    $('[data-remove-cloud]').addEventListener('click', () => void removeCloudCopy());
+    $('[data-leave-sync]').addEventListener('click', () => void leaveSync());
+    $('[data-download-recovery]').addEventListener('click', () => downloadRecoveryFile());
+    $('[data-claim-transfer]').addEventListener('click', () => void claimOwnership());
+    $('[data-close-transfer]').addEventListener('click', () => { transferPanel.hidden = true; });
+    $('[data-transfer-code]').addEventListener('click', async () => {
+      const code = $('[data-transfer-code]').textContent || '';
+      if (!code) return;
+      try {
+        await navigator.clipboard.writeText(code);
+        showToast(locale === 'de' ? 'Besitzer-Code kopiert.' : 'Ownership code copied.');
+      } catch { /* The visible code can still be entered manually. */ }
+    });
+    root.querySelectorAll<HTMLButtonElement>('[data-recover-project]').forEach(button => {
+      button.addEventListener('click', () => recoveryFileInput.click());
+    });
+    recoveryFileInput.addEventListener('change', () => {
+      const file = recoveryFileInput.files?.[0];
+      recoveryFileInput.value = '';
+      if (file) void recoverFromFile(file);
+    });
+    $('[data-copy-invite]').addEventListener('click', async () => {
+      if (!currentInviteUrl) return;
+      try {
+        await navigator.clipboard.writeText(currentInviteUrl);
+        showToast(locale === 'de' ? 'Einmal-Link kopiert.' : 'One-time link copied.');
+      } catch { showToast(locale === 'de' ? 'Link konnte nicht kopiert werden.' : 'Could not copy the link.'); }
+    });
+    $('[data-cancel-invite]').addEventListener('click', () => {
+      void cancelCurrentInvite();
+    });
+    $('[data-close-pair-result]').addEventListener('click', () => closeDialog(syncDialog));
+    $('[data-delete-project]').addEventListener('click', () => void deleteProject(activeProject()));
+    $('[data-export]').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `spendflow-backup-${today()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+    document.addEventListener('keydown', event => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && !categoryDialog.open && !expenseDialog.open && !projectDialog.open && !editProjectDialog.open && !syncDialog.open && !flowFullscreenDialog.open) {
+        event.preventDefault();
+        expenseForm.requestSubmit();
+      }
+    });
+    [categoryDialog, expenseDialog, projectDialog, editProjectDialog, syncDialog].forEach(dialog => dialog.addEventListener('click', event => {
+      if (event.target === dialog) {
+        if (dialog === expenseDialog) editingExpenseId = '';
+        closeDialog(dialog);
+      }
+    }));
+    syncDialog.addEventListener('close', () => {
+      void cancelCurrentInvite();
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) void pullProject();
+    });
+    window.addEventListener('online', () => void pullProject(false));
+    pollTimer = window.setInterval(() => void pullProject(), 20000);
+
+    $('[data-date]').value = today();
+    render();
+    void handlePairingLink();
+    if (syncConfig()) void pullProject();
+  }
+</script>
+
+<style>
+  .spendflow {
+    --sf-ink: #202721;
+    --sf-muted: #667068;
+    --sf-purple: #6657d9;
+    --sf-lilac: #eeeafd;
+    --sf-panel: rgba(255, 254, 250, 0.92);
+    width: min(1440px, calc(100% - 36px));
+    margin: 0 auto;
+    padding: 1.7rem 0 7rem;
+  }
+
+  .spendflow [hidden] { display: none !important; }
+
+  .toolbar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 0.45rem 0 1.3rem;
+    border-bottom: 1px solid #d9dcd5;
+  }
+
+  .tool-title { display: flex; align-items: center; min-width: 0; }
+  .tool-title .back-link { display: grid; width: 36px; height: 36px; margin-right: 0.8rem; place-items: center; border: 1px solid #d9dcd5; border-radius: 50%; text-decoration: none; }
+  .flow-logo { position: relative; display: block; width: 42px; height: 42px; margin-right: 0.8rem; overflow: hidden; border-radius: 12px; background: var(--sf-ink); }
+  .flow-logo i { position: absolute; left: 9px; width: 7px; border-radius: 7px; background: #d8ff5f; transform: rotate(-12deg); }
+  .flow-logo i:nth-child(1) { top: 8px; height: 11px; }
+  .flow-logo i:nth-child(2) { top: 14px; left: 18px; height: 20px; background: #9c91f1; }
+  .flow-logo i:nth-child(3) { top: 7px; left: 27px; height: 27px; background: #ff8764; }
+  .tool-title h1 { margin: 0; font-size: 1.1rem; letter-spacing: -0.035em; }
+  .tool-title p { margin: 0.1rem 0 0; overflow: hidden; color: var(--sf-muted); font-size: 0.72rem; text-overflow: ellipsis; white-space: nowrap; }
+
+  .project-switcher { display: grid; grid-template-columns: auto minmax(170px, 270px) auto auto; gap: 0.6rem; align-items: center; }
+  .project-switcher label { color: var(--sf-muted); font-size: 0.72rem; font-weight: 750; }
+  select, input { color: var(--sf-ink); }
+  .project-switcher select, .period-filter select {
+    min-height: 42px;
+    padding: 0 2.2rem 0 0.85rem;
+    border: 1px solid #d5d8d1;
+    border-radius: 10px;
+    background: #fffefa;
+    font-size: 0.84rem;
+    font-weight: 750;
+  }
+  .icon-button { width: 40px; height: 40px; border: 0; border-radius: 10px; background: var(--sf-ink); color: white; font-size: 1.35rem; cursor: pointer; }
+  .project-edit-button { border: 1px solid #d5d8d1; background: #fffefa; color: #59625b; font-size: 1rem; }
+  .project-edit-button:hover { border-color: #afb5ad; color: var(--sf-ink); }
+  .toolbar-actions { display: flex; gap: 0.55rem; justify-self: end; }
+  .quiet-button { display: inline-flex; gap: 0.45rem; align-items: center; min-height: 40px; padding: 0 0.8rem; border: 1px solid #d8dbd4; border-radius: 10px; background: #fffefa; color: #4d574f; font-size: 0.74rem; font-weight: 750; cursor: pointer; }
+  .quiet-button:hover { border-color: #afb5ad; }
+  .quiet-button.danger:hover { border-color: #e9b7aa; color: #a43a24; }
+  .quiet-button svg { width: 16px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+
+  .project-overview { margin-top: 1.25rem; padding: 1.35rem; border: 1px solid #dadcd5; border-radius: 18px; background: rgba(255,254,250,.84); }
+  .project-overview-head { display: flex; gap: 1.5rem; align-items: flex-start; justify-content: space-between; padding-bottom: 1.15rem; border-bottom: 1px solid #e2e4de; }
+  .project-overview-head h2 { margin: .12rem 0 0; font-size: 1.45rem; letter-spacing: -.045em; }
+  .project-overview-head p { margin: .35rem 0 0; color: var(--sf-muted); font-size: .73rem; line-height: 1.5; }
+  .project-overview-head-actions { display: flex; gap: .55rem; align-items: center; }
+  .project-overview-list { display: grid; gap: .65rem; margin-top: 1rem; }
+  :global(.project-overview-row) { display: grid; grid-template-columns: minmax(170px,1.2fr) minmax(145px,.8fr) minmax(170px,.8fr) auto; gap: 1rem; align-items: center; min-height: 76px; padding: .8rem .85rem; border: 1px solid #e0e2dc; border-radius: 12px; background: rgba(255,255,255,.65); }
+  :global(.project-overview-row.active) { border-color: #cfc9ed; box-shadow: inset 4px 0 #6657d9; }
+  :global(.project-overview-identity), :global(.project-overview-status), :global(.project-overview-edited) { display: grid; min-width: 0; gap: .2rem; }
+  :global(.project-overview-identity strong) { overflow: hidden; font-size: .83rem; text-overflow: ellipsis; white-space: nowrap; }
+  :global(.project-overview-row small) { color: #7b837c; font-size: .6rem; line-height: 1.35; }
+  :global(.project-overview-status span) { width: max-content; padding: .25rem .48rem; border-radius: 99px; font-size: .56rem; font-weight: 850; }
+  :global(.project-overview-status span.synced) { background: #e5f5ec; color: #287153; }
+  :global(.project-overview-status span.local) { background: #f0eef8; color: #6659a8; }
+  :global(.project-overview-edited time) { color: #313a33; font-size: .66rem; font-weight: 750; }
+  :global(.project-overview-actions) { display: flex; gap: .4rem; justify-content: flex-end; }
+  :global(.project-overview-actions button) { min-height: 34px; padding: 0 .68rem; border: 1px solid #d8dad4; border-radius: 8px; background: white; color: #4e5850; font-size: .62rem; font-weight: 800; cursor: pointer; }
+  :global(.project-overview-actions button:hover) { border-color: #bfc3bb; color: #222b24; }
+  :global(.project-overview-actions .project-overview-delete) { width: 34px; padding: 0; background: #f8ece9; color: #aa4934; font-size: 1.05rem; }
+  .sync-button { position: relative; }
+  .sync-dot { display: block; width: 7px; height: 7px; border-radius: 50%; background: #a9afa9; }
+  .sync-dot.connected { background: #39a06f; box-shadow: 0 0 0 3px rgba(57,160,111,.11); }
+  .sync-dot.working { animation: sync-pulse 1s ease-in-out infinite; }
+  .sync-dot.error { background: #d15a40; }
+  @keyframes sync-pulse { 50% { opacity: .35; transform: scale(.8); } }
+
+  .local-note { display: flex; gap: 0.65rem; align-items: center; margin: 1rem 0; padding: 0.7rem 0.9rem; border: 1px solid rgba(30,93,66,.12); border-radius: 10px; background: rgba(216,255,95,.16); color: #3f5147; }
+  .local-note svg { flex: 0 0 auto; width: 17px; fill: none; stroke: #2d674b; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+  .local-note p { margin: 0; font-size: 0.75rem; }
+
+  .onboarding {
+    display: grid;
+    min-height: min(620px, 68vh);
+    padding: clamp(4rem, 9vw, 8rem) 1.5rem;
+    place-items: center;
+    align-content: center;
+    text-align: center;
+  }
+  .onboarding-mark { position: relative; display: block; width: 70px; height: 70px; margin-bottom: 1.5rem; overflow: hidden; border-radius: 20px; background: var(--sf-ink); box-shadow: 0 18px 45px rgba(31,39,33,.18); }
+  .onboarding-mark i { position: absolute; bottom: 14px; width: 10px; border-radius: 8px; transform: rotate(-10deg); }
+  .onboarding-mark i:nth-child(1) { left: 16px; height: 19px; background: #d8ff5f; }
+  .onboarding-mark i:nth-child(2) { left: 30px; height: 33px; background: #9c91f1; }
+  .onboarding-mark i:nth-child(3) { left: 44px; height: 44px; background: #ff8764; }
+  .onboarding h2 { max-width: 650px; margin: .3rem 0 0; font-size: clamp(2.1rem, 5vw, 4.2rem); letter-spacing: -.065em; line-height: .98; }
+  .onboarding p { max-width: 520px; margin: 1.1rem 0 0; color: var(--sf-muted); font-size: clamp(.95rem, 1.8vw, 1.1rem); line-height: 1.6; }
+  .onboarding-button { display: flex; gap: 1.5rem; align-items: center; margin-top: 2rem; padding: .9rem 1.1rem .9rem 1.25rem; border: 0; border-radius: 12px; background: var(--sf-ink); color: white; font-size: .82rem; font-weight: 800; cursor: pointer; box-shadow: 0 12px 30px rgba(31,39,33,.16); }
+  .onboarding-button span { color: #d8ff5f; font-size: 1.1rem; transition: transform .18s ease; }
+  .onboarding-button:hover span { transform: translateX(3px); }
+  .recovery-link { margin-top: .9rem; padding: .35rem; border: 0; background: transparent; color: #666f68; font-size: .66rem; font-weight: 750; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .onboarding small { margin-top: .8rem; color: #939a94; font-size: .67rem; }
+
+  .workspace { display: grid; grid-template-columns: minmax(290px, 340px) minmax(0, 1fr); gap: 1rem; align-items: start; }
+  .control-column { display: grid; gap: 1rem; }
+  .main-column { display: grid; min-width: 0; gap: 1rem; }
+  .panel { border: 1px solid #dadcd5; border-radius: 18px; background: var(--sf-panel); box-shadow: 0 14px 45px rgba(34, 45, 37, 0.045); }
+  .quick-entry, .category-panel, .transactions { padding: 1.2rem; }
+  .panel-heading, .flow-heading { display: flex; gap: 1rem; align-items: flex-start; justify-content: space-between; }
+  .panel-heading.compact { align-items: center; }
+  .eyebrow { display: block; margin-bottom: 0.35rem; color: var(--sf-purple); font-size: 0.6rem; font-weight: 850; letter-spacing: 0.12em; }
+  .panel h2 { margin: 0; font-size: 1.04rem; letter-spacing: -0.035em; }
+  .shortcut { padding: 0.3rem 0.4rem; border: 1px solid #dcddd7; border-radius: 6px; color: #8a918b; font-size: 0.62rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+  .amount-field, .field { display: grid; gap: 0.4rem; margin-top: 1rem; }
+  .amount-field > span:first-child, .field > span:first-child { color: #525c54; font-size: 0.68rem; font-weight: 800; }
+  .field small { color: #989e99; font-weight: 600; }
+  .amount-input { display: flex; align-items: center; min-height: 62px; border-bottom: 2px solid #cfd2cb; }
+  .amount-input:focus-within { border-color: var(--sf-purple); }
+  .amount-input b { color: #626b64; font-size: 1.25rem; }
+  .amount-input input { width: 100%; min-width: 0; padding: 0 0.6rem; border: 0; outline: 0; background: transparent; font-size: 2.1rem; font-weight: 760; letter-spacing: -0.055em; }
+  .field input, .field select { width: 100%; min-height: 44px; padding: 0 0.75rem; border: 1px solid #d3d6cf; border-radius: 9px; background: #fff; font-size: 0.8rem; }
+  .field input:focus, .field select:focus { border-color: var(--sf-purple); outline: 3px solid rgba(102,87,217,.12); }
+  .quick-category-create { display: grid; grid-template-columns: minmax(0,1fr) 42px auto; gap: .5rem; align-items: end; margin-top: .55rem; padding: .65rem; border: 1px solid #d8d4ef; border-radius: 10px; background: #f7f5ff; }
+  .quick-category-create > label:first-child { display: grid; min-width: 0; gap: .35rem; }
+  .quick-category-create > label:first-child span { color: #5b566d; font-size: .63rem; font-weight: 800; }
+  .quick-category-create > label:first-child input { width: 100%; min-width: 0; height: 40px; padding: 0 .65rem; border: 1px solid #d2cdea; border-radius: 8px; background: white; font-size: .75rem; }
+  .quick-color input { width: 42px; height: 40px; padding: 0; overflow: hidden; border: 1px solid #d2cdea; border-radius: 8px; background: white; cursor: pointer; }
+  .quick-color input::-webkit-color-swatch-wrapper { padding: 3px; }
+  .quick-color input::-webkit-color-swatch { border: 0; border-radius: 5px; }
+  .quick-category-create > button { height: 40px; padding: 0 .7rem; border: 0; border-radius: 8px; background: var(--sf-purple); color: white; font-size: .68rem; font-weight: 800; cursor: pointer; }
+  .entry-type-switch { display: grid; grid-template-columns: 1fr 1fr; gap: .35rem; margin: .9rem 0 0; padding: .3rem; border: 1px solid #d9dbd5; border-radius: 10px; background: #f2f2ed; }
+  .entry-type-switch legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+  .entry-type-switch label { cursor: pointer; }
+  .entry-type-switch input { position: absolute; opacity: 0; pointer-events: none; }
+  .entry-type-switch span { display: grid; min-height: 36px; place-items: center; border-radius: 7px; color: #687069; font-size: .68rem; font-weight: 800; }
+  .entry-type-switch input:checked + span { background: white; color: var(--sf-ink); box-shadow: 0 2px 8px rgba(25,34,28,.08); }
+  .primary-button { display: flex; width: 100%; min-height: 48px; margin-top: 1.1rem; padding: 0 1rem; align-items: center; justify-content: space-between; border: 0; border-radius: 11px; background: var(--sf-ink); color: white; font-size: 0.79rem; font-weight: 800; cursor: pointer; transition: transform .18s ease, background .18s ease; }
+  .primary-button:hover { background: #303a32; transform: translateY(-1px); }
+  .primary-button svg { width: 19px; fill: none; stroke: #d8ff5f; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+
+  .mini-button { padding: 0.43rem 0.58rem; border: 1px solid #d5d7d1; border-radius: 7px; background: white; color: #505a52; font-size: 0.68rem; font-weight: 800; cursor: pointer; }
+  .category-list { display: grid; gap: 0.55rem; margin-top: 1rem; }
+  :global(.category-row) { display: grid; grid-template-columns: 8px minmax(0,1fr) 27px 27px 27px 27px; gap: .42rem; align-items: center; min-height: 58px; padding: .55rem .6rem; border: 1px solid #e0e2dd; border-radius: 10px; background: rgba(255,255,255,.64); }
+  :global(.category-row > i) { width: 8px; height: 31px; border-radius: 8px; }
+  :global(.category-row > div) { display: grid; min-width: 0; gap: .15rem; }
+  :global(.category-row strong) { overflow: hidden; font-size: .74rem; text-overflow: ellipsis; white-space: nowrap; }
+  :global(.category-row small) { color: #7d857f; font-size: .62rem; }
+  :global(.category-color-edit) { width: 25px; height: 25px; padding: 0; overflow: hidden; border: 1px solid #d4d7d0; border-radius: 6px; background: transparent; cursor: pointer; }
+  :global(.category-color-edit::-webkit-color-swatch-wrapper) { padding: 2px; }
+  :global(.category-color-edit::-webkit-color-swatch) { border: 0; border-radius: 3px; }
+  :global(.category-icon-button) { width: 27px; height: 27px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #7b827c; cursor: pointer; }
+  :global(.category-icon-button:hover) { background: #f0f1ed; color: #252d27; }
+  :global(.category-add-button) { background: #efedf9; color: #6257a5; font-size: 1rem; }
+  :global(.subcategory-row) { min-height: 49px; margin-left: 1rem; border-style: dashed; background: rgba(250,250,247,.75); }
+  :global(.subcategory-row.depth-3) { margin-left: 2rem; }
+  :global(.subcategory-row > i) { display: grid; width: auto; height: auto; place-items: center; background: transparent !important; color: #929991; font-size: .75rem; font-style: normal; }
+  :global(.subcategory-row > span) { width: 27px; }
+  :global(.category-empty) { margin: .3rem 0 0; color: var(--sf-muted); font-size: .75rem; line-height: 1.5; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); border: 1px solid #dadcd5; border-radius: 16px; background: rgba(255, 254, 250, .72); }
+  .stats.dual { grid-template-columns: repeat(5, minmax(0,1fr)); }
+  .stats article { display: grid; gap: 0.2rem; padding: 1rem 1.15rem; }
+  .stats article + article { border-left: 1px solid #e0e2dc; }
+  .stats span { color: #778079; font-size: 0.64rem; font-weight: 750; }
+  .stats strong { overflow: hidden; font-size: clamp(1.15rem, 2vw, 1.55rem); letter-spacing: -0.055em; text-overflow: ellipsis; white-space: nowrap; }
+  .stats strong.negative { color: #bc452d; }
+  .stats small { overflow: hidden; color: #8e958f; font-size: 0.61rem; text-overflow: ellipsis; white-space: nowrap; }
+
+  .flow-panel { min-height: 540px; padding: 1.25rem 1.35rem 1rem; }
+  .flow-heading { align-items: center; }
+  .flow-heading-actions { display: flex; gap: .55rem; align-items: center; }
+  .inline-flow-zoom { display: flex; gap: .2rem; align-items: center; padding: .2rem; border: 1px solid #dfe1dc; border-radius: 9px; background: #f7f7f3; }
+  .inline-flow-zoom button { display: grid; width: 29px; height: 29px; padding: 0; place-items: center; border: 0; border-radius: 6px; background: #fff; color: #586159; font-size: .85rem; font-weight: 850; cursor: pointer; }
+  .inline-flow-zoom button:hover { background: #eceee8; color: var(--sf-ink); }
+  .inline-flow-zoom output { min-width: 39px; color: #737b75; font-size: .56rem; font-weight: 850; text-align: center; font-variant-numeric: tabular-nums; }
+  .inline-flow-zoom .inline-flow-zoom-reset { width: 34px; font-size: .52rem; }
+  .period-filter select { min-height: 38px; font-size: 0.72rem; }
+  .flow-fullscreen-button { display: inline-flex; gap: .4rem; align-items: center; min-height: 38px; padding: 0 .7rem; border: 1px solid #d8dbd4; border-radius: 9px; background: #fff; color: #59625b; font-size: .67rem; font-weight: 800; cursor: pointer; }
+  .flow-fullscreen-button:hover { border-color: #bfc4bb; color: var(--sf-ink); }
+  .flow-fullscreen-button svg { width: 15px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+  .flow-canvas { position: relative; margin-top: 1rem; min-height: 445px; border-top: 1px solid #eceee9; }
+  .flow-labels { display: grid; grid-template-columns: 66% 34%; padding: 0.75rem 0.3rem 0; color: #9aa09b; font-size: 0.55rem; font-weight: 850; letter-spacing: 0.1em; }
+  .flow-labels.dual { grid-template-columns: 1fr 1fr; }
+  .flow-labels.dual span:last-child { text-align: right; }
+  .flow-labels.hierarchical { grid-template-columns: repeat(3, 1fr); }
+  .flow-labels.hierarchical span:nth-child(2) { text-align: center; }
+  .flow-labels.hierarchical span:last-child { text-align: right; }
+  .flow-scroll { width: 100%; max-width: 100%; min-width: 0; height: clamp(400px, 58vh, 560px); max-height: none; overflow: auto; overscroll-behavior: contain; contain: strict; cursor: grab; touch-action: pan-x pan-y; -webkit-overflow-scrolling: touch; scrollbar-gutter: stable; }
+  .flow-scroll.dragging { cursor: grabbing; user-select: none; }
+  .flow-inline-zoom-surface { position: relative; min-width: 100%; min-height: 1px; overflow: hidden; }
+  .flow-scroll svg { position: absolute; top: 0; display: block; min-width: 760px; width: 100%; height: 400px; overflow: visible; transition: opacity .2s ease; transform-origin: 0 0; }
+  .flow-scroll :global(.flow-name) { fill: #2c342e; stroke: #fffefa; stroke-width: 3px; paint-order: stroke; stroke-linejoin: round; font-size: 12px; font-weight: 750; }
+  .flow-scroll :global(.flow-value) { fill: #7f8780; stroke: #fffefa; stroke-width: 3px; paint-order: stroke; stroke-linejoin: round; font-size: 10px; }
+  .flow-scroll :global(.flow-total) { fill: #202721; font-size: 14px; font-weight: 850; }
+  .flow-scroll :global(.flow-balance) { fill: #667068; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+  .empty-state { position: absolute; inset: 4rem 0 0; display: grid; place-content: center; text-align: center; }
+  .empty-state[hidden] { display: none; }
+  .empty-state > span { display: grid; width: 52px; height: 52px; margin: 0 auto 0.8rem; place-items: center; border-radius: 16px; background: var(--sf-lilac); color: var(--sf-purple); font-size: 1.5rem; }
+  .empty-state h3 { margin: 0; font-size: 1rem; }
+  .empty-state p { margin: 0.4rem 0 0; color: var(--sf-muted); font-size: 0.75rem; }
+
+  .flow-fullscreen-dialog { width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; overflow: hidden; border: 0; background: #f7f7f2; color: var(--sf-ink); }
+  .flow-fullscreen-dialog::backdrop { background: rgba(18,24,19,.78); }
+  .flow-fullscreen-shell { display: grid; grid-template-rows: auto minmax(0,1fr) auto; width: 100%; height: 100%; }
+  .flow-fullscreen-toolbar { position: relative; z-index: 2; display: flex; gap: 1rem; align-items: center; justify-content: space-between; min-height: 68px; padding: .75rem 1rem; border-bottom: 1px solid #dfe2da; background: rgba(255,254,250,.96); box-shadow: 0 5px 24px rgba(28,37,30,.07); }
+  .flow-fullscreen-toolbar > div:first-child { display: grid; gap: .1rem; }
+  .flow-fullscreen-toolbar strong { font-size: .88rem; }
+  .flow-zoom-controls { display: flex; gap: .35rem; align-items: center; }
+  .flow-zoom-controls button { display: grid; min-width: 36px; height: 36px; padding: 0 .55rem; place-items: center; border: 1px solid #d8dbd4; border-radius: 9px; background: #fff; color: #4d574f; font-size: 1rem; font-weight: 800; cursor: pointer; }
+  .flow-zoom-controls button:hover { border-color: #bcc2b8; background: #f7f8f4; }
+  .flow-zoom-controls output { min-width: 48px; color: #667068; font-size: .66rem; font-weight: 850; text-align: center; font-variant-numeric: tabular-nums; }
+  .flow-zoom-controls .flow-zoom-reset { padding-inline: .7rem; font-size: .62rem; }
+  .flow-zoom-controls .flow-fullscreen-close { margin-left: .25rem; border-color: #303a32; background: #202721; color: #fff; font-size: 1.2rem; }
+  .flow-fullscreen-viewport { position: relative; overflow: auto; overscroll-behavior: contain; background-color: #fffefa; background-image: radial-gradient(circle, rgba(87,97,89,.15) 1px, transparent 1px); background-size: 22px 22px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .flow-fullscreen-viewport.dragging { cursor: grabbing; }
+  .flow-zoom-surface { position: relative; min-width: 100%; min-height: 100%; }
+  .flow-canvas.is-fullscreen { box-sizing: border-box; margin: 0; padding: 1rem; border: 0; background: rgba(255,254,250,.94); }
+  .flow-canvas.is-fullscreen .flow-scroll { height: auto; max-height: none; overflow: visible; contain: none; cursor: default; touch-action: auto; }
+  .flow-gesture-hint { margin: 0; padding: .55rem 1rem; border-top: 1px solid #e0e2dc; background: #fffefa; color: #7b837d; font-size: .59rem; font-weight: 700; text-align: center; }
+
+  .entry-count { display: grid; min-width: 30px; height: 25px; padding: 0 0.45rem; place-items: center; border-radius: 99px; background: #f0f0ec; color: #6f7771; font-size: 0.62rem; font-weight: 800; }
+  .transaction-list { display: grid; gap: .5rem; margin-top: 1rem; }
+  :global(.transaction-row) { display: grid; grid-template-columns: 6px 72px minmax(0,1fr) auto 64px; gap: 1rem; align-items: center; min-height: 68px; padding: .72rem .75rem; border: 1px solid #e3e5df; border-radius: 11px; background: rgba(255,255,255,.58); transition: border-color .15s ease, background .15s ease; }
+  :global(.transaction-row:hover) { border-color: #cfd3cb; background: rgba(255,255,255,.9); }
+  :global(.transaction-row > i) { width: 6px; height: 38px; border-radius: 6px; }
+  :global(.transaction-row time) { color: #737c75; font-size: 0.67rem; font-weight: 700; letter-spacing: .01em; }
+  :global(.transaction-row > div) { display: grid; min-width: 0; gap: 0.22rem; }
+  :global(.transaction-row strong) { overflow: hidden; font-size: 0.8rem; text-overflow: ellipsis; white-space: nowrap; }
+  :global(.transaction-row small) { overflow: hidden; color: #89908a; font-size: 0.64rem; text-overflow: ellipsis; white-space: nowrap; }
+  :global(.transaction-row > b) { font-size: 0.8rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  :global(.transaction-row > b.income-amount) { color: #267655; }
+  :global(.transaction-row.income) { border-color: rgba(39,132,98,.25); }
+  :global(.transaction-actions) { display: flex; gap: .3rem; justify-content: flex-end; }
+  :global(.transaction-actions button) { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 7px; background: #f1f2ee; color: #717a73; cursor: pointer; }
+  :global(.transaction-actions button:hover) { background: #e8eae4; color: #2e3730; }
+  :global(.transaction-actions button:last-child:hover) { background: #f7e9e5; color: #b94a32; }
+  :global(.transaction-empty) { padding: 1.25rem .2rem .35rem; color: var(--sf-muted); font-size: .75rem; }
+
+  .mobile-nav, .mobile-add { display: none; }
+  .app-dialog { width: min(430px, calc(100% - 28px)); padding: 0; border: 0; border-radius: 18px; background: #fffefa; color: var(--sf-ink); box-shadow: 0 30px 100px rgba(20,29,23,.25); }
+  .app-dialog::backdrop { background: rgba(24,31,26,.5); backdrop-filter: blur(4px); }
+  .app-dialog form { padding: 1.35rem; }
+  .dialog-head { display: flex; align-items: flex-start; justify-content: space-between; }
+  .dialog-head h2 { margin: 0; font-size: 1.2rem; letter-spacing: -.04em; }
+  .dialog-close { width: 32px; height: 32px; border: 1px solid #dddeda; border-radius: 8px; background: white; color: #69716b; font-size: 1.2rem; cursor: pointer; }
+  .new-group-fields[hidden] { display: none; }
+  .color-picker { display: grid; gap: .75rem; margin: 1rem 0 0; padding: 0; border: 0; }
+  .color-picker legend { margin-bottom: 0.5rem; color: #525c54; font-size: .68rem; font-weight: 800; }
+  .custom-color { display: grid; grid-template-columns: 52px 1fr; gap: .75rem; align-items: center; padding: .65rem; border: 1px solid #d9dbd5; border-radius: 11px; background: #fff; }
+  .custom-color > input { width: 52px; height: 44px; padding: 0; overflow: hidden; border: 0; border-radius: 8px; background: transparent; cursor: pointer; }
+  .custom-color > input::-webkit-color-swatch-wrapper { padding: 0; }
+  .custom-color > input::-webkit-color-swatch { border: 0; border-radius: 8px; }
+  .custom-color > span { display: grid; gap: .16rem; }
+  .custom-color strong { color: #313a33; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78rem; }
+  .custom-color small { color: #858c86; font-size: .61rem; line-height: 1.35; }
+  .color-presets { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .color-presets button { width: 28px; height: 28px; padding: 0; border: 4px solid white; border-radius: 50%; background: var(--swatch); box-shadow: 0 0 0 1px #d4d6d0; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
+  .color-presets button:hover { transform: scale(1.08); box-shadow: 0 0 0 2px var(--swatch); }
+
+  .sync-dialog { width: min(480px, calc(100% - 28px)); }
+  .sync-dialog-content { padding: 1.35rem; }
+  .sync-loading { display: grid; min-height: 220px; place-content: center; justify-items: center; gap: .85rem; color: var(--sf-muted); text-align: center; }
+  .sync-loading p { margin: 0; font-size: .78rem; }
+  .spinner { width: 28px; height: 28px; border: 3px solid #dedbe9; border-top-color: var(--sf-purple); border-radius: 50%; animation: sync-spin .8s linear infinite; }
+  @keyframes sync-spin { to { transform: rotate(360deg); } }
+  .security-summary { display: grid; grid-template-columns: 44px 1fr; gap: .8rem; align-items: start; margin-top: 1.2rem; padding: .85rem; border: 1px solid #d8d4ef; border-radius: 12px; background: #f7f5ff; }
+  .security-summary > span { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 12px; background: var(--sf-purple); color: white; font-size: 1.35rem; }
+  .security-summary strong { display: block; font-size: .78rem; }
+  .security-summary p { margin: .25rem 0 0; color: #696475; font-size: .68rem; line-height: 1.48; }
+  .security-points { display: grid; gap: .55rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+  .security-points li { position: relative; padding-left: 1.35rem; color: #515a53; font-size: .7rem; line-height: 1.45; }
+  .security-points li::before { position: absolute; left: 0; content: '✓'; color: #278462; font-weight: 900; }
+  .device-name-field { margin-top: 1.1rem; }
+  .sync-legal { display: block; margin-top: .7rem; color: #8a918b; font-size: .58rem; line-height: 1.45; text-align: center; }
+  .sync-status-card { display: grid; grid-template-columns: 40px 1fr; gap: .7rem; align-items: center; margin-top: 1.15rem; padding: .75rem; border: 1px solid rgba(39,132,98,.22); border-radius: 11px; background: rgba(216,255,95,.12); }
+  .status-lock { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 50%; background: #2d7858; color: white; font-weight: 900; }
+  .sync-status-card div { display: grid; gap: .15rem; }
+  .sync-status-card strong { font-size: .77rem; }
+  .sync-status-card small { color: #66736a; font-size: .62rem; }
+  .recovery-card { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: .75rem; align-items: center; margin-top: 1rem; padding: .75rem; border: 1px solid #d9d5ed; border-radius: 11px; background: #f7f5ff; }
+  .recovery-card > div { display: grid; gap: .2rem; }
+  .recovery-card strong { font-size: .7rem; }
+  .recovery-card small { color: #736e7e; font-size: .59rem; line-height: 1.45; }
+  .invite-panel { margin-top: 1rem; padding: 1rem; border: 1px solid #d9dbd5; border-radius: 13px; background: #fff; text-align: center; }
+  .invite-panel h3 { margin: 0; font-size: .98rem; letter-spacing: -.03em; }
+  .qr-frame { width: 264px; max-width: 100%; margin: .85rem auto; padding: 12px; border: 1px solid #e1e2dd; border-radius: 14px; background: #fffefa; box-shadow: 0 12px 35px rgba(30,39,32,.08); }
+  .qr-frame canvas { display: block; width: 100%; height: auto; }
+  .invite-panel > p { max-width: 38ch; margin: .75rem auto 0; color: #69716b; font-size: .66rem; line-height: 1.5; }
+  .invite-actions { display: flex; gap: .55rem; justify-content: center; margin-top: .85rem; }
+  .connect-device-button { margin-top: 1rem; }
+  .transfer-panel { margin-top: 1rem; padding: 1rem; border: 1px solid #d8d4ef; border-radius: 12px; background: #f7f5ff; text-align: center; }
+  .transfer-panel h3 { margin: 0; font-size: .83rem; }
+  .transfer-panel > strong { display: block; margin: .8rem 0 .35rem; color: var(--sf-purple); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.35rem; letter-spacing: .14em; cursor: copy; }
+  .transfer-panel p { margin: 0 auto .8rem; color: #6e6878; font-size: .65rem; line-height: 1.45; }
+  .devices-section { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid #e1e3dd; }
+  .devices-heading { display: flex; align-items: center; justify-content: space-between; }
+  .devices-heading > strong { font-size: .72rem; }
+  .devices-heading button { width: 28px; height: 28px; border: 0; border-radius: 7px; background: #f1f2ee; color: #707871; cursor: pointer; }
+  .device-list { display: grid; gap: .45rem; margin-top: .65rem; }
+  :global(.device-row) { display: grid; grid-template-columns: 34px minmax(0,1fr) auto; gap: .65rem; align-items: center; min-height: 52px; padding: .55rem .6rem; border: 1px solid #e2e3de; border-radius: 9px; }
+  :global(.device-icon) { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 8px; background: #f0eef9; color: var(--sf-purple); font-size: 1.05rem; }
+  :global(.device-row > div) { display: grid; min-width: 0; gap: .1rem; }
+  :global(.device-row strong) { overflow: hidden; font-size: .7rem; text-overflow: ellipsis; white-space: nowrap; }
+  :global(.device-row small) { color: #858c86; font-size: .59rem; }
+  :global(.device-actions) { display: flex; gap: .35rem; align-items: center; }
+  :global(.device-actions button) { padding: .35rem .5rem; border: 0; border-radius: 7px; background: #eeecf8; color: #6559ad; font-size: .56rem; font-weight: 800; cursor: pointer; white-space: nowrap; }
+  :global(.device-actions button:last-child) { background: #f5ece9; color: #a84b35; }
+  :global(.device-empty) { margin: .5rem 0; color: var(--sf-muted); font-size: .68rem; }
+  .member-controls { margin-top: 1rem; }
+  .member-notice { padding: .85rem; border: 1px solid #dedfd9; border-radius: 11px; background: #f7f7f3; }
+  .member-notice strong { display: block; font-size: .73rem; }
+  .member-notice p { margin: .3rem 0 0; color: #747c76; font-size: .65rem; line-height: 1.5; }
+  .member-recovery { display: block; width: 100%; text-align: center; }
+  .remove-cloud-button { width: 100%; margin-top: 1rem; padding: .65rem; border: 0; background: transparent; color: #a54c38; font-size: .63rem; font-weight: 750; cursor: pointer; }
+  .remove-cloud-button:hover { text-decoration: underline; }
+  .pair-result { display: grid; min-height: 270px; padding-top: 1rem; align-content: center; justify-items: center; text-align: center; }
+  .pair-result > span { display: grid; width: 58px; height: 58px; place-items: center; border-radius: 50%; background: #2d7858; color: white; font-size: 1.4rem; font-weight: 900; }
+  .pair-result > span.error { background: #c65d45; }
+  .pair-result h3 { margin: 1rem 0 0; font-size: 1.2rem; letter-spacing: -.04em; }
+  .pair-result p { max-width: 38ch; margin: .45rem 0 0; color: var(--sf-muted); font-size: .73rem; line-height: 1.5; }
+  .pair-result .primary-button { max-width: 250px; margin-top: 1.2rem; }
+  .toast { position: fixed; z-index: 50; right: 1.5rem; bottom: 1.5rem; max-width: min(340px, calc(100% - 30px)); padding: .8rem 1rem; border-radius: 10px; background: #202721; color: white; font-size: .75rem; font-weight: 700; opacity: 0; pointer-events: none; transform: translateY(12px); transition: opacity .2s ease, transform .2s ease; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  @media (max-width: 1050px) {
+    .toolbar { grid-template-columns: 1fr auto; }
+    .project-switcher { grid-row: 2; grid-column: 1 / -1; justify-content: center; }
+    .toolbar-actions { grid-column: 2; grid-row: 1; }
+    .workspace { grid-template-columns: 290px minmax(0, 1fr); }
+    .stats article { padding-inline: .85rem; }
+  }
+
+  @media (max-width: 760px) {
+    .spendflow { width: calc(100% - 24px); padding-top: .7rem; padding-bottom: 7.5rem; }
+    .toolbar { grid-template-columns: 1fr auto; gap: .8rem; }
+    .tool-title .back-link { display: none; }
+    .tool-title p { display: none; }
+    .flow-logo { width: 38px; height: 38px; }
+    .toolbar-actions .danger, .toolbar-actions .quiet-button span { display: none; }
+    .toolbar-actions .quiet-button { width: 40px; justify-content: center; padding: 0; }
+    .toolbar-actions .sync-button { width: 48px; }
+    .project-switcher { grid-template-columns: 1fr auto auto; justify-content: stretch; }
+    .project-switcher label { display: none; }
+    .project-switcher select { width: 100%; }
+    .local-note { margin-block: .75rem; }
+    .project-overview { margin-top: .8rem; padding: 1rem; }
+    .project-overview-head { display: grid; gap: .9rem; }
+    .project-overview-head-actions { justify-content: space-between; }
+    :global(.project-overview-row) { grid-template-columns: minmax(0,1fr) auto; gap: .7rem; }
+    :global(.project-overview-status), :global(.project-overview-edited) { grid-column: 1; }
+    :global(.project-overview-actions) { grid-column: 2; grid-row: 1 / span 3; align-self: stretch; flex-direction: column; justify-content: center; }
+    .workspace { display: flex; flex-direction: column; }
+    .control-column, .main-column { display: contents; }
+    .stats { order: 1; width: 100%; }
+    .quick-entry { order: 3; width: 100%; scroll-margin-top: 10px; }
+    .flow-panel { order: 2; width: 100%; min-height: 480px; padding-inline: 1rem; scroll-margin-top: 10px; }
+    .transactions { order: 4; width: 100%; scroll-margin-top: 10px; }
+    .category-panel { order: 5; width: 100%; scroll-margin-top: 10px; }
+    .stats, .stats.dual { grid-template-columns: 1fr 1fr; }
+    .stats article:nth-child(3) { grid-column: auto; border-top: 0; border-left: 1px solid #e0e2dc; }
+    .stats article:last-child { grid-column: 1 / -1; border-top: 1px solid #e0e2dc; border-left: 0; }
+    .flow-heading { align-items: flex-start; }
+    .flow-heading h2 { max-width: 14ch; }
+    .flow-heading-actions { flex-wrap: wrap; align-items: stretch; justify-content: flex-end; }
+    .inline-flow-zoom output, .inline-flow-zoom .inline-flow-zoom-reset { display: none; }
+    .flow-fullscreen-button span { display: none; }
+    .flow-fullscreen-button { width: 40px; justify-content: center; padding: 0; }
+    .flow-scroll svg { height: 360px; }
+    .flow-scroll { height: 360px; }
+    .flow-canvas { min-height: 385px; }
+    .flow-labels { grid-template-columns: 66% 34%; }
+    .flow-labels.hierarchical { grid-template-columns: repeat(3, 1fr); }
+    .shortcut { display: none; }
+    :global(.transaction-row) { grid-template-columns: 5px 48px minmax(0,1fr) auto 62px; gap: .65rem; padding-inline: .6rem; }
+    .mobile-nav { position: fixed; z-index: 20; right: 12px; bottom: 10px; left: 12px; display: grid; grid-template-columns: repeat(3,1fr); height: 62px; padding: 6px 70px 5px 9px; border: 1px solid rgba(255,255,255,.12); border-radius: 18px; background: rgba(30,37,31,.96); box-shadow: 0 15px 50px rgba(15,25,18,.25); backdrop-filter: blur(16px); }
+    .mobile-nav a { display: grid; place-items: center; align-content: center; gap: 2px; color: #dfe4df; font-size: .55rem; font-weight: 700; text-decoration: none; }
+    .mobile-nav svg { width: 18px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
+    .mobile-add { position: fixed; z-index: 21; right: 23px; bottom: 17px; display: grid; width: 48px; height: 48px; padding: 0; place-items: center; border: 0; border-radius: 14px; background: #d8ff5f; color: #1c241e; font-size: 1.7rem; font-weight: 500; cursor: pointer; box-shadow: 0 8px 25px rgba(0,0,0,.25); }
+    .toast { right: 15px; bottom: 86px; }
+    .flow-fullscreen-toolbar { min-height: 62px; padding: .6rem .7rem; }
+    .flow-fullscreen-toolbar > div:first-child { display: none; }
+    .flow-zoom-controls { width: 100%; justify-content: flex-end; }
+    .flow-zoom-controls .flow-zoom-reset { margin-right: auto; }
+  }
+
+  @media (max-width: 460px) {
+    .local-note p { line-height: 1.4; }
+    .stats strong { font-size: 1.08rem; }
+    .flow-heading { display: grid; }
+    .flow-scroll { height: 340px; }
+    .period-filter select { width: 100%; }
+    :global(.transaction-row) { grid-template-columns: 5px minmax(0,1fr) auto 62px; }
+    :global(.transaction-row time) { display: none; }
+    .mobile-nav { padding-right: 64px; }
+    :global(.device-row) { grid-template-columns: 34px minmax(0,1fr); }
+    :global(.device-actions) { grid-column: 2; flex-wrap: wrap; }
+    .recovery-card { grid-template-columns: 1fr; }
+  }
+</style>

@@ -4,7 +4,7 @@ import { getLocaleFromUrl } from '../i18n/utils';
 
 const locale = getLocaleFromUrl(Astro.url);
 const tr = (de: string, en: string) => locale === 'de' ? de : en;
-const updated = locale === 'de' ? '17. September 2026' : '17 September 2026';
+const updated = locale === 'de' ? '2. November 2026' : '2 November 2026';
 ---
 
 <LegalLayout
@@ -15,12 +15,12 @@ const updated = locale === 'de' ? '17. September 2026' : '17 September 2026';
   description={tr('Datenschutzerklärung von neulanc.', 'Privacy policy for neulanc.')}
   updated={updated}
 >
-  <p class="legal-notice">
+  <!-- <p class="legal-notice">
     {tr(
       'Vor der Veröffentlichung ergänzen: vollständige ladungsfähige Anschrift und gegebenenfalls weitere eingesetzte Dienste. Der Text beschreibt den derzeit im Quellcode erkennbaren Stand.',
       'Complete before publication: full service address and any additional services in use. This text reflects the processing currently identifiable in the source code.'
     )}
-  </p>
+  </p> -->
 
   <p class="legal-lead">
     {tr(
@@ -34,7 +34,6 @@ const updated = locale === 'de' ? '17. September 2026' : '17 September 2026';
     <address>
       Michael Neuhold<br />
       neulanc<br />
-      {tr('Schrems 49a', 'Schrems 49a')}<br />
       E-Mail: <a href="mailto:neuhold-michael@neulanc.com">neuhold-michael@neulanc.com</a>
     </address>
   </section>
@@ -72,10 +71,38 @@ const updated = locale === 'de' ? '17. September 2026' : '17 September 2026';
       'Du kannst die Entscheidung jederzeit über „Cookie-Einstellungen“ im Footer ändern oder die Website-Daten in deinem Browser löschen.',
       'You can change the decision at any time through “Cookie settings” in the footer or by deleting website data in your browser.'
     )}</p>
+    <p>{tr(
+      'Web-Apps können außerdem die von dir eingegebenen Arbeitsdaten und Einstellungen lokal im Browser speichern, damit die ausdrücklich angeforderte Funktion bereitgestellt wird. Bei SpendFlow betrifft das ohne aktivierte Synchronisierung insbesondere Projekte, Kategorien sowie Einnahmen- und Ausgabenbuchungen. Diese Daten werden nicht automatisch an neulanc übertragen und können durch Löschen der Website-Daten im Browser entfernt werden.',
+      'Web apps may also store the work data and settings you enter locally in the browser so the explicitly requested function can be provided. In SpendFlow, without sync enabled, this includes projects, categories, and income and outgoing entries. This data is not automatically sent to neulanc and can be removed by deleting the sites data in your browser.'
+    )}</p>
   </section>
 
   <section>
-    <h2>{tr('4. Optionaler externer Dienst: MathJax', '4. Optional external service: MathJax')}</h2>
+    <h2>{tr('4. Optionale verschlüsselte SpendFlow-Synchronisierung', '4. Optional encrypted SpendFlow sync')}</h2>
+    <p>{tr(
+      'Die Synchronisierung ist standardmäßig deaktiviert und wird nur auf deine ausdrückliche Anforderung für ein einzelnes Projekt eingerichtet. Vor der Übertragung wird die Projektdatei mit AES-GCM im Browser Ende-zu-Ende verschlüsselt. Der Projektschlüssel verbleibt auf den verbundenen Geräten und wird beim Verbinden über den QR-Code im URL-Fragment übertragen; dieses Fragment wird bei einem normalen HTTP-Aufruf nicht an den Server gesendet. neulanc kann den Inhalt der Projektdatei daher technisch nicht im Klartext lesen.',
+      'Sync is disabled by default and is set up for an individual project only at your explicit request. Before transmission, the project file is end-to-end encrypted in the browser using AES-GCM. The project key remains on connected devices and is transferred during pairing in the QR-code URL fragment; this fragment is not sent to the server in a normal HTTP request. neulanc therefore cannot technically read the project file in plaintext.'
+    )}</p>
+    <p>{tr(
+      'Auf dem Hosting-Server werden die verschlüsselte Projektdatei, zufällige Projekt- und Gerätekennungen, gehashte Geräte-Zugangsdaten, der von dir gewählte Gerätename sowie Erstellungs-, Änderungs- und letzte Zugriffszeit gespeichert. Einmal-Einladungen werden nach erfolgreicher Verwendung sofort entfernt und laufen spätestens nach einer Minute ab. Zur Missbrauchsbegrenzung wird die IP-Adresse mit einem serverseitigen Geheimnis pseudonymisiert und nur als minutengenauer Zähler verwendet; solche Zähler werden nach spätestens 24 Stunden zur Löschung vorgesehen. Daneben können die unter Abschnitt 2 beschriebenen Server-Logs anfallen.',
+      'The hosting server stores the encrypted project file, random project and device identifiers, hashed device credentials, the device name you choose, and creation, modification and last-access times. One-time invitations are removed immediately after successful use and expire after no more than one minute. To limit abuse, the IP address is pseudonymised with a server-side secret and used only as a per-minute counter; such counters are scheduled for deletion after no more than 24 hours. The server logs described in section 2 may also be generated.'
+    )}</p>
+    <p>{tr(
+      'Die Verarbeitung dient ausschließlich der von dir angeforderten geräteübergreifenden Synchronisierung und ihrer Sicherheit. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit die Verarbeitung zur Bereitstellung der von dir angeforderten Funktion erforderlich ist. Du kannst die Synchronisierung in SpendFlow beenden; dabei wird die verschlüsselte Serverkopie gelöscht und das Projekt bleibt auf dem aktuellen Gerät. Beim Löschen eines synchronisierten Projekts wird auch die Serverkopie gelöscht. Lokale Kopien auf anderen Geräten müssen dort gesondert gelöscht werden.',
+      'Processing is limited to providing and securing the cross-device sync you request. The legal basis is Article 6(1)(b) GDPR insofar as processing is necessary to provide the function you requested. You can stop sync in SpendFlow; this deletes the encrypted server copy while keeping the project on the current device. Deleting a synced project also deletes the server copy. Local copies on other devices must be deleted separately on those devices.'
+    )}</p>
+    <p>{tr(
+      'Die Serverkopie bleibt gespeichert, bis du sie über SpendFlow löschst oder eine Löschung verlangst. Ohne den Projektschlüssel können verlorene lokale Daten nicht durch neulanc wiederhergestellt werden. Geräte-Zugang und Projektschlüssel werden lokal im Browser gespeichert; das Löschen der Browserdaten entfernt diesen Zugang auf dem jeweiligen Gerät.',
+      'The server copy is retained until you delete it through SpendFlow or request erasure. Without the project key, neulanc cannot recover lost local data. Device access and the project key are stored locally in the browser; clearing browser data removes access on that device.'
+    )}</p>
+    <p>{tr(
+      'Das erste Gerät ist das Besitzergerät. Nur dieses kann neue Geräte einladen, Gerätezugriffe widerrufen, den Besitzerzugang mit einem eine Minute gültigen Einmal-Code übertragen oder die Serverkopie löschen. Eine herunterladbare Recovery-Datei enthält den Projektschlüssel und einen hochentropischen Wiederherstellungsnachweis. Wer diese Datei besitzt, kann auf das Projekt zugreifen; sie ist daher vertraulich aufzubewahren. Nach einer Wiederherstellung oder einem Besitzerwechsel wird der Wiederherstellungsnachweis serverseitig ersetzt, sodass ältere Recovery-Dateien nicht erneut verwendet werden können.',
+      'The first device is the owner device. Only it can invite new devices, revoke device access, transfer owner access using a one-time code valid for one minute, or delete the server copy. A downloadable recovery file contains the project key and a high-entropy recovery credential. Anyone who holds this file can access the project, so it must be kept confidential. After recovery or an ownership transfer, the server replaces the recovery credential so older recovery files cannot be reused.'
+    )}</p>
+  </section>
+
+  <section>
+    <h2>{tr('5. Optionaler externer Dienst: MathJax', '5. Optional external service: MathJax')}</h2>
     <p>{tr(
       'Auf der Portfolio-Seite kann MathJax zur Darstellung mathematischer Formeln von jsDelivr geladen werden. Der Abruf erfolgt erst, wenn du optionale Dienste akzeptiert hast. Dabei wird technisch eine Verbindung zu Servern des CDN-Anbieters hergestellt; insbesondere IP-Adresse, Zeitpunkt, angeforderte Datei und Browserdaten können übermittelt werden.',
       'The portfolio page can load MathJax from jsDelivr to render mathematical notation. It is requested only after you accept optional services. This establishes a technical connection to the CDN providers servers; in particular, the IP address, request time, requested file and browser information may be transmitted.'
@@ -88,7 +115,7 @@ const updated = locale === 'de' ? '17. September 2026' : '17 September 2026';
   </section>
 
   <section>
-    <h2>{tr('5. Externe Links und Kontaktaufnahme', '5. External links and contacting us')}</h2>
+    <h2>{tr('6. Externe Links und Kontaktaufnahme', '6. External links and contacting us')}</h2>
     <p>{tr(
       'Links zu GitHub, LinkedIn, Strava, Instagram, X und weiteren externen Angeboten stellen erst beim Anklicken eine Verbindung zum jeweiligen Anbieter her. Ab diesem Zeitpunkt gelten auch dessen Datenschutzbestimmungen.',
       'Links to GitHub, LinkedIn, Strava, Instagram, X and other external services establish a connection only when clicked. From that point, the relevant providers privacy terms also apply.'
@@ -100,7 +127,7 @@ const updated = locale === 'de' ? '17. September 2026' : '17 September 2026';
   </section>
 
   <section>
-    <h2>{tr('6. Empfänger und Auftragsverarbeiter', '6. Recipients and processors')}</h2>
+    <h2>{tr('7. Empfänger und Auftragsverarbeiter', '7. Recipients and processors')}</h2>
     <p>{tr(
       'Daten werden nur an technische Dienstleister weitergegeben, soweit dies für Betrieb, Sicherheit oder eine von dir angeforderte Funktion erforderlich ist. Mit Auftragsverarbeitern werden, soweit erforderlich, Vereinbarungen gemäß Art. 28 DSGVO geschlossen.',
       'Data is disclosed to technical service providers only where required for operation, security or a function you requested. Where required, processor agreements are concluded under Article 28 GDPR.'
@@ -108,7 +135,7 @@ const updated = locale === 'de' ? '17. September 2026' : '17 September 2026';
   </section>
 
   <section>
-    <h2>{tr('7. Deine Rechte', '7. Your rights')}</h2>
+    <h2>{tr('8. Deine Rechte', '8. Your rights')}</h2>
     <p>{tr('Nach Maßgabe der DSGVO stehen dir insbesondere folgende Rechte zu:', 'Subject to the GDPR, you have the following rights in particular:')}</p>
     <ul>
       <li>{tr('Auskunft über verarbeitete personenbezogene Daten (Art. 15)', 'Access to personal data being processed (Article 15)')}</li>
@@ -122,17 +149,17 @@ const updated = locale === 'de' ? '17. September 2026' : '17 September 2026';
   </section>
 
   <section>
-    <h2>{tr('8. Beschwerderecht', '8. Right to lodge a complaint')}</h2>
+    <h2>{tr('9. Beschwerderecht', '9. Right to lodge a complaint')}</h2>
     <p>{tr('Du kannst dich bei einer Datenschutzaufsichtsbehörde beschweren. In Österreich ist dies die:', 'You may lodge a complaint with a data-protection supervisory authority. In Austria, this is:')}</p>
     <address>
       {tr('Österreichische Datenschutzbehörde', 'Austrian Data Protection Authority')}<br />
-      Barichgasse 40–42, 1030 Wien<br />
+      Barichgasse 40-42, 1030 Wien<br />
       <a href="https://www.dsb.gv.at" target="_blank" rel="noreferrer">www.dsb.gv.at</a>
     </address>
   </section>
 
   <section>
-    <h2>{tr('9. Änderungen dieser Erklärung', '9. Changes to this notice')}</h2>
+    <h2>{tr('10. Änderungen dieser Erklärung', '10. Changes to this notice')}</h2>
     <p>{tr(
       'Diese Datenschutzerklärung wird angepasst, wenn sich Funktionen, Dienstleister oder rechtliche Anforderungen ändern. Die aktuelle Fassung ist stets auf dieser Seite abrufbar.',
       'This privacy policy will be updated when functions, providers or legal requirements change. The current version is always available on this page.'
@@ -140,6 +167,6 @@ const updated = locale === 'de' ? '17. September 2026' : '17 September 2026';
   </section>
 
   <p class="legal-source-note">
-    {tr('Grundlage dieses Entwurfs sind insbesondere die Informationspflichten nach Art. 12–14 DSGVO sowie die Hinweise der Österreichischen Datenschutzbehörde zu Cookies. Dieser Entwurf ersetzt keine individuelle Rechtsberatung.', 'This draft is based in particular on the transparency duties in Articles 12–14 GDPR and guidance from the Austrian Data Protection Authority on cookies. It is not a substitute for individual legal advice.')}
+    {tr('Grundlage dieses Entwurfs sind insbesondere die Informationspflichten nach Art. 12-14 DSGVO sowie die Hinweise der Österreichischen Datenschutzbehörde zu Cookies. Dieser Entwurf ersetzt keine individuelle Rechtsberatung.', 'This draft is based in particular on the transparency duties in Articles 12-14 GDPR and guidance from the Austrian Data Protection Authority on cookies. It is not a substitute for individual legal advice.')}
   </p>
 </LegalLayout>

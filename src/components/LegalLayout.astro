@@ -30,13 +30,20 @@ const canonicalPath = locale === 'de' ? `/${slug}/` : `/en/${slug}/`;
     <link rel="alternate" hreflang="de" href={`https://neulanc.com/${slug}/`} />
     <link rel="alternate" hreflang="en" href={`https://neulanc.com/en/${slug}/`} />
     <link rel="alternate" hreflang="x-default" href={`https://neulanc.com/${slug}/`} />
-    <title>{title} – neulanc</title>
+    <title>{title} - neulanc</title>
   </head>
   <body id="page-top">
     <header class="legal-topbar">
       <a class="legal-brand" href={locale === 'de' ? '/' : '/en/'} aria-label="neulanc Home">
-        <span aria-hidden="true">n.</span>
-        neulanc
+        <img
+          class="legal-brand-mark"
+          src="/web-app-manifest-512x512.png"
+          alt=""
+          width="36"
+          height="36"
+          decoding="async"
+        />
+        <span>neulanc</span>
       </a>
       <nav aria-label={tr('Sprachauswahl', 'Language selection')}>
         <a href={`/${slug}/`} class:list={{ active: locale === 'de' }} lang="de">DE</a>
@@ -108,15 +115,13 @@ const canonicalPath = locale === 'de' ? `/${slug}/` : `/en/${slug}/`;
     text-decoration: none;
   }
 
-  .legal-brand > span {
-    display: grid;
-    width: 34px;
-    height: 34px;
-    place-items: center;
+  .legal-brand-mark {
+    display: block;
+    width: 36px;
+    height: 36px;
     border-radius: 10px;
-    background: #076bc9;
-    color: #fff;
-    font-size: 0.8rem;
+    box-shadow: 0 5px 14px rgba(16, 36, 58, 0.16);
+    object-fit: cover;
   }
 
   .legal-topbar nav {

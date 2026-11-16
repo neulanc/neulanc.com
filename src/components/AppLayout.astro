@@ -38,7 +38,14 @@ const homePath = locale === 'en' ? '/en/' : '/';
   <body id="page-top">
     <header class="app-header">
       <a class="brand" href={homePath} aria-label="neulanc apps home">
-        <span class="brand-mark" aria-hidden="true">n.</span>
+        <img
+          class="brand-mark"
+          src="https://neulanc.com/web-app-manifest-512x512.png"
+          alt=""
+          width="36"
+          height="36"
+          decoding="async"
+        />
         <span>apps</span>
       </a>
       <nav aria-label={locale === 'de' ? 'Hauptnavigation' : 'Main navigation'}>
@@ -113,14 +120,12 @@ const homePath = locale === 'en' ? '/en/' : '/';
   }
 
   .brand-mark {
-    display: grid;
+    display: block;
     width: 36px;
     height: 36px;
-    place-items: center;
     border-radius: 10px;
-    background: var(--ink);
-    color: var(--lime);
-    font-size: 0.9rem;
+    box-shadow: 0 5px 14px rgba(23, 32, 27, 0.16);
+    object-fit: cover;
   }
 
   .app-header nav {
