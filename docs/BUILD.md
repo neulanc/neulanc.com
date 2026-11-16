@@ -1,26 +1,74 @@
-# Run/Build the website
+# Development and deployment
 
-## Build
+## Requirements
+
+- Node.js `20.19+` or `22.12+`
+- npm
+- PHP-capable Apache hosting for the custom 404 handlers and SpendFlow sync
+
+## Local development
+
+Install exactly the locked dependencies:
 
 ```bash
-npm run build
+npm ci
 ```
 
-## Run locally (e.g to test)
+Start Astro's development server:
 
 ```bash
 npm run dev
 ```
 
-Subpages will not work, but you can use them with relateive paths with localhost (e.g localhost:4321/faces for faces.neulanc.com)
+Open [localhost:4321](http://localhost:4321). The production subdomains are represented locally by `/app` and `/faces` paths.
 
-## Deploy to Hostinger
+## Production build
 
-Upload the contents of `public_html/` to the website's Hostinger document root, including the hidden `.htaccess` file and `404.php`. The generated `404.html` contains the design; the PHP handler ensures unknown URLs keep a genuine HTTP 404 status instead of being replaced by Hostinger's default page.
+```bash
+npm run build
+```
 
-The subdomain document roots map to their matching build directories:
+The command:
 
-- `faces.neulanc.com` → `public_html/faces/`
-- `app.neulanc.com` → `public_html/app/`
+1. generates the static Astro site in `public_html/`;
+2. copies shared `_astro` assets into the app and faces roots;
+3. copies the branded 404 page into both subdomain roots; and
+4. includes the profile's compatibility PDF path.
 
-Both directories contain their own `.htaccess`, `404.php`, and copied `_astro` assets after `npm run build`.
+`public_html/` is disposable build output. Do not make source changes there because the next build replaces them.
+
+Preview the completed build with:
+
+```bash
+npm run preview
+```
+
+## Hostinger layout
+
+Upload each generated directory to its matching document root, including hidden `.htaccess` files and `404.php`.
+
+| Domain | Hostinger document root | Local build source |
+| --- | --- | --- |
+| `neulanc.com` | `public_html/` | `public_html/` |
+| `app.neulanc.com` | `public_html/app/` | `public_html/app/` |
+| `faces.neulanc.com` | `public_html/faces/` | `public_html/faces/` |
+
+The main-domain upload must not accidentally remove the `app/` and `faces/` subdirectories. Deploy the complete generated structure or upload each document root deliberately.
+
+SpendFlow synchronization also requires:
+
+- `public_html/app/api/spendflow.php`
+- `public_html/app/api/.htaccess`
+- permission for PHP to create a private `spendflow-private/` directory beside `public_html/`
+
+No API secret needs to be configured: the relay creates its server secret in the private directory on first use.
+
+## Release check
+
+Before uploading:
+
+- run `npm run build` without errors;
+- test the main, app, faces, German, and English entry pages;
+- test an unknown URL and confirm it returns the branded page with status `404`;
+- verify MeldPDF with local sample files; and
+- verify SpendFlow locally, then test encrypted sync over HTTPS after deployment.
